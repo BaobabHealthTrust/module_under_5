@@ -1,0 +1,43 @@
+<script language="javascript">
+  tstUsername = "";
+  tt_cancel_destination = '/user_logout/<%= params[:user_id] %>';
+  tt_cancel_show = '<%= @patient_registration %>/scan/<%= params[:user_id] %>?ext=true';
+</script>
+<div id="home">
+  <div id="project_name">
+    <div style="margin-top: 0px; color: #6281A7; font-size: 0.4em;">
+      <%= @project %>
+    </div>
+  </div>
+  <select id="tabs">
+    <option value="">
+      Overview
+    </option>
+    <option value="">
+      Reports
+    </option>
+
+    <option value="">
+      Administration
+    </option>
+
+  </select>
+
+  <div id="facility"><%= @facility %></div>
+  <div id="location">Workstation Location</div>
+
+  <div id="date">
+    <%= Date.today.strftime("%d-%b-%Y") %>
+  </div>
+  <div id="user">User Name</div>
+
+  <select id="links">
+    <option value='' link='/logout'>Logout</option>
+    <option value='<%= @patient_registration %>/search?user_id=<%= params[:user_id] %>&ext=true'
+            link='<%= @patient_registration %>/search?user_id=<%= params[:user_id] %>&ext=true' ttSize="290px">
+      Find / Register Patient
+    </option>
+    <option value=''  ttSize="100px">Set Date</option>
+  </select>
+
+</div>
