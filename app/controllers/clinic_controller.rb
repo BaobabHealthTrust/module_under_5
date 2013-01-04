@@ -3,7 +3,12 @@ class ClinicController < ApplicationController
 
   def index
 
-    redirect_to "/patients/show/#{params[:ext_patient_id]}?user_id=#{params[:user_id]}" if !params[:ext_patient_id].nil?
+    @location = Location.find(params[:location_id] || session[:location_id]) rescue nil
+
+    session[:location_id] = @location.id if !@location.nil?
+    
+    redirect_to "/patients/show/#{params[:ext_patient_id]}?user_id=#{params[:user_id]}&location_id=#{
+    params[:location_id]}" if !params[:ext_patient_id].nil?
 
     @project = get_global_property_value("project.name") rescue "Unknown"
 
@@ -11,6 +16,15 @@ class ClinicController < ApplicationController
 
     @patient_registration = get_global_property_value("patient.registation.url") rescue ""
 
+    @link = get_global_property_value("user.management.url").to_s rescue nil
+
+    if @link.nil?
+      flash[:error] = "Missing configuration for <br/>user management connection!"
+
+      redirect_to "/no_user" and return
+    end
+
+    # raise @link.to_yaml
   end
 
   def user_login
@@ -40,10 +54,277 @@ class ClinicController < ApplicationController
       redirect_to "/no_user" and return
     end
 
+    session[:datetime] = nil
+    session[:location_id] = nil
+
     host = request.host_with_port rescue ""
 
     redirect_to "#{link}/logout/#{params[:id]}?ext=true&src=#{host}" and return if params[:ext_user_id].nil?
 
+  end
+
+  def set_datetime
+  end
+
+  def update_datetime
+    unless params[:set_day]== "" or params[:set_month]== "" or params[:set_year]== ""
+      # set for 1 second after midnight to designate it as a retrospective date
+      date_of_encounter = Time.mktime(params[:set_year].to_i,
+        params[:set_month].to_i,
+        params[:set_day].to_i,0,0,1)
+      session[:datetime] = date_of_encounter #if date_of_encounter.to_date != Date.today
+    end
+
+    redirect_to "/clinic?user_id=#{params[:user_id]}&location_id=#{params[:location_id]}"
+  end
+
+  def reset_datetime
+    session[:datetime] = nil
+    redirect_to "/clinic?user_id=#{params[:user_id]}&location_id=#{params[:location_id]}" and return
+  end
+
+  def administration
+
+    @link = get_global_property_value("user.management.url").to_s rescue nil
+
+    if @link.nil?
+      flash[:error] = "Missing configuration for <br/>user management connection!"
+
+      redirect_to "/no_user" and return
+    end
+
+    @host = request.host_with_port rescue ""
+
+    render :layout => false
+  end
+
+  def my_account
+
+    @link = get_global_property_value("user.management.url").to_s rescue nil
+
+    if @link.nil?
+      flash[:error] = "Missing configuration for <br/>user management connection!"
+
+      redirect_to "/no_user" and return
+    end
+    
+    @host = request.host_with_port rescue ""
+
+    render :layout => false
+  end
+
+  def overview
+    render :layout => false
+  end
+
+  def reports
+    render :layout => false
+  end
+
+  def project_users
+    render :layout => false
+  end
+
+  def project_users_list
+    users = User.find(:all, :conditions => ["username LIKE ? AND user_id IN (?)", "#{params[:username]}%",
+        UserProperty.find(:all, :conditions => ["property = 'Status' AND property_value = 'ACTIVE'"]
+        ).map{|user| user.user_id}], :limit => 50)
+
+    @project = get_global_property_value("project.name").downcase.gsub(/\s/, ".") rescue nil
+
+    result = users.collect { |user|
+      [
+        user.id,
+        (user.user_properties.find_by_property("#{@project}.activities").property_value.split(",") rescue nil),
+        (user.user_properties.find_by_property("Last Name").property_value rescue nil),
+        (user.user_properties.find_by_property("First Name").property_value rescue nil),
+        user.username
+      ]
+    }
+
+    render :text => result.to_json
+  end
+
+  def add_to_project
+
+    @project = get_global_property_value("project.name").downcase.gsub(/\s/, ".") rescue nil
+
+    unless params[:target].nil? || @project.nil?
+      user = User.find(params[:target]) rescue nil
+
+      unless user.nil?
+        UserProperty.create(
+          :user_id => user.id,
+          :property => "#{@project}.activities",
+          :property_value => ""
+        )
+      end
+    end
+    
+    redirect_to "/project_users_list" and return
+  end
+
+  def remove_from_project
+
+    @project = get_global_property_value("project.name").downcase.gsub(/\s/, ".") rescue nil
+
+    unless params[:target].nil? || @project.nil?
+      user = User.find(params[:target]) rescue nil
+
+      unless user.nil?
+        user.user_properties.find_by_property("#{@project}.activities").delete
+      end
+    end
+    
+    redirect_to "/project_users_list" and return
+  end
+
+  def manage_activities
+
+    @project = get_global_property_value("project.name").downcase.gsub(/\s/, ".") rescue nil
+
+    unless @project.nil?
+      @users = UserProperty.find_all_by_property("#{@project}.activities").collect { |user| user.user_id }
+    
+      @roles = UserRole.find(:all, :conditions => ["user_id IN (?)", @users]).collect { |role| role.role }.sort.uniq
+
+    end
+
+  end
+
+  def check_role_activities
+    activities = {}
+
+    if File.exists?("#{Rails.root}/config/protocol_task_flow.yml")
+      YAML.load_file("#{Rails.root}/config/protocol_task_flow.yml")["#{Rails.env
+        }"]["clinical.encounters.sequential.list"].split(",").each{|activity|
+        
+        activities[activity.titleize] = 0
+
+      } rescue nil
+    end
+      
+    role = params[:role].downcase.gsub(/\s/,".") rescue nil
+
+    unless File.exists?("#{Rails.root}/config/roles")
+      Dir.mkdir("#{Rails.root}/config/roles")
+    end
+
+    unless role.nil?
+      if File.exists?("#{Rails.root}/config/roles/#{role}.yml")
+        YAML.load_file("#{Rails.root}/config/roles/#{role}.yml")["#{Rails.env
+        }"]["activities.list"].split(",").compact.each{|activity|
+
+          activities[activity.titleize] = 1
+
+        } rescue nil
+      end
+    end
+
+    render :text => activities.to_json
+  end
+
+  def create_role_activities
+    activities = []
+    
+    role = params[:role].downcase.gsub(/\s/,".") rescue nil
+    activity = params[:activity] rescue nil
+
+    unless File.exists?("#{Rails.root}/config/roles")
+      Dir.mkdir("#{Rails.root}/config/roles")
+    end
+
+    unless role.nil? || activity.nil?
+
+      file = "#{Rails.root}/config/roles/#{role}.yml"
+
+      activities = YAML.load_file(file)["#{Rails.env
+        }"]["activities.list"].split(",") rescue []
+
+      activities << activity
+
+      activities = activities.map{|a| a.upcase}.uniq
+
+      f = File.open(file, "w")
+
+      f.write("#{Rails.env}:\n    activities.list: #{activities.uniq.join(",")}")
+
+      f.close
+
+    end
+    
+    activities = {}
+
+    if File.exists?("#{Rails.root}/config/protocol_task_flow.yml")
+      YAML.load_file("#{Rails.root}/config/protocol_task_flow.yml")["#{Rails.env
+        }"]["clinical.encounters.sequential.list"].split(",").each{|activity|
+
+        activities[activity.titleize] = 0
+
+      } rescue nil
+    end
+
+    YAML.load_file("#{Rails.root}/config/roles/#{role}.yml")["#{Rails.env
+        }"]["activities.list"].split(",").each{|activity|
+
+      activities[activity.titleize] = 1
+
+    } rescue nil
+
+    render :text => activities.to_json
+  end
+
+  def remove_role_activities
+    activities = []
+
+    role = params[:role].downcase.gsub(/\s/,".") rescue nil
+    activity = params[:activity] rescue nil
+
+    unless File.exists?("#{Rails.root}/config/roles")
+      Dir.mkdir("#{Rails.root}/config/roles")
+    end
+
+    unless role.nil? || activity.nil?
+
+      file = "#{Rails.root}/config/roles/#{role}.yml"
+
+      activities = YAML.load_file(file)["#{Rails.env
+        }"]["activities.list"].split(",").map{|a| a.upcase} rescue []
+
+      activities = activities - [activity.upcase]
+
+      activities = activities.map{|a| a.titleize}.uniq
+
+      f = File.open(file, "w")
+
+      f.write("#{Rails.env}:\n    activities.list: #{activities.uniq.join(",")}")
+
+      f.close
+
+    end
+
+    activities = {}
+
+    if File.exists?("#{Rails.root}/config/protocol_task_flow.yml")
+      YAML.load_file("#{Rails.root}/config/protocol_task_flow.yml")["#{Rails.env
+        }"]["clinical.encounters.sequential.list"].split(",").each{|activity|
+
+        activities[activity.titleize] = 0
+
+      } rescue nil
+    end
+
+    YAML.load_file("#{Rails.root}/config/roles/#{role}.yml")["#{Rails.env
+        }"]["activities.list"].split(",").each{|activity|
+
+      activities[activity.titleize] = 1
+
+    } rescue nil
+
+    render :text => activities.to_json
+  end
+
+  def project_members    
   end
 
 end

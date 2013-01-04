@@ -74,7 +74,7 @@ class TaskFlow
       
     end
 
-    self.current_user_activities = self.user.activities.collect{|a| a.downcase}
+    self.current_user_activities = self.user.activities.collect{|a| a.downcase} rescue {}
     
   end
 
