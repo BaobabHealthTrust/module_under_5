@@ -9,6 +9,10 @@ class Patient < ActiveRecord::Base
   has_many :programs, :through => :patient_programs
   has_many :relationships, :foreign_key => :person_a, :dependent => :destroy, :conditions => {:voided => 0}
   has_many :orders, :conditions => {:voided => 0}
+
+  has_many :program_encounters, :class_name => 'ProgramEncounter',
+    :foreign_key => :patient_id, :dependent => :destroy
+  
   has_many :encounters, :conditions => {:voided => 0} do 
     def find_by_date(encounter_date)
       encounter_date = Date.today unless encounter_date

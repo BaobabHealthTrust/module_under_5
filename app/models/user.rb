@@ -7,4 +7,6 @@ class User < ActiveRecord::Base
 
 	has_many :user_properties, :foreign_key => :user_id # no default scope
 
+  cattr_accessor :current
+  
 end

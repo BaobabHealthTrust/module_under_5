@@ -12,7 +12,7 @@ class EncountersController < ApplicationController
       if !type.nil?
         @encounter = Encounter.create(
           :patient_id => patient.id,
-          :provider => (params[:user_id]),
+          :provider_id => (params[:user_id]),
           :encounter_type => type,
           :location_id => (session[:location_id] || params[:location_id])
         )
@@ -243,6 +243,53 @@ class EncountersController < ApplicationController
 
     end
     
+  end
+
+  def list_observations
+    obs = []
+
+    obs = Encounter.find(params[:encounter_id]).observations.collect{|o|
+      [o.id, o.to_s]
+    } rescue []
+
+    render :text => obs.to_json
+  end
+
+  def void
+    prog = ProgramEncounterDetails.find_by_encounter_id(params[:encounter_id]) rescue nil
+
+    unless prog.nil?
+      prog.void
+
+      encounter = Encounter.find(params[:encounter_id]) rescue nil
+
+      unless encounter.nil?
+        encounter.void
+      end
+      
+    end
+
+    
+    render :text => [].to_json
+  end
+
+  def list_encounters
+    result = []
+    
+    program = ProgramEncounter.find(params[:program_id]) rescue nil
+
+    unless program.nil?
+      result = program.program_encounter_types.find(:all).collect{|e|
+        [
+          e.encounter_id, e.encounter.type.name.titleize,
+          e.encounter.encounter_datetime.strftime("%H:%M"),
+          e.encounter.creator,
+          e.encounter.encounter_datetime.strftime("%d-%b-%Y")
+        ]
+      }
+    end
+
+    render :text => result.to_json
   end
 
 end

@@ -3,6 +3,10 @@ class ClinicController < ApplicationController
 
   def index
 
+    User.current = User.find(@user["user_id"]) rescue nil
+
+    Location.current = Location.find(params[:location_id] || session[:location_id]) rescue nil
+
     @location = Location.find(params[:location_id] || session[:location_id]) rescue nil
 
     session[:location_id] = @location.id if !@location.nil?

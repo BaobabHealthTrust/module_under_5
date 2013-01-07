@@ -7,6 +7,8 @@ class Program < ActiveRecord::Base
   has_many :program_workflows, :conditions => {:retired => 0}
   has_many :program_workflow_states, :through => :program_workflows
 
+  has_one :program_encounter, :foreign_key => :program_id
+
   # Actually returns +Concept+s of suitable +Regimen+s for the given +weight+
   # and this +Program+
   def regimens(weight=nil)

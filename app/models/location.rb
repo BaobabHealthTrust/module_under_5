@@ -3,7 +3,7 @@ class Location < ActiveRecord::Base
   set_primary_key "location_id"
   include Openmrs
 
-  cattr_accessor :current_location
+  cattr_accessor :current_location, :current
 
   def site_id
     Location.current_health_center.location_id.to_s

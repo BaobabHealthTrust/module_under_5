@@ -37,10 +37,52 @@ class PatientsController < ApplicationController
   end
 
   def current_visit
+    @patient = Patient.find(params[:id] || params[:patient_id]) rescue nil
+
+    ProgramEncounter.current_date = (session[:date_time] || Time.now)
+    
+    @programs = @patient.program_encounters.current.collect{|p|
+
+      [
+        p.id,
+        p.to_s,
+        p.program_encounter_types.collect{|e|
+          [
+            e.encounter_id, e.encounter.type.name,
+            e.encounter.encounter_datetime.strftime("%H:%M"),
+            e.encounter.creator
+          ]
+        },
+        p.date_time.strftime("%d-%b-%Y")
+      ]
+    } if !@patient.nil?
+
+    # raise @programs.inspect
+
     render :layout => false
   end
 
   def visit_history
+    @patient = Patient.find(params[:id] || params[:patient_id]) rescue nil
+
+    @programs = @patient.program_encounters.find(:all, :order => ["date_time DESC"]).collect{|p|
+
+      [
+        p.id,
+        p.to_s,
+        p.program_encounter_types.collect{|e|
+          [
+            e.encounter_id, e.encounter.type.name,
+            e.encounter.encounter_datetime.strftime("%H:%M"),
+            e.encounter.creator
+          ]
+        },
+        p.date_time.strftime("%d-%b-%Y")
+      ]
+    } if !@patient.nil?
+
+    # raise @programs.inspect
+
     render :layout => false
   end
 

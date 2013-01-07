@@ -40,9 +40,9 @@ class PatientProgram < ActiveRecord::Base
 
   def to_s
     if !self.program.concept.shortname.blank?
-    	"#{self.program.concept.shortname} (at #{location.name rescue nil})"
+    	"#{self.program.concept.shortname}"
     else
-    	"#{self.program.concept.fullname} (at #{location.name rescue nil})"
+    	"#{self.program.concept.fullname}"
     end
   end
   
