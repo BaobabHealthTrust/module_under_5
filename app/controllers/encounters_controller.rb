@@ -12,9 +12,9 @@ class EncountersController < ApplicationController
       if !type.nil?
         @encounter = Encounter.create(
           :patient_id => patient.id,
-          :provider => (params[:provider_id] || User.first.person),
+          :provider => (params[:user_id]),
           :encounter_type => type,
-          :location_id => (params[:location_id] || Location.first.id)
+          :location_id => (session[:location_id] || params[:location_id])
         )
 
         @current = nil

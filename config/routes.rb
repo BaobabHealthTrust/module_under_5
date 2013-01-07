@@ -39,6 +39,14 @@ ActionController::Routing::Routes.draw do |map|
 
   map.project_members '/project_members', :controller => 'clinic', :action => 'project_members'
 
+  map.my_activities '/my_activities', :controller => 'clinic', :action => 'my_activities'
+
+  map.check_user_activities '/check_user_activities', :controller => 'clinic', :action => 'check_user_activities'
+
+  map.create_user_activity '/create_user_activity', :controller => 'clinic', :action => 'create_user_activity'
+
+  map.remove_user_activity '/remove_user_activity', :controller => 'clinic', :action => 'remove_user_activity'
+
   # The priority is based upon order of creation: first created -> highest priority.
 
   # Sample of regular route:

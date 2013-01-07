@@ -79,7 +79,8 @@
         </iframe>
       </td>
       <td style="height: 70px;">
-        <button class="btn">
+        <button class="btn" onclick="window.parent.location='/my_activities?user_id=<%= params[:user_id]
+              %>&location_id=<%= session[:location_id] || params[:location_id] %>'">
           <span>
             My Activities
           </span>

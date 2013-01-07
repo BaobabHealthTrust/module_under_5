@@ -327,4 +327,164 @@ class ClinicController < ApplicationController
   def project_members    
   end
 
+  def my_activities    
+  end
+
+  def check_user_activities
+    activities = {}
+
+    @user["roles"].each do |role|
+
+      role = role.downcase.gsub(/\s/,".") rescue nil
+
+      if File.exists?("#{Rails.root}/config/roles/#{role}.yml")
+
+        YAML.load_file("#{Rails.root}/config/roles/#{role}.yml")["#{Rails.env
+        }"]["activities.list"].split(",").each{|activity|
+
+          activities[activity.titleize] = 0 if activity.downcase.match("^" +
+              (!params[:search].nil? ? params[:search].downcase : ""))
+
+        } rescue nil
+
+      end
+    
+    end
+
+    @project = get_global_property_value("project.name").downcase.gsub(/\s/, ".") rescue nil
+
+    unless @project.nil?
+      
+      UserProperty.find_by_user_id_and_property(@user["user_id"],
+        "#{@project}.activities").property_value.split(",").each{|activity|
+        
+        activities[activity.titleize] = 1 if activity.downcase.match("^" +
+            (!params[:search].nil? ? params[:search].downcase : "")) and !activities[activity.titleize].nil?
+
+      }
+
+    end
+    
+    render :text => activities.to_json
+  end
+
+  def create_user_activity
+
+    @project = get_global_property_value("project.name").downcase.gsub(/\s/, ".") rescue nil
+
+    unless @project.nil? || params[:activity].nil?
+
+      user = UserProperty.find_by_user_id_and_property(@user["user_id"],
+        "#{@project}.activities")
+
+      unless user.nil?
+        properties = user.property_value.split(",")
+
+        properties << params[:activity]
+
+        properties = properties.map{|p| p.upcase}.uniq
+
+        user.update_attribute("property_value", properties.join(","))
+
+      else
+
+        UserProperty.create(
+          :user_id => @user["user_id"],
+          :property => "#{@project}.activities",
+          :property_value => params[:activity]
+        )
+
+      end
+
+    end
+    
+    activities = {}
+
+    @user["roles"].each do |role|
+
+      role = role.downcase.gsub(/\s/,".") rescue nil
+
+      if File.exists?("#{Rails.root}/config/roles/#{role}.yml")
+
+        YAML.load_file("#{Rails.root}/config/roles/#{role}.yml")["#{Rails.env
+        }"]["activities.list"].split(",").each{|activity|
+
+          activities[activity.titleize] = 0 if activity.downcase.match("^" +
+              (!params[:search].nil? ? params[:search].downcase : ""))
+
+        } rescue nil
+
+      end
+
+    end
+
+    @project = get_global_property_value("project.name").downcase.gsub(/\s/, ".") rescue nil
+
+    unless @project.nil?
+
+      UserProperty.find_by_user_id_and_property(@user["user_id"],
+        "#{@project}.activities").property_value.split(",").each{|activity|
+
+        activities[activity.titleize] = 1
+
+      }
+
+    end
+
+    render :text => activities.to_json
+  end
+
+  def remove_user_activity
+
+    @project = get_global_property_value("project.name").downcase.gsub(/\s/, ".") rescue nil
+
+    unless @project.nil? || params[:activity].nil?
+
+      user = UserProperty.find_by_user_id_and_property(@user["user_id"],
+        "#{@project}.activities")
+
+      unless user.nil?
+        properties = user.property_value.split(",").map{|p| p.upcase}.uniq
+
+        properties = properties - [params[:activity].upcase]
+
+        user.update_attribute("property_value", properties.join(","))
+      end
+
+    end
+
+    activities = {}
+
+    @user["roles"].each do |role|
+
+      role = role.downcase.gsub(/\s/,".") rescue nil
+
+      if File.exists?("#{Rails.root}/config/roles/#{role}.yml")
+
+        YAML.load_file("#{Rails.root}/config/roles/#{role}.yml")["#{Rails.env
+        }"]["activities.list"].split(",").each{|activity|
+
+          activities[activity.titleize] = 0 if activity.downcase.match("^" +
+              (!params[:search].nil? ? params[:search].downcase : ""))
+
+        } rescue nil
+
+      end
+
+    end
+
+    unless @project.nil?
+
+      UserProperty.find_by_user_id_and_property(@user["user_id"],
+        "#{@project}.activities").property_value.split(",").each{|activity|
+
+        activities[activity.titleize] = 1
+
+      }
+
+    end
+
+    render :text => activities.to_json
+  end
+
 end

@@ -74,8 +74,16 @@ class TaskFlow
       
     end
 
-    self.current_user_activities = self.user.activities.collect{|a| a.downcase} rescue {}
-    
+    project = get_global_property_value("project.name").downcase.gsub(/\s/, ".") rescue nil
+
+    self.current_user_activities = UserProperty.find_by_user_id_and_property(user_id,
+      "#{project}.activities").property_value.split(",").collect{|a| a.downcase} rescue {}
+      
+  end
+
+  def get_global_property_value(param)
+    YAML.load_file("#{Rails.root}/config/application.yml")["#{Rails.env
+        }"][param] rescue nil
   end
 
   def next_task
