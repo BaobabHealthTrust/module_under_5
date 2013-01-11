@@ -1,0 +1,355 @@
+<script type='text/javascript' language='javascript'>
+  <!--
+  tt_cancel_show = '/patients/show/<%= @patient.id %>?user_id=<%= @user.id %>';
+  tt_cancel_destination = '/patients/show/<%= @patient.id %>?user_id=<%= @user.id %>';
+</script>
+
+<form method='post' action='/encounters/create'>
+  <input type='hidden' name='program' value='UNDER 5 PROGRAM' />
+  <input type='hidden' name='encounter_type' value='IMUNIZATION RECORD ' />
+  <input type='hidden' name='patient_id' value='<%= @patient.id %>' />
+  <input type='hidden' name='user_id' value='<%= @user.id %>' />
+  <table>
+    <tr>
+      <td>
+				BCG immunization was given at birth?
+      </td>
+      <td>
+        <select id='1.1' name='concept[BCG immunization was given at birth?]' helpText='BCG immunization was given at birth?'>
+          <option></option>
+          <option value='Yes'>Yes</option>
+          <option value='No'>No</option>
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <td>
+				Immunization year
+      </td>
+      <td>
+        <select id='1.1.2.1' name='concept[Immunization year]' helpText='Immunization year' condition='__$("1.1").value == "Yes"' >
+          <option></option>
+          <option value='Unknown'>Unknown</option>
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <td>
+				Immunization month 
+      </td>
+      <td>
+        <select id='1.1.2.2' name='concept[Immunization month ]' helpText='Immunization month ' condition='__$("1.1").value == "Yes"'  condition='__$("1.1.2.1").value.trim() != "Unknown"' >
+          <option></option>
+          <option value='September'>September</option>
+          <option value='August'>August</option>
+          <option value='July'>July</option>
+          <option value='June'>June</option>
+          <option value='May'>May</option>
+          <option value='April'>April</option>
+          <option value='March'>March</option>
+          <option value='February'>February</option>
+          <option value='January'>January</option>
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <td>
+
+      </td>
+      <td>
+        <select id='1.1.2.2.' name='concept[]' helpText=''>
+          <option></option>
+          <option value='Unknown'>Unknown</option>
+          <option value='December'>December</option>
+          <option value='November'>November</option>
+          <option value='October'>October</option>
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <td>
+				Immunization day 
+      </td>
+      <td>
+        <input type='text' id='1.1.2.3'  name='concept[Immunization day ]' helpText='Immunization day '  condition='__$("1.1").value == "Yes"'  condition='__$("1.1.2.2").value.trim() != "Unknown"' />
+      </td>
+    </tr>
+    <tr>
+      <td>
+				Has immunization scar been seen?
+      </td>
+      <td>
+        <select id='1.1.2.4' name='concept[Has immunization scar been seen?]' helpText='Has immunization scar been seen?' condition='__$("1.1").value == "Yes"' >
+          <option></option>
+          <option value='No'>No</option>
+          <option value='Yes'>Yes</option>
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <td>
+				Repeat BCG immunization given? 
+      </td>
+      <td>
+        <select id='1.1.2.4.2.1' name='concept[Repeat BCG immunization given? ]' helpText='Repeat BCG immunization given? ' condition='__$("1.1.2.4").value == "No"'  condition='var d = checkBCGDate(); d > 12;' >
+          <option></option>
+          <option value='Yes'>Yes</option>
+          <option value='No'>No</option>
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <td>
+				Repeat immunization dose date 
+      </td>
+      <td>
+        <input type='text' id='1.1.2.4.2.1.2.1'  name='concept[Repeat immunization dose date ]' helpText='Repeat immunization dose date '  condition='__$("1.1.2.4.2.1").value == "Yes"'  field_type='date' />
+      </td>
+    </tr>
+    <tr>
+      <td>
+				Third polio vaccine at 2.5 months 
+      </td>
+      <td>
+        <select id='1.10' name='concept[Third polio vaccine at 2.5 months ]' helpText='Third polio vaccine at 2.5 months ' condition='<%= @patient.age_in_months >= 2.5 and !@patient.polio2.downcase == "yes" %>' >
+          <option></option>
+          <option value='Yes'>Yes</option>
+          <option value='No'>No</option>
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <td>
+				Date third Polio vaccine given 
+      </td>
+      <td>
+        <input type='text' id='1.10.2.1'  name='concept[Date third Polio vaccine given ]' helpText='Date third Polio vaccine given '  condition='__$("1.10").value == "Yes"'  field_type='date' />
+      </td>
+    </tr>
+    <tr>
+      <td>
+				Fourth polio vaccine at 3.5 months 
+      </td>
+      <td>
+        <select id='1.11' name='concept[Fourth polio vaccine at 3.5 months ]' helpText='Fourth polio vaccine at 3.5 months ' condition='<%= @patient.age_in_months >= 3.5 and !@patient.polio3.downcase == "yes" %>' >
+          <option></option>
+          <option value='Yes'>Yes</option>
+          <option value='No'>No</option>
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <td>
+				Date fourth Polio vaccine given 
+      </td>
+      <td>
+        <input type='text' id='1.11.2.1'  name='concept[Date fourth Polio vaccine given ]' helpText='Date fourth Polio vaccine given '  condition='__$("1.11").value == "Yes"'  field_type='date' />
+      </td>
+    </tr>
+    <tr>
+      <td>
+				Measles vaccine at 9 months
+      </td>
+      <td>
+        <select id='1.12' name='concept[Measles vaccine at 9 months]' helpText='Measles vaccine at 9 months'>
+          <option></option>
+          <option value='Yes'>Yes</option>
+          <option value='No'>No</option>
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <td>
+				Date measles vaccine given
+      </td>
+      <td>
+        <input type='text' id='1.12.2.1'  name='concept[Date measles vaccine given]' helpText='Date measles vaccine given'  condition='__$("1.12").value == "Yes"' />
+      </td>
+    </tr>
+    <tr>
+      <td>
+				Mother HIV Status
+      </td>
+      <td>
+        <select id='1.13' name='concept[Mother HIV Status]' helpText='Mother HIV Status'>
+          <option></option>
+          <option value='Positive'>Positive</option>
+          <option value='Negative'>Negative</option>
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <td>
+				Childs current HIV status
+      </td>
+      <td>
+        <select id='1.13.2.1' name='concept[Childs current HIV status]' helpText='Childs current HIV status' condition='__$("1.13").value == "Positive"' >
+          <option></option>
+          <option value='Not confirmed diagnosis'>Not confirmed diagnosis</option>
+          <option value='Not HIV infected'>Not HIV infected</option>
+          <option value='HIV infected'>HIV infected</option>
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <td>
+				Was DPT-HepB-Hib 1 vaccine given at 6 weeks or later? 
+      </td>
+      <td>
+        <select id='1.2' name='concept[Was DPT-HepB-Hib 1 vaccine given at 6 weeks or later? ]' helpText='Was DPT-HepB-Hib 1 vaccine given at 6 weeks or later? ' condition='<%= @patient.age_in_months > 1.5 and !@patient.dpt1.downcase == "yes" %>' >
+          <option></option>
+          <option value='Yes'>Yes</option>
+          <option value='No'>No</option>
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <td>
+				Date DPT-HepB-Hib 1 vaccine given 
+      </td>
+      <td>
+        <input type='text' id='1.2.2.1'  name='concept[Date DPT-HepB-Hib 1 vaccine given ]' helpText='Date DPT-HepB-Hib 1 vaccine given '  condition='__$("1.2").value == "Yes"'  field_type='date' />
+      </td>
+    </tr>
+    <tr>
+      <td>
+				Was DPT-HepB-Hib 2 vaccine given at 1 month after first dose? 
+      </td>
+      <td>
+        <select id='1.3' name='concept[Was DPT-HepB-Hib 2 vaccine given at 1 month after first dose? ]' helpText='Was DPT-HepB-Hib 2 vaccine given at 1 month after first dose? ' condition='<%= @patient.age_in_months > 2 and !@patient.dpt2.downcase == "yes" %>' >
+          <option></option>
+          <option value='Yes'>Yes</option>
+          <option value='No'>No</option>
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <td>
+				Date DPT-HepB-Hib 2 vaccine given 
+      </td>
+      <td>
+        <input type='text' id='1.3.2.1'  name='concept[Date DPT-HepB-Hib 2 vaccine given ]' helpText='Date DPT-HepB-Hib 2 vaccine given '  condition='__$("1.3").value == "Yes"'  field_type='date' />
+      </td>
+    </tr>
+    <tr>
+      <td>
+				Was DPT-HepB-Hib 3 vaccine given at 1 month after second dose? 
+      </td>
+      <td>
+        <select id='1.4' name='concept[Was DPT-HepB-Hib 3 vaccine given at 1 month after second dose? ]' helpText='Was DPT-HepB-Hib 3 vaccine given at 1 month after second dose? ' condition='<%= @patient.age_in_months > 2 and !@patient.dpt3.downcase == "yes" %>' >
+          <option></option>
+          <option value='Yes'>Yes</option>
+          <option value='No'>No</option>
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <td>
+				Date DPT-HepB-Hib 3 vaccine given 
+      </td>
+      <td>
+        <input type='text' id='1.4.2.1'  name='concept[Date DPT-HepB-Hib 3 vaccine given ]' helpText='Date DPT-HepB-Hib 3 vaccine given '  condition='__$("1.4").value == "Yes"'  field_type='date' />
+      </td>
+    </tr>
+    <tr>
+      <td>
+				PCV 1 vaccine given at 6 weeks or later? 
+      </td>
+      <td>
+        <select id='1.5' name='concept[PCV 1 vaccine given at 6 weeks or later? ]' helpText='PCV 1 vaccine given at 6 weeks or later? ' condition='<%= @patient.age_in_months > 1.5 and !@patient.pcv1.downcase == "yes" %>' >
+          <option></option>
+          <option value='Yes'>Yes</option>
+          <option value='No'>No</option>
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <td>
+				Date PCV 1 vaccine given 
+      </td>
+      <td>
+        <input type='text' id='1.5.2.1'  name='concept[Date PCV 1 vaccine given ]' helpText='Date PCV 1 vaccine given '  condition='__$("1.5").value == "Yes"'  field_type='date' />
+      </td>
+    </tr>
+    <tr>
+      <td>
+				PCV 2 vaccine given at 1 month after first dose? 
+      </td>
+      <td>
+        <select id='1.6' name='concept[PCV 2 vaccine given at 1 month after first dose? ]' helpText='PCV 2 vaccine given at 1 month after first dose? ' condition='<%= @patient.age_in_months > 1.5 and !@patient.pcv2.downcase == "yes" %>' >
+          <option></option>
+          <option value='Yes'>Yes</option>
+          <option value='No'>No</option>
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <td>
+				Date PCV 2 vaccine given 
+      </td>
+      <td>
+        <input type='text' id='1.6.2.1'  name='concept[Date PCV 2 vaccine given ]' helpText='Date PCV 2 vaccine given '  condition='__$("1.6").value == "Yes"'  field_type='date' />
+      </td>
+    </tr>
+    <tr>
+      <td>
+				PCV 3 vaccine given at 1 month after second dose? 
+      </td>
+      <td>
+        <select id='1.7' name='concept[PCV 3 vaccine given at 1 month after second dose? ]' helpText='PCV 3 vaccine given at 1 month after second dose? ' condition='<%= @patient.age_in_months >= 1.5 and !@patient.pcv3.downcase == "yes" %>' >
+          <option></option>
+          <option value='Yes'>Yes</option>
+          <option value='No'>No</option>
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <td>
+				Date PCV 31 vaccine given 
+      </td>
+      <td>
+        <input type='text' id='1.7.2.1'  name='concept[Date PCV 31 vaccine given ]' helpText='Date PCV 31 vaccine given '  condition='__$("1.7").value == "Yes"'  field_type='date' />
+      </td>
+    </tr>
+    <tr>
+      <td>
+				First polio vaccine at birth 
+      </td>
+      <td>
+        <select id='1.8' name='concept[First polio vaccine at birth ]' helpText='First polio vaccine at birth ' condition='<%= @patient.age_in_months < 0.5 and !@patient.polio0.downcase == "yes" %>' >
+          <option></option>
+          <option value='Yes'>Yes</option>
+          <option value='No'>No</option>
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <td>
+				Date first Polio vaccine given 
+      </td>
+      <td>
+        <input type='text' id='1.8.2.1'  name='concept[Date first Polio vaccine given ]' helpText='Date first Polio vaccine given '  condition='__$("1.8").value == "Yes"'  field_type='date' />
+      </td>
+    </tr>
+    <tr>
+      <td>
+				Second polio vaccine at 1.5 months 
+      </td>
+      <td>
+        <select id='1.9' name='concept[Second polio vaccine at 1.5 months ]' helpText='Second polio vaccine at 1.5 months ' condition='<%= @patient.age_in_months >= 1.5 and !@patient.polio1.downcase == "yes" %>' >
+          <option></option>
+          <option value='Yes'>Yes</option>
+          <option value='No'>No</option>
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <td>
+				Date second Polio vaccine given 
+      </td>
+      <td>
+        <input type='text' id='1.9.2.1'  name='concept[Date second Polio vaccine given ]' helpText='Date second Polio vaccine given '  condition='__$("1.9").value == "Yes"'  field_type='date' />
+      </td>
+    </tr>
+  </table>
+</form>

@@ -20,3 +20,16 @@ function checkConfirmationStatus(status){
     }
     setTimeout("checkConfirmationStatus()", 100)
 }
+
+function checkBCGDate(session_date){
+    var today = new Date(session_date);
+    var year = (__$("1.1.2.1").value.trim() != "Unknown" ? __$("1.1.2.1").value.trim() : today.getFullYear());
+    var month = padZeros((__$("1.1.2.2").value.trim() != "Unknown" ? __$("1.1.2.2").value.trim() : today.getMonth()) + 1, 2);
+    var day = padZeros((__$("1.1.2.3").value.trim() != "Unknown" ? __$("1.1.2.3").value.trim() : today.getDate()), 2);
+    
+    var bcgDate = new Date(year + "-" + month + "-" + day);
+
+    var diff = today - bcgDate;
+
+    return Math.round(diff / (7 * 24 * 60 * 60 * 1000))
+}
