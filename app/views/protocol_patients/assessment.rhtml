@@ -1,0 +1,110 @@
+<script type='text/javascript' language='javascript'>
+<!--
+	tt_cancel_show = '/patients/show/<%= @patient.id %>?user_id=<%= @user.id %>';
+	tt_cancel_destination = '/patients/show/<%= @patient.id %>?user_id=<%= @user.id %>';
+	</script>
+
+<form method='post' action='/encounters/create'>
+	<input type='hidden' name='program' value='UNDER 5 PROGRAM' />
+	<input type='hidden' name='encounter_type' value='ASSESSMENT AT ONE WEEK POSTNATAL CHECK ' />
+	<input type='hidden' name='patient_id' value='<%= @patient.id %>' />
+	<input type='hidden' name='user_id' value='<%= @user.id %>' />
+	<table>
+		<tr>
+			<td>
+				Does the child have fever?
+			</td>
+			<td>
+<select id='1.1' name='concept[Does the child have fever?]' helpText='Does the child have fever?'>
+<option></option>
+<option value='No'>No</option>
+ <option value='Yes'>Yes</option>
+ </select>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Is child breathing fast?
+			</td>
+			<td>
+<select id='1.2' name='concept[Is child breathing fast?]' helpText='Is child breathing fast?'>
+<option></option>
+<option value='No'>No</option>
+ <option value='Yes'>Yes</option>
+ </select>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Does child have a bulging fontanele?
+			</td>
+			<td>
+<select id='1.4' name='concept[Does child have a bulging fontanele?]' helpText='Does child have a bulging fontanele?'>
+<option></option>
+<option value='No'>No</option>
+ <option value='Yes'>Yes</option>
+ </select>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Does the child have umbilicus discharging?
+			</td>
+			<td>
+<select id='1.5' name='concept[Does the child have umbilicus discharging?]' helpText='Does the child have umbilicus discharging?'>
+<option></option>
+<option value='No'>No</option>
+ <option value='Yes'>Yes</option>
+ </select>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Does the child have cyanosis? 
+			</td>
+			<td>
+<select id='1.6' name='concept[Cyanosis]' helpText='Does the child have cyanosis? '>
+<option></option>
+<option value='No'>No</option>
+ <option value='Yes'>Yes</option>
+ </select>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Does the child have jaundice? 
+			</td>
+			<td>
+<select id='1.7' name='concept[Jaundice]' helpText='Does the child have jaundice? '>
+<option></option>
+<option value='No'>No</option>
+ <option value='Yes'>Yes</option>
+ </select>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Are the eyes for the child discharging? 
+			</td>
+			<td>
+<select id='1.8' name='concept[Eye discharge]' helpText='Are the eyes for the child discharging? '>
+<option></option>
+<option value='No'>No</option>
+ <option value='Yes'>Yes</option>
+ </select>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Is the child not suckling?
+			</td>
+			<td>
+<select id='1.9' name='concept[Is the child not suckling?]' helpText='Is the child not suckling?'>
+<option></option>
+<option value='No'>No</option>
+ <option value='Yes'>Yes</option>
+ </select>
+			</td>
+		</tr>
+	</table>
+</form>

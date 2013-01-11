@@ -2,7 +2,7 @@
 class EncountersController < ApplicationController
 
   def create
-    
+
     patient = Patient.find(params[:patient_id]) rescue nil
 
     if !patient.nil?
@@ -358,5 +358,17 @@ class EncountersController < ApplicationController
     render :text => "<li></li><li " + locations.map{|location| "value=\"#{location.strip}\">#{location.strip}" }.join("</li><li ") + "</li>"
 
   end
-  
+
+  def diagnoses
+
+    search_string         = (params[:search_string] || '').upcase
+
+    diagnosis_concepts    = Concept.find_by_name("Qech outpatient diagnosis list").concept_members_names.sort.uniq rescue ["Unknown"]
+
+    @results = diagnosis_concepts.collect{|e| e}.delete_if{|x| !x.match(/^#{search_string}/)}
+
+    render :text => "<li>" + @results.join("</li><li>") + "</li>"
+
+  end
+
 end

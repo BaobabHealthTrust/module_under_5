@@ -1,0 +1,102 @@
+<script type='text/javascript' language='javascript'>
+<!--
+	tt_cancel_show = '/patients/show/<%= @patient.id %>?user_id=<%= @user.id %>';
+	tt_cancel_destination = '/patients/show/<%= @patient.id %>?user_id=<%= @user.id %>';
+	</script>
+
+<form method='post' action='/encounters/create'>
+	<input type='hidden' name='program' value='UNDER 5 PROGRAM' />
+	<input type='hidden' name='encounter_type' value='VITAMIN A SUPPLEMENTATION AND DE-WORMING SCHEDULE ' />
+	<input type='hidden' name='patient_id' value='<%= @patient.id %>' />
+	<input type='hidden' name='user_id' value='<%= @user.id %>' />
+	<table>
+		<tr>
+			<td>
+				Vitamin A 100,000 IU given? 
+			</td>
+			<td>
+<select id='1.1' name='concept[Vitamin A 100,000 IU given? ]' helpText='Vitamin A 100,000 IU given? ' condition='<%= @patient.age_in_months(session["datetime"] || Date.today).to_i < 12 && @patient.age_in_months(session["datetime"] || Date.today).to_i > 6 && @patient.age_in_months(session["datetime"] || Date.today).to_i < 60 %>' >
+<option></option>
+<option value='No'>No</option>
+ <option value='Yes'>Yes</option>
+ </select>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Vitamin A 200,000 IU given? 
+			</td>
+			<td>
+<select id='1.2' name='concept[Vitamin A 200,000 IU given? ]' helpText='Vitamin A 200,000 IU given? ' condition='<%= @patient.age_in_months(session["datetime"] || Date.today).to_i >= 12 && @patient.age_in_months(session["datetime"] || Date.today).to_i > 6 && @patient.age_in_months(session["datetime"] || Date.today).to_i < 60 %>' >
+<option></option>
+<option value='No'>No</option>
+ <option value='Yes'>Yes</option>
+ </select>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				
+			</td>
+			<td>
+<select id='1.2.1' name='concept[]' helpText=''>
+<option></option>
+<option value='Mebendazole'>Mebendazole</option>
+ <option value='Albendazole'>Albendazole</option>
+ </select>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Has half a tablet Albendazole been given?  
+			</td>
+			<td>
+<input type='text' id='1.2.1.1.1.1'  name='concept[Has half a tablet Albendazole been given?  ]' helpText='Has half a tablet Albendazole been given?  '  condition='<%= (@patient.age_in_months(session["datetime"] || Date.today).to_i >= 12 && @patient.age_in_months(session["datetime"] || Date.today).to_i <= 23) %>' />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Has 1 tablet Albendazole been given? 
+			</td>
+			<td>
+<input type='text' id='1.2.1.1.1.2'  name='concept[Has 1 tablet Albendazole been given? ]' helpText='Has 1 tablet Albendazole been given? '  condition='<%= @patient.age_in_months(session["datetime"] || Date.today).to_i >= 24 && @patient.age_in_months(session["datetime"] || Date.today).to_i <= 59 %>' />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Has 1 tablet Mebendazole been given? 
+			</td>
+			<td>
+<input type='text' id='1.2.1.2.1'  name='concept[Has 1 tablet Mebendazole been given? ]' helpText='Has 1 tablet Mebendazole been given? '  condition='__$("1.2.1").value == "Mebendazole"'  condition='<%= @patient.age_in_months(session["datetime"] || Date.today).to_i >= 12 && @patient.age_in_months(session["datetime"] || Date.today).to_i <= 59 %>' />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Visit date 
+			</td>
+			<td>
+<input type='text' id='1.3.1'  name='concept[Visit date ]' helpText='Visit date '  field_type='date' />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Have long-lasting insecticidal nets for malaria been given?
+			</td>
+			<td>
+<select id='1.4.1' name='concept[Have long-lasting insecticidal nets for malaria been given?]' helpText='Have long-lasting insecticidal nets for malaria been given?'>
+<option></option>
+<option value='Yes'>Yes</option>
+ <option value='No'>No</option>
+ </select>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Date nets received 
+			</td>
+			<td>
+<input type='text' id='1.4.1.2.1'  name='concept[Date nets received ]' helpText='Date nets received '  condition='__$("1.4.1").value == "Yes"'  field_type='date' />
+			</td>
+		</tr>
+	</table>
+</form>

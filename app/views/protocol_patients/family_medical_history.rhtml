@@ -1,0 +1,134 @@
+<script type='text/javascript' language='javascript'>
+<!--
+	tt_cancel_show = '/patients/show/<%= @patient.id %>?user_id=<%= @user.id %>';
+	tt_cancel_destination = '/patients/show/<%= @patient.id %>?user_id=<%= @user.id %>';
+	</script>
+
+<form method='post' action='/encounters/create'>
+	<input type='hidden' name='program' value='UNDER 5 PROGRAM' />
+	<input type='hidden' name='encounter_type' value='FAMILY MEDICAL HISTORY ' />
+	<input type='hidden' name='patient_id' value='<%= @patient.id %>' />
+	<input type='hidden' name='user_id' value='<%= @user.id %>' />
+	<table>
+		<tr>
+			<td>
+				Has family a history of allergies?
+			</td>
+			<td>
+<select id='1.1' name='concept[Has family a history of allergies?]' helpText='Has family a history of allergies?'>
+<option></option>
+<option value='No'>No</option>
+ <option value='Yes'>Yes</option>
+ </select>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Does the family have a history of rheumatism?
+			</td>
+			<td>
+<select id='1.10' name='concept[Does the family have a history of rheumatism?]' helpText='Does the family have a history of rheumatism?'>
+<option></option>
+<option value='No'>No</option>
+ <option value='Yes'>Yes</option>
+ </select>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Does the family have a history of sickle cell?
+			</td>
+			<td>
+<select id='1.11' name='concept[Does the family have a history of sickle cell?]' helpText='Does the family have a history of sickle cell?'>
+<option></option>
+<option value='No'>No</option>
+ <option value='Yes'>Yes</option>
+ </select>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				has the family a history of mental disorders?
+			</td>
+			<td>
+<select id='1.2' name='concept[has the family a history of mental disorders?]' helpText='has the family a history of mental disorders?'>
+<option></option>
+<option value='No'>No</option>
+ <option value='Yes'>Yes</option>
+ </select>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Has the family a history of neoplasm?
+			</td>
+			<td>
+<select id='1.4' name='concept[Has the family a history of neoplasm?]' helpText='Has the family a history of neoplasm?'>
+<option></option>
+<option value='No'>No</option>
+ <option value='Yes'>Yes</option>
+ </select>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Has the family a history of asthma?
+			</td>
+			<td>
+<select id='1.5' name='concept[Has the family a history of asthma?]' helpText='Has the family a history of asthma?'>
+<option></option>
+<option value='No'>No</option>
+ <option value='Yes'>Yes</option>
+ </select>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Does the family have a diabetes history?
+			</td>
+			<td>
+<select id='1.6' name='concept[Does the family have a diabetes history?]' helpText='Does the family have a diabetes history?'>
+<option></option>
+<option value='No'>No</option>
+ <option value='Yes'>Yes</option>
+ </select>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Does the family have a history of cardiovascular related diseases?
+			</td>
+			<td>
+<select id='1.7' name='concept[Does the family have a history of cardiovascular related diseases?]' helpText='Does the family have a history of cardiovascular related diseases?'>
+<option></option>
+<option value='No'>No</option>
+ <option value='Yes'>Yes</option>
+ </select>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Does the family have a history of endocrine related diseases?
+			</td>
+			<td>
+<select id='1.8' name='concept[Does the family have a history of endocrine related diseases?]' helpText='Does the family have a history of endocrine related diseases?'>
+<option></option>
+<option value='No'>No</option>
+ <option value='Yes'>Yes</option>
+ </select>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Does the family have a history of hypertension?
+			</td>
+			<td>
+<select id='1.9' name='concept[Does the family have a history of hypertension?]' helpText='Does the family have a history of hypertension?'>
+<option></option>
+<option value='No'>No</option>
+ <option value='Yes'>Yes</option>
+ </select>
+			</td>
+		</tr>
+	</table>
+</form>

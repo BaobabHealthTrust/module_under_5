@@ -1,0 +1,310 @@
+<script type='text/javascript' language='javascript'>
+<!--
+	tt_cancel_show = '/patients/show/<%= @patient.id %>?user_id=<%= @user.id %>';
+	tt_cancel_destination = '/patients/show/<%= @patient.id %>?user_id=<%= @user.id %>';
+	</script>
+
+<form method='post' action='/encounters/create'>
+	<input type='hidden' name='program' value='UNDER 5 PROGRAM' />
+	<input type='hidden' name='encounter_type' value='UNDER 5 VISIT ' />
+	<input type='hidden' name='patient_id' value='<%= @patient.id %>' />
+	<input type='hidden' name='user_id' value='<%= @user.id %>' />
+	<table>
+		<tr>
+			<td>
+				Are there any diagnoses to be captured? 
+			</td>
+			<td>
+<select id='1.1' name='concept[Are there any diagnoses to be captured? ]' helpText='Are there any diagnoses to be captured? ' disabled='disabled' >
+<option></option>
+<option value='Yes'>Yes</option>
+ <option value='No'>No</option>
+ </select>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Diagnosis 
+			</td>
+			<td>
+<input type='text' id='1.1.10'  name='concept[Diagnosis ]' helpText='Diagnosis '  optional='true'  ajaxUrl='/encounters/diagnoses'  condition='__$("1.1").value.trim() == "Yes" && __$("1.1.9").value.trim().length > 0' />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Diagnosis 
+			</td>
+			<td>
+<input type='text' id='1.1.11'  name='concept[Diagnosis ]' helpText='Diagnosis '  optional='true'  ajaxUrl='/encounters/diagnoses'  condition='__$("1.1").value.trim() == "Yes" && __$("1.1.10").value.trim().length > 0' />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Diagnosis 
+			</td>
+			<td>
+<input type='text' id='1.1.12'  name='concept[Diagnosis ]' helpText='Diagnosis '  optional='true'  ajaxUrl='/encounters/diagnoses'  condition='__$("1.1").value.trim() == "Yes" && __$("1.1.11").value.trim().length > 0' />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Diagnosis 
+			</td>
+			<td>
+<input type='text' id='1.1.3'  name='concept[Diagnosis ]' helpText='Diagnosis '  ajaxUrl='/encounters/diagnoses'  condition='__$("1.1").value.trim() == "Yes"' />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Diagnosis 
+			</td>
+			<td>
+<input type='text' id='1.1.4'  name='concept[Diagnosis ]' helpText='Diagnosis '  optional='true'  ajaxUrl='/encounters/diagnoses'  condition='__$("1.1").value.trim() == "Yes" && __$("1.1.3").value.trim().length > 0' />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Diagnosis 
+			</td>
+			<td>
+<input type='text' id='1.1.5'  name='concept[Diagnosis ]' helpText='Diagnosis '  optional='true'  ajaxUrl='/encounters/diagnoses'  condition='__$("1.1").value.trim() == "Yes" && __$("1.1.4").value.trim().length > 0' />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Diagnosis 
+			</td>
+			<td>
+<input type='text' id='1.1.6'  name='concept[Diagnosis ]' helpText='Diagnosis '  optional='true'  ajaxUrl='/encounters/diagnoses'  condition='__$("1.1").value.trim() == "Yes" && __$("1.1.5").value.trim().length > 0' />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Diagnosis 
+			</td>
+			<td>
+<input type='text' id='1.1.7'  name='concept[Diagnosis ]' helpText='Diagnosis '  optional='true'  ajaxUrl='/encounters/diagnoses'  condition='__$("1.1").value.trim() == "Yes" && __$("1.1.6").value.trim().length > 0' />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Diagnosis 
+			</td>
+			<td>
+<input type='text' id='1.1.8'  name='concept[Diagnosis ]' helpText='Diagnosis '  optional='true'  ajaxUrl='/encounters/diagnoses'  condition='__$("1.1").value.trim() == "Yes" && __$("1.1.7").value.trim().length > 0' />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Diagnosis 
+			</td>
+			<td>
+<input type='text' id='1.1.9'  name='concept[Diagnosis ]' helpText='Diagnosis '  optional='true'  ajaxUrl='/encounters/diagnoses'  condition='__$("1.1").value.trim() == "Yes" && __$("1.1.8").value.trim().length > 0' />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Are there any lab results to be captured? 
+			</td>
+			<td>
+<select id='1.2' name='concept[Are there any lab results to be captured? ]' helpText='Are there any lab results to be captured? ' disabled='disabled' >
+<option></option>
+<option value='Yes'>Yes</option>
+ <option value='No'>No</option>
+ </select>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Lab test done 
+			</td>
+			<td>
+<input type='text' id='1.2.2.1'  name='concept[Lab test done ]' helpText='Lab test done '  condition='__$("1.2").value == "Yes"'  condition='__$("1.2").value.trim() == "Yes"' />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Lab test result 
+			</td>
+			<td>
+<input type='text' id='1.2.2.10'  name='concept[Lab test result ]' helpText='Lab test result '  condition='__$("1.2.").value == "Yes"'  condition='__$("1.2.2.9").value.trim().length > 0' />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Lab test done 
+			</td>
+			<td>
+<input type='text' id='1.2.2.11'  name='concept[Lab test done ]' helpText='Lab test done '  condition='__$("1.2.").value == "Yes"'  condition='__$("1.2").value.trim() == "Yes" && __$("1.2.2.9").value.trim().length > 0' />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Lab test result 
+			</td>
+			<td>
+<input type='text' id='1.2.2.12'  name='concept[Lab test result ]' helpText='Lab test result '  condition='__$("1.2.").value == "Yes"'  condition='__$("1.2.2.11").value.trim().length > 0' />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Lab test done 
+			</td>
+			<td>
+<input type='text' id='1.2.2.13'  name='concept[Lab test done ]' helpText='Lab test done '  condition='__$("1.2.").value == "Yes"'  condition='__$("1.2").value.trim() == "Yes" && __$("1.2.2.11").value.trim().length > 0' />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Lab test result 
+			</td>
+			<td>
+<input type='text' id='1.2.2.14'  name='concept[Lab test result ]' helpText='Lab test result '  condition='__$("1.2.").value == "Yes"'  condition='__$("1.2.2.13").value.trim().length > 0' />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Lab test done 
+			</td>
+			<td>
+<input type='text' id='1.2.2.15'  name='concept[Lab test done ]' helpText='Lab test done '  condition='__$("1.2.").value == "Yes"'  condition='__$("1.2").value.trim() == "Yes" && __$("1.2.2.13").value.trim().length > 0' />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Lab test result 
+			</td>
+			<td>
+<input type='text' id='1.2.2.16'  name='concept[Lab test result ]' helpText='Lab test result '  condition='__$("1.2.").value == "Yes"'  condition='__$("1.2.2.15").value.trim().length > 0' />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Lab test done 
+			</td>
+			<td>
+<input type='text' id='1.2.2.17'  name='concept[Lab test done ]' helpText='Lab test done '  condition='__$("1.2.").value == "Yes"'  condition='__$("1.2").value.trim() == "Yes" && __$("1.2.2.15").value.trim().length > 0' />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Lab test result 
+			</td>
+			<td>
+<input type='text' id='1.2.2.18'  name='concept[Lab test result ]' helpText='Lab test result '  condition='__$("1.2.").value == "Yes"'  condition='__$("1.2.2.17").value.trim().length > 0' />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Lab test done 
+			</td>
+			<td>
+<input type='text' id='1.2.2.19'  name='concept[Lab test done ]' helpText='Lab test done '  condition='__$("1.2.").value == "Yes"'  condition='__$("1.2").value.trim() == "Yes" && __$("1.2.2.17").value.trim().length > 0' />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Lab test result 
+			</td>
+			<td>
+<input type='text' id='1.2.2.2'  name='concept[Lab test result ]' helpText='Lab test result '  condition='__$("1.2").value == "Yes"'  condition='__$("1.2.2.1").value.trim().length > 0' />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Lab test result 
+			</td>
+			<td>
+<input type='text' id='1.2.2.20'  name='concept[Lab test result ]' helpText='Lab test result '  condition='__$("1.2.").value == "Yes"'  condition='__$("1.2.2.19").value.trim().length > 0' />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Lab test done 
+			</td>
+			<td>
+<input type='text' id='1.2.2.3'  name='concept[Lab test done ]' helpText='Lab test done '  condition='__$("1.2").value == "Yes"'  condition='__$("1.2").value.trim() == "Yes" && __$("1.2.2.1").value.trim().length > 0' />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Lab test result 
+			</td>
+			<td>
+<input type='text' id='1.2.2.4'  name='concept[Lab test result ]' helpText='Lab test result '  condition='__$("1.2").value == "Yes"'  condition='__$("1.2.2.3").value.trim().length > 0' />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Lab test done 
+			</td>
+			<td>
+<input type='text' id='1.2.2.5'  name='concept[Lab test done ]' helpText='Lab test done '  condition='__$("1.2").value == "Yes"'  condition='__$("1.2").value.trim() == "Yes" && __$("1.2.2.3").value.trim().length > 0' />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Lab test result 
+			</td>
+			<td>
+<input type='text' id='1.2.2.6'  name='concept[Lab test result ]' helpText='Lab test result '  condition='__$("1.2").value == "Yes"'  condition='__$("1.2.2.5").value.trim().length > 0' />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Lab test done 
+			</td>
+			<td>
+<input type='text' id='1.2.2.7'  name='concept[Lab test done ]' helpText='Lab test done '  condition='__$("1.2").value == "Yes"'  condition='__$("1.2").value.trim() == "Yes" && __$("1.2.2.5").value.trim().length > 0' />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Lab test result 
+			</td>
+			<td>
+<input type='text' id='1.2.2.8'  name='concept[Lab test result ]' helpText='Lab test result '  condition='__$("1.2").value == "Yes"'  condition='__$("1.2.2.7").value.trim().length > 0' />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Lab test done 
+			</td>
+			<td>
+<input type='text' id='1.2.2.9'  name='concept[Lab test done ]' helpText='Lab test done '  condition='__$("1.2").value == "Yes"'  condition='__$("1.2").value.trim() == "Yes" && __$("1.2.2.7").value.trim().length > 0' />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Treatment 
+			</td>
+			<td>
+<input type='text' id='1.3'  name='concept[Treatment ]' helpText='Treatment '  optional='true'  tt_pageStyleClass='NoControls'  tt_onUnLoad='removeGenerics()'  tt_onLoad='generateGenerics(<%= @patient.id %>)' />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Height
+			</td>
+			<td>
+<input type='text' id='1.4'  name='concept[Height]' helpText='Height' />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Weight
+			</td>
+			<td>
+<input type='text' id='1.5'  name='concept[Weight]' helpText='Weight' />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Notes
+			</td>
+			<td>
+<input type='text' id='1.6'  name='concept[Notes]' helpText='Notes' />
+			</td>
+		</tr>
+	</table>
+</form>

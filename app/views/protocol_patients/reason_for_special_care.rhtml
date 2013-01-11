@@ -1,0 +1,118 @@
+<script type='text/javascript' language='javascript'>
+<!--
+	tt_cancel_show = '/patients/show/<%= @patient.id %>?user_id=<%= @user.id %>';
+	tt_cancel_destination = '/patients/show/<%= @patient.id %>?user_id=<%= @user.id %>';
+	</script>
+
+<form method='post' action='/encounters/create'>
+	<input type='hidden' name='program' value='UNDER 5 PROGRAM' />
+	<input type='hidden' name='encounter_type' value='Reason for special care ' />
+	<input type='hidden' name='patient_id' value='<%= @patient.id %>' />
+	<input type='hidden' name='user_id' value='<%= @user.id %>' />
+	<table>
+		<tr>
+			<td>
+				Weight less than 2500g
+			</td>
+			<td>
+<select id='1.1' name='concept[Weight less than 2500g]' helpText='Weight less than 2500g'>
+<option></option>
+<option value='No'>No</option>
+ <option value='Yes'>Yes</option>
+ </select>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Baby born less than 2 years since last birth of other child
+			</td>
+			<td>
+<select id='1.2' name='concept[Baby born less than 2 years since last birth of other child]' helpText='Baby born less than 2 years since last birth of other child'>
+<option></option>
+<option value='No'>No</option>
+ <option value='Yes'>Yes</option>
+ </select>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				2 or more children in family have died?
+			</td>
+			<td>
+<select id='1.3' name='concept[2 or more children in family have died?]' helpText='2 or more children in family have died?'>
+<option></option>
+<option value='No'>No</option>
+ <option value='Yes'>Yes</option>
+ </select>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Child exposed to HIV?
+			</td>
+			<td>
+<select id='1.4' name='concept[Child exposed to HIV?]' helpText='Child exposed to HIV?'>
+<option></option>
+<option value='No'>No</option>
+ <option value='Yes'>Yes</option>
+ </select>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Is child an orphan? 
+			</td>
+			<td>
+<select id='1.5' name='concept[Orphan]' helpText='Is child an orphan? '>
+<option></option>
+<option value='No'>No</option>
+ <option value='Yes'>Yes</option>
+ </select>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Fifth or more child
+			</td>
+			<td>
+<select id='1.6' name='concept[Fifth or more child]' helpText='Fifth or more child'>
+<option></option>
+<option value='No'>No</option>
+ <option value='Yes'>Yes</option>
+ </select>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Child a twin
+			</td>
+			<td>
+<select id='1.7' name='concept[Child a twin]' helpText='Child a twin'>
+<option></option>
+<option value='No'>No</option>
+ <option value='Yes'>Yes</option>
+ </select>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Any other reason for special care
+			</td>
+			<td>
+<select id='1.8' name='concept[Any other reason for special care]' helpText='Any other reason for special care'>
+<option></option>
+<option value='Yes'>Yes</option>
+ <option value='No'>No</option>
+ </select>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Specify other reason for special care 
+			</td>
+			<td>
+<input type='text' id='1.8.2.1'  name='concept[Specify]' helpText='Specify other reason for special care '  condition='__$("1.8").value == "Yes"' />
+			</td>
+		</tr>
+	</table>
+</form>

@@ -1,0 +1,106 @@
+<script type='text/javascript' language='javascript'>
+<!--
+	tt_cancel_show = '/patients/show/<%= @patient.id %>?user_id=<%= @user.id %>';
+	tt_cancel_destination = '/patients/show/<%= @patient.id %>?user_id=<%= @user.id %>';
+	</script>
+
+<form method='post' action='/encounters/create'>
+	<input type='hidden' name='program' value='UNDER 5 PROGRAM' />
+	<input type='hidden' name='encounter_type' value='SURGICAL HISTORY ' />
+	<input type='hidden' name='patient_id' value='<%= @patient.id %>' />
+	<input type='hidden' name='user_id' value='<%= @user.id %>' />
+	<table>
+		<tr>
+			<td>
+				Ever had any surgical procedure?
+			</td>
+			<td>
+<select id='1.1' name='concept[Ever had any surgical procedure?]' helpText='Ever had any surgical procedure?'>
+<option></option>
+<option value='Yes'>Yes</option>
+ <option value='No'>No</option>
+ </select>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Diagnosis date 
+			</td>
+			<td>
+<input type='text' id='1.1.10'  name='concept[Diagnosis date ]' helpText='Diagnosis date '  field_type='date'  condition='__$("1.1").value.trim() == "Yes" && __$("1.1.9").value.trim().length > 0' />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Diagnosis 
+			</td>
+			<td>
+<input type='text' id='1.1.11'  name='concept[Diagnosis ]' helpText='Diagnosis '  optional='true'  condition='__$("1.1").value.trim() == "Yes" && __$("1.1.9").value.trim().length > 0' />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Diagnosis date 
+			</td>
+			<td>
+<input type='text' id='1.1.12'  name='concept[Diagnosis date ]' helpText='Diagnosis date '  field_type='date'  condition='__$("1.1").value.trim() == "Yes" && __$("1.1.11").value.trim().length > 0' />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Diagnosis 
+			</td>
+			<td>
+<input type='text' id='1.1.3'  name='concept[Diagnosis ]' helpText='Diagnosis '  condition='__$("1.1").value.trim() == "Yes"' />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Diagnosis date 
+			</td>
+			<td>
+<input type='text' id='1.1.4'  name='concept[Diagnosis date ]' helpText='Diagnosis date '  field_type='date'  condition='__$("1.1").value.trim() == "Yes"' />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Diagnosis 
+			</td>
+			<td>
+<input type='text' id='1.1.5'  name='concept[Diagnosis ]' helpText='Diagnosis '  optional='true'  condition='__$("1.1").value.trim() == "Yes" && __$("1.1.3").value.trim().length > 0' />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Diagnosis date 
+			</td>
+			<td>
+<input type='text' id='1.1.6'  name='concept[Diagnosis date ]' helpText='Diagnosis date '  field_type='date'  condition='__$("1.1").value.trim() == "Yes" && __$("1.1.5").value.trim().length > 0' />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Diagnosis 
+			</td>
+			<td>
+<input type='text' id='1.1.7'  name='concept[Diagnosis ]' helpText='Diagnosis '  optional='true'  condition='__$("1.1").value.trim() == "Yes" && __$("1.1.5").value.trim().length > 0' />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Diagnosis date 
+			</td>
+			<td>
+<input type='text' id='1.1.8'  name='concept[Diagnosis date ]' helpText='Diagnosis date '  field_type='date'  condition='__$("1.1").value.trim() == "Yes" && __$("1.1.7").value.trim().length > 0' />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Diagnosis 
+			</td>
+			<td>
+<input type='text' id='1.1.9'  name='concept[Diagnosis ]' helpText='Diagnosis '  optional='true'  condition='__$("1.1").value.trim() == "Yes" && __$("1.1.7").value.trim().length > 0' />
+			</td>
+		</tr>
+	</table>
+</form>
