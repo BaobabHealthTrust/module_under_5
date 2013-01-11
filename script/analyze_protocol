@@ -158,12 +158,12 @@ def build_page(obj)
 
   object.each do |key, value|
 
-    result = result + "\t\t<tr>\n\t\t\t<td>\n"
-    
     if key.downcase != "text" and key.downcase != "root" and key.downcase != "program" and
         key.downcase != "concept" and key.downcase != "except_concept" and key.downcase != "drug_concept" and
         key.downcase != "special_field" and key.downcase != "label" and key.downcase != "scope"
-      
+
+      result = result + "\t\t<tr>\n\t\t\t<td>\n"
+    
       result = result + "\t\t\t\t#{value["question"]}\n\t\t\t</td>\n\t\t\t<td>"
 
       if !value["options"].nil?
@@ -583,13 +583,13 @@ Dir.foreach(File.expand_path('../../spec', __FILE__)) do |filename|
 
       @flow << "#{key}" if (!value["ignore"].nil? ? (!value["ignore"].downcase == "true" ? false : true ) : true)
 
-      name = value["text"].strip.downcase.gsub(/\s/, "_").gsub(/\//, "")
+      name = value["text"].strip.downcase.gsub(/\s/, "_").gsub(/\//, "").gsub(/\-/, "_") rescue (raise value.to_yaml)
 
       label = value["label"] if !value["label"].nil?
 
       @label[label] = label if !value["label"].nil?
 
-      labeltxt = label.strip.downcase.gsub(/\s/, "_").gsub(/\//, "") rescue nil
+      labeltxt = label.strip.downcase.gsub(/\s/, "_").gsub(/\//, "").gsub(/\-/, "_") rescue nil
 
       @controller_content = @controller_content + "\tdef #{(!label.nil? ? labeltxt : name)}\n\n\t" +
         "@patient = Patient.find(params[:patient_id]) rescue nil\n\n\t" + 
