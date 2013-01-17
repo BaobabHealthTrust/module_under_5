@@ -34,7 +34,6 @@ class Patient < ActiveRecord::Base
   def name
     "#{self.person.names.first.given_name} #{self.person.names.first.family_name}"
   end
-
   
   def national_id
     self.patient_identifiers.find_by_identifier_type(PatientIdentifierType.find_by_name("National id").id).identifier rescue nil

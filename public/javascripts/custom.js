@@ -33,3 +33,37 @@ function checkBCGDate(session_date){
 
     return Math.round(diff / (7 * 24 * 60 * 60 * 1000))
 }
+
+function findDates(){
+    getDayOfMonthPicker(__$("1.1.2.1").value, __$("1.1.2.2").value);
+}
+
+function populateMonth(id){
+
+    __$(id).innerHTML = "";
+
+    var months = [
+        [1,"January"],
+        [2,"February"],
+        [3,"March"],
+        [4,"April"],
+        [5,"May"],
+        [6,"June"],
+        [7,"July"],
+        [8,"August"],
+        [9,"September"],
+        [10,"October"],
+        [11,"November"],
+        [12,"December"],
+        ["Unknown","Unknown"]
+    ]
+
+    for(var i = 0; i < months.length; i++){
+        var opt = document.createElement("option");
+        opt.value = months[i][0];
+        opt.innerHTML = months[i][1];
+
+        __$(id).appendChild(opt);
+    }
+
+}

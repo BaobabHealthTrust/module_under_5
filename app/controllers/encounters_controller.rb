@@ -3,6 +3,10 @@ class EncountersController < ApplicationController
 
   def create
 
+    User.current = User.find(@user["user_id"]) rescue nil
+
+    Location.current = Location.find(params[:location_id] || session[:location_id]) rescue nil
+
     patient = Patient.find(params[:patient_id]) rescue nil
 
     if !patient.nil?
@@ -18,7 +22,9 @@ class EncountersController < ApplicationController
         )
 
         @current = nil
-        
+
+        # raise @encounter.to_yaml
+
         if !params[:program].blank?
 
           @program = Program.find_by_concept_id(ConceptName.find_by_name(params[:program]).concept_id) rescue nil
@@ -249,6 +255,52 @@ class EncountersController < ApplicationController
 
           end
 
+        end if !params[:concept].nil?
+
+        
+        if !params[:prescription].nil?
+
+          params[:prescription].each do |prescription|
+        
+            @suggestions = prescription[:suggestion] || ['New Prescription']
+            @patient = Patient.find(params[:patient_id] || session[:patient_id]) rescue nil
+
+            unless params[:location]
+              session_date = session[:datetime] || params[:encounter_datetime] || Time.now()
+            else
+              session_date = params[:encounter_datetime] #Use encounter_datetime passed during import
+            end
+            # set current location via params if given
+            Location.current_location = Location.find(params[:location]) if params[:location]
+
+            @diagnosis = Observation.find(prescription[:diagnosis]) rescue nil
+            @suggestions.each do |suggestion|
+              unless (suggestion.blank? || suggestion == '0' || suggestion == 'New Prescription')
+                @order = DrugOrder.find(suggestion)
+                DrugOrder.clone_order(@encounter, @patient, @diagnosis, @order)
+              else
+
+                @formulation = (prescription[:formulation] || '').upcase
+                @drug = Drug.find_by_name(@formulation) rescue nil
+                unless @drug
+                  flash[:notice] = "No matching drugs found for formulation #{prescription[:formulation]}"
+                  # render :give_drugs, :patient_id => params[:patient_id]
+                  # return
+                end
+                start_date = session_date
+                auto_expire_date = session_date.to_date + prescription[:duration].to_i.days
+                prn = prescription[:prn].to_i
+                
+                DrugOrder.write_order(@encounter, @patient, @diagnosis, @drug,
+                  start_date, auto_expire_date, [prescription[:morning_dose],
+                    prescription[:afternoon_dose], prescription[:evening_dose], 
+                    prescription[:night_dose]], prescription[:type_of_prescription], prn)
+            
+              end
+            end
+      
+          end
+
         end
 
       else
@@ -300,11 +352,17 @@ class EncountersController < ApplicationController
       [o.id, o.to_piped_s] rescue nil
     }.compact 
 
+    orders = Encounter.find(params[:encounter_id]).drug_orders.collect{|o|
+      [o.id, o.to_piped_s] rescue nil
+    }.compact 
+
+    obs = obs + orders
+
     render :text => obs.to_json
   end
 
   def void
-    prog = ProgramEncounterDetails.find_by_encounter_id(params[:encounter_id]) rescue nil
+    prog = ProgramEncounterDetail.find_by_encounter_id(params[:encounter_id]) rescue nil
 
     unless prog.nil?
       prog.void
@@ -327,7 +385,8 @@ class EncountersController < ApplicationController
     program = ProgramEncounter.find(params[:program_id]) rescue nil
 
     unless program.nil?
-      result = program.program_encounter_types.find(:all, :joins => [:encounter], 
+      result = program.program_encounter_types.find(:all, :joins => [:encounter],
+        :conditions => ["encounter.voided = 0"],
         :order => ["encounter_datetime DESC"]).collect{|e|
         [
           e.encounter_id, e.encounter.type.name.titleize,
@@ -361,11 +420,11 @@ class EncountersController < ApplicationController
 
   def diagnoses
 
-    search_string         = (params[:search_string] || '').upcase
+    search_string         = (params[:search] || '').upcase
 
-    diagnosis_concepts    = Concept.find_by_name("Qech outpatient diagnosis list").concept_members_names.sort.uniq rescue ["Unknown"]
+    diagnosis_concepts    = Concept.find_by_name("Qech outpatient diagnosis list").concept_members.collect{|c| c.concept.fullname}.sort.uniq rescue ["Unknown"]
 
-    @results = diagnosis_concepts.collect{|e| e}.delete_if{|x| !x.match(/^#{search_string}/)}
+    @results = diagnosis_concepts.collect{|e| e}.delete_if{|x| !x.upcase.match(/^#{search_string}/)}
 
     render :text => "<li>" + @results.join("</li><li>") + "</li>"
 

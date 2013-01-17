@@ -12,10 +12,10 @@
 	<table>
 		<tr>
 			<td>
-				Ever had any surgical procedure?
+				Ever had any surgical procedure? 
 			</td>
 			<td>
-<select id='1.1' name='concept[Ever had any surgical procedure?]' helpText='Ever had any surgical procedure?'>
+<select id='1.1' name='concept[Ever had any surgical procedure? ]' helpText='Ever had any surgical procedure? ' pos='0' >
 <option></option>
 <option value='Yes'>Yes</option>
  <option value='No'>No</option>
@@ -24,18 +24,10 @@
 		</tr>
 		<tr>
 			<td>
-				Diagnosis date 
-			</td>
-			<td>
-<input type='text' id='1.1.10'  name='concept[Diagnosis date ]' helpText='Diagnosis date '  condition='__$("1.1").value.trim() == "Yes" && __$("1.1.9").value.trim().length > 0'  field_type='date' />
-			</td>
-		</tr>
-		<tr>
-			<td>
 				Diagnosis 
 			</td>
 			<td>
-<input type='text' id='1.1.11'  name='concept[Diagnosis ]' helpText='Diagnosis '  optional='true'  condition='__$("1.1").value.trim() == "Yes" && __$("1.1.9").value.trim().length > 0' />
+<input type='text' id='1.1.3'   helpText='Diagnosis '  condition='__$("1.1").value.trim() == "Yes"'  pos='1'  name='concept[Diagnosis][]' />
 			</td>
 		</tr>
 		<tr>
@@ -43,7 +35,7 @@
 				Diagnosis date 
 			</td>
 			<td>
-<input type='text' id='1.1.12'  name='concept[Diagnosis date ]' helpText='Diagnosis date '  condition='__$("1.1").value.trim() == "Yes" && __$("1.1.11").value.trim().length > 0'  field_type='date' />
+<input type='text' id='1.1.4'   helpText='Diagnosis date '  condition='__$("1.1").value.trim() == "Yes"'  pos='2'  name='concept[Diagnosis date][]'  field_type='date' />
 			</td>
 		</tr>
 		<tr>
@@ -51,7 +43,7 @@
 				Diagnosis 
 			</td>
 			<td>
-<input type='text' id='1.1.3'  name='concept[Diagnosis ]' helpText='Diagnosis '  condition='__$("1.1").value.trim() == "Yes"' />
+<input type='text' id='1.1.5'   helpText='Diagnosis '  optional='true'  condition='__$("1.1").value.trim() == "Yes" && __$("1.1.3").value.trim().length > 0'  pos='3'  name='concept[Diagnosis][]' />
 			</td>
 		</tr>
 		<tr>
@@ -59,7 +51,7 @@
 				Diagnosis date 
 			</td>
 			<td>
-<input type='text' id='1.1.4'  name='concept[Diagnosis date ]' helpText='Diagnosis date '  condition='__$("1.1").value.trim() == "Yes"'  field_type='date' />
+<input type='text' id='1.1.6'   helpText='Diagnosis date '  condition='__$("1.1").value.trim() == "Yes" && __$("1.1.5").value.trim().length > 0'  pos='4'  name='concept[Diagnosis date][]'  field_type='date' />
 			</td>
 		</tr>
 		<tr>
@@ -67,7 +59,7 @@
 				Diagnosis 
 			</td>
 			<td>
-<input type='text' id='1.1.5'  name='concept[Diagnosis ]' helpText='Diagnosis '  optional='true'  condition='__$("1.1").value.trim() == "Yes" && __$("1.1.3").value.trim().length > 0' />
+<input type='text' id='1.1.7'   helpText='Diagnosis '  optional='true'  condition='__$("1.1").value.trim() == "Yes" && __$("1.1.5").value.trim().length > 0'  pos='5'  name='concept[Diagnosis][]' />
 			</td>
 		</tr>
 		<tr>
@@ -75,7 +67,7 @@
 				Diagnosis date 
 			</td>
 			<td>
-<input type='text' id='1.1.6'  name='concept[Diagnosis date ]' helpText='Diagnosis date '  condition='__$("1.1").value.trim() == "Yes" && __$("1.1.5").value.trim().length > 0'  field_type='date' />
+<input type='text' id='1.1.8'   helpText='Diagnosis date '  condition='__$("1.1").value.trim() == "Yes" && __$("1.1.7").value.trim().length > 0'  pos='6'  name='concept[Diagnosis date][]'  field_type='date' />
 			</td>
 		</tr>
 		<tr>
@@ -83,7 +75,7 @@
 				Diagnosis 
 			</td>
 			<td>
-<input type='text' id='1.1.7'  name='concept[Diagnosis ]' helpText='Diagnosis '  optional='true'  condition='__$("1.1").value.trim() == "Yes" && __$("1.1.5").value.trim().length > 0' />
+<input type='text' id='1.1.9'   helpText='Diagnosis '  optional='true'  condition='__$("1.1").value.trim() == "Yes" && __$("1.1.7").value.trim().length > 0'  pos='7'  name='concept[Diagnosis][]' />
 			</td>
 		</tr>
 		<tr>
@@ -91,7 +83,7 @@
 				Diagnosis date 
 			</td>
 			<td>
-<input type='text' id='1.1.8'  name='concept[Diagnosis date ]' helpText='Diagnosis date '  condition='__$("1.1").value.trim() == "Yes" && __$("1.1.7").value.trim().length > 0'  field_type='date' />
+<input type='text' id='1.1.10'   helpText='Diagnosis date '  condition='__$("1.1").value.trim() == "Yes" && __$("1.1.9").value.trim().length > 0'  pos='8'  name='concept[Diagnosis date][]'  field_type='date' />
 			</td>
 		</tr>
 		<tr>
@@ -99,7 +91,15 @@
 				Diagnosis 
 			</td>
 			<td>
-<input type='text' id='1.1.9'  name='concept[Diagnosis ]' helpText='Diagnosis '  optional='true'  condition='__$("1.1").value.trim() == "Yes" && __$("1.1.7").value.trim().length > 0' />
+<input type='text' id='1.1.11'   helpText='Diagnosis '  optional='true'  condition='__$("1.1").value.trim() == "Yes" && __$("1.1.9").value.trim().length > 0'  pos='9'  name='concept[Diagnosis][]' />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Diagnosis date 
+			</td>
+			<td>
+<input type='text' id='1.1.12'   helpText='Diagnosis date '  condition='__$("1.1").value.trim() == "Yes" && __$("1.1.11").value.trim().length > 0'  pos='10'  name='concept[Diagnosis date][]'  field_type='date' />
 			</td>
 		</tr>
 	</table>

@@ -103,7 +103,7 @@ if params[:user_id].nil?
 
 	end
 
-	def imunization_record
+	def immunization_record
 
 	@patient = Patient.find(params[:patient_id]) rescue nil
 
