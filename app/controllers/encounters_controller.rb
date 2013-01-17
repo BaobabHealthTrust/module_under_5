@@ -2,11 +2,15 @@
 class EncountersController < ApplicationController
 
   def create
-    
+
+    User.current = User.find(@user["user_id"]) rescue nil
+
+    Location.current = Location.find(params[:location_id] || session[:location_id]) rescue nil
+
     patient = Patient.find(params[:patient_id]) rescue nil
 
     if !patient.nil?
-      
+
       type = EncounterType.find_by_name(params[:encounter_type]).id rescue nil
 
       if !type.nil?
@@ -18,7 +22,9 @@ class EncountersController < ApplicationController
         )
 
         @current = nil
-        
+
+        # raise @encounter.to_yaml
+
         if !params[:program].blank?
 
           @program = Program.find_by_concept_id(ConceptName.find_by_name(params[:program]).concept_id) rescue nil
@@ -59,7 +65,7 @@ class EncountersController < ApplicationController
             end
 
           else
-            
+
             redirect_to "/encounters/missing_program?program=#{params[:program]}" and return
 
           end
@@ -79,18 +85,18 @@ class EncountersController < ApplicationController
             if !concept.nil? and !value.blank?
 
               if !@program.nil? and !@current.nil?
-                
+
                 selected_state = @program.program_workflows.map(&:program_workflow_states).flatten.select{|pws|
                   pws.concept.fullname.upcase() == value.upcase()
                 }.first rescue nil
-                
+
                 @current.transition({
                     :state => "#{value}",
                     :start_date => Time.now,
                     :end_date => Time.now
                   }) if !selected_state.nil?
               end
-              
+
               concept_type = nil
               if value.strip.match(/^\d+$/)
 
@@ -119,7 +125,7 @@ class EncountersController < ApplicationController
                 end
 
               end
-              
+
               obs = Observation.create(
                 :person_id => @encounter.patient_id,
                 :concept_id => concept,
@@ -149,7 +155,7 @@ class EncountersController < ApplicationController
               else
 
                 obs.update_attribute("value_text", value)
-                
+
               end
 
             else
@@ -177,7 +183,7 @@ class EncountersController < ApplicationController
                       :end_date => Time.now
                     }) if !selected_state.nil?
                 end
-              
+
                 concept_type = nil
                 if item.strip.match(/^\d+$/)
 
@@ -249,6 +255,52 @@ class EncountersController < ApplicationController
 
           end
 
+        end if !params[:concept].nil?
+
+
+        if !params[:prescription].nil?
+
+          params[:prescription].each do |prescription|
+
+            @suggestions = prescription[:suggestion] || ['New Prescription']
+            @patient = Patient.find(params[:patient_id] || session[:patient_id]) rescue nil
+
+            unless params[:location]
+              session_date = session[:datetime] || params[:encounter_datetime] || Time.now()
+            else
+              session_date = params[:encounter_datetime] #Use encounter_datetime passed during import
+            end
+            # set current location via params if given
+            Location.current_location = Location.find(params[:location]) if params[:location]
+
+            @diagnosis = Observation.find(prescription[:diagnosis]) rescue nil
+            @suggestions.each do |suggestion|
+              unless (suggestion.blank? || suggestion == '0' || suggestion == 'New Prescription')
+                @order = DrugOrder.find(suggestion)
+                DrugOrder.clone_order(@encounter, @patient, @diagnosis, @order)
+              else
+
+                @formulation = (prescription[:formulation] || '').upcase
+                @drug = Drug.find_by_name(@formulation) rescue nil
+                unless @drug
+                  flash[:notice] = "No matching drugs found for formulation #{prescription[:formulation]}"
+                  # render :give_drugs, :patient_id => params[:patient_id]
+                  # return
+                end
+                start_date = session_date
+                auto_expire_date = session_date.to_date + prescription[:duration].to_i.days
+                prn = prescription[:prn].to_i
+
+                DrugOrder.write_order(@encounter, @patient, @diagnosis, @drug,
+                  start_date, auto_expire_date, [prescription[:morning_dose],
+                    prescription[:afternoon_dose], prescription[:evening_dose],
+                    prescription[:night_dose]], prescription[:type_of_prescription], prn)
+
+              end
+            end
+
+          end
+
         end
 
       else
@@ -266,7 +318,7 @@ class EncountersController < ApplicationController
         link = get_global_property_value("patient.registration.url").to_s rescue nil
 
         baby_id = baby.associate_with_mother("#{link}", "Baby #{((params[:baby].to_i - 1) rescue 1)}",
-          "#{(!mother.nil? ? (mother.names.first.family_name rescue "Unknown") : 
+          "#{(!mother.nil? ? (mother.names.first.family_name rescue "Unknown") :
           "Unknown")}", params["concept"]["Gender]"], params["concept"]["Date of delivery]"]) # rescue nil
 
         # Baby identifier
@@ -290,7 +342,7 @@ class EncountersController < ApplicationController
       redirect_to @task.next_task.url and return
 
     end
-    
+
   end
 
   def list_observations
@@ -298,13 +350,19 @@ class EncountersController < ApplicationController
 
     obs = Encounter.find(params[:encounter_id]).observations.collect{|o|
       [o.id, o.to_piped_s] rescue nil
-    }.compact 
+    }.compact
+
+    orders = Encounter.find(params[:encounter_id]).drug_orders.collect{|o|
+      [o.id, o.to_piped_s] rescue nil
+    }.compact
+
+    obs = obs + orders
 
     render :text => obs.to_json
   end
 
   def void
-    prog = ProgramEncounterDetails.find_by_encounter_id(params[:encounter_id]) rescue nil
+    prog = ProgramEncounterDetail.find_by_encounter_id(params[:encounter_id]) rescue nil
 
     unless prog.nil?
       prog.void
@@ -314,20 +372,21 @@ class EncountersController < ApplicationController
       unless encounter.nil?
         encounter.void
       end
-      
+
     end
 
-    
+
     render :text => [].to_json
   end
 
   def list_encounters
     result = []
-    
+
     program = ProgramEncounter.find(params[:program_id]) rescue nil
 
     unless program.nil?
-      result = program.program_encounter_types.find(:all, :joins => [:encounter], 
+      result = program.program_encounter_types.find(:all, :joins => [:encounter],
+        :conditions => ["encounter.voided = 0"],
         :order => ["encounter_datetime DESC"]).collect{|e|
         [
           e.encounter_id, e.encounter.type.name.titleize,
@@ -358,5 +417,17 @@ class EncountersController < ApplicationController
     render :text => "<li></li><li " + locations.map{|location| "value=\"#{location.strip}\">#{location.strip}" }.join("</li><li ") + "</li>"
 
   end
-  
+
+  def diagnoses
+
+    search_string         = (params[:search] || '').upcase
+
+    diagnosis_concepts    = Concept.find_by_name("Qech outpatient diagnosis list").concept_members.collect{|c| c.concept.fullname}.sort.uniq rescue ["Unknown"]
+
+    @results = diagnosis_concepts.collect{|e| e}.delete_if{|x| !x.upcase.match(/^#{search_string}/)}
+
+    render :text => "<li>" + @results.join("</li><li>") + "</li>"
+
+  end
+
 end

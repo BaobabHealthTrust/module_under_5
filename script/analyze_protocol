@@ -7,7 +7,7 @@ require "json"
 
 @flow = []
 
-@questions = {}
+@questions = {"order" => {}}
 
 @scope = {}
 
@@ -37,6 +37,14 @@ def expand(obj, original)
       if !obj["attributes"].nil?
 
         @questions[obj["root"]]["program"] = obj["attributes"]["program"] if !obj["attributes"]["program"].nil?
+
+        @questions[obj["root"]]["includejs"] = obj["attributes"]["includejs"] if !obj["attributes"]["includejs"].nil?
+
+        @questions[obj["root"]]["includecss"] = obj["attributes"]["includecss"] if !obj["attributes"]["includecss"].nil?
+
+        @questions[obj["root"]]["ignore"] = obj["attributes"]["ignore"] if !obj["attributes"]["ignore"].nil?
+
+        @questions[obj["root"]]["parent"] = obj["attributes"]["parent"] if !obj["attributes"]["parent"].nil?
 
         @questions[obj["root"]]["scope"] = obj["attributes"]["scope"] if !obj["attributes"]["scope"].nil?
         
@@ -142,6 +150,8 @@ end
 
 def build_page(obj)
 
+  order = {}
+
   result = "<script type='text/javascript' language='javascript'>\n" + 
     "<!--\n\t" +
     "tt_cancel_show = '/patients/show/<%= @patient.id %>?user_id=<%= @user.id %>';\n\t" +
@@ -154,9 +164,20 @@ def build_page(obj)
     "name='patient_id' value='<%= @patient.id %>' />\n\t<input type='hidden' " +
     "name='user_id' value='<%= @user.id %>' />\n\t<table>\n"
 
-  object = obj.sort
+  obj.each do |key, value|
 
-  object.each do |key, value|
+    unless value["attributes"].nil?
+      order[value["attributes"]["pos"].to_i] = key if !value["attributes"]["pos"].nil?
+    end
+
+  end
+
+  order = order.sort
+
+  order.each do |item|
+
+    key = item[1]
+    value = obj[item[1]]
 
     if key.downcase != "text" and key.downcase != "root" and key.downcase != "program" and
         key.downcase != "concept" and key.downcase != "except_concept" and key.downcase != "drug_concept" and
@@ -176,7 +197,7 @@ def build_page(obj)
         } #{(!value["attributes"].nil? ? (!value["attributes"]["helpText"].nil? ? "" :
         "helpText='#{value["question"]}'" ) : "helpText='#{value["question"]}'")}"
 
-        if !value["condition"].nil?
+        if !value["condition"].nil? and (!value["attributes"].nil? ? (value["attributes"]["condition"].nil?) : true)
           parts = value["condition"].to_s.match(/\[([^\]]+)\](\s)?([^\s|^\[]+)(\s)?\[([^\]]+)\]/)
 
           if parts
@@ -222,7 +243,7 @@ def build_page(obj)
         } #{(!value["attributes"].nil? && !value["attributes"]["helpText"].nil? ? "" :
         "helpText='#{value["question"]}'" )} "
 
-        if !value["condition"].nil?
+        if !value["condition"].nil? and (!value["attributes"].nil? ? (value["attributes"]["condition"].nil?) : true)
           parts = value["condition"].to_s.gsub(/\[/, "").gsub(/\]/, "").strip.split(" ")
 
           if parts.length == 3
@@ -399,7 +420,7 @@ Dir.foreach(File.expand_path('../../spec', __FILE__)) do |filename|
 
                     parts = term.split(":")
 
-                    @result[mline[1]][mline[3]][mline[5]][mline[7]]["attributes"][parts[0].strip] = parts[1].strip
+                    @result[mline[1]][mline[3]][mline[5]][mline[7]]["attributes"][parts[0].strip] = parts[1].strip rescue (raise parts.inspect)
 
                   end
                 end
@@ -579,6 +600,8 @@ Dir.foreach(File.expand_path('../../spec', __FILE__)) do |filename|
 
     expand(@result, @result)
 
+    # puts @questions.to_yaml
+
     @questions.each do |key, value|
 
       @flow << "#{key}" if (!value["ignore"].nil? ? (!value["ignore"].downcase == "true" ? false : true ) : true)
@@ -613,13 +636,35 @@ Dir.foreach(File.expand_path('../../spec', __FILE__)) do |filename|
 
       @special_field[(!label.nil? ? labeltxt : name)] = value["special_field"] if !value["special_field"].nil?
 
-      f = File.open("#{File.expand_path('../../app/views', __FILE__)}/protocol_patients/#{(!label.nil? ? labeltxt : name)}.rhtml", "w")
+      file = File.open("#{File.expand_path('../../app/views', __FILE__)}/protocol_patients/#{(!label.nil? ? labeltxt : name)}.rhtml", "w")
 
-      result = build_page(value)
+      result = ""
 
-      f.write(result)
+      unless value["includecss"].nil?
 
-      f.close
+        jsfiles = value["includecss"].split(";")
+
+        jsfiles.each{|c|
+          result = "#{result}<link href='/touchscreentoolkit/lib/stylesheets/#{c.strip}.css' type='text/css' rel='stylesheet' />\n\n" if !c.nil?
+        }
+
+      end
+
+      unless value["includejs"].nil?
+
+        jsfiles = value["includejs"].split(";")
+
+        jsfiles.each{|f|
+          result = "#{result}<script type='text/javascript' src='/touchscreentoolkit/lib/javascripts/#{f.strip}.js' ></script>\n\n" if !f.nil?
+        }
+        
+      end
+
+      result = result + build_page(value)
+
+      file.write(result.to_s)
+
+      file.close
 
     end
 
