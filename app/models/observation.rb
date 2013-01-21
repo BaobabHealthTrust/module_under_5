@@ -98,6 +98,14 @@ class Observation < ActiveRecord::Base
     "#{formatted_name}:  #{self.answer_string(tags)}"
   end
 
+  def to_piped_s(tags=[])
+    formatted_name = self.concept_name.typed(tags).name rescue nil
+    formatted_name ||= self.concept_name.name rescue nil
+    formatted_name ||= self.concept.concept_names.typed(tags).first.name || self.concept.fullname rescue nil
+    formatted_name ||= self.concept.concept_names.first.name rescue 'Unknown concept name'
+    "#{formatted_name}|  #{self.answer_string(tags)}"
+  end
+
   def name(tags=[])
     formatted_name = self.concept_name.tagged(tags).name rescue nil
     formatted_name ||= self.concept_name.name rescue nil

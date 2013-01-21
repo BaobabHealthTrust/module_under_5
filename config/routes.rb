@@ -53,6 +53,8 @@ ActionController::Routing::Routes.draw do |map|
 
   map.list_encounters '/list_encounters', :controller => 'encounters', :action => 'list_encounters'
 
+  map.demographic_fields '/demographic_fields', :controller => 'clinic', :action => 'demographic_fields'
+
   # The priority is based upon order of creation: first created -> highest priority.
 
   # Sample of regular route:
