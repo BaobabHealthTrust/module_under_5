@@ -10,17 +10,22 @@ next_task = @task.encounter_type.gsub('_',' ') rescue nil
 %>
 
   function showNexttask(){
+    if(__$("patient-dashboard-application") == null){
+      setTimeout("showNexttask()", 500);
+      return;
+    }
+
     if(!__$("nextTask")){
-      var pos = checkCtrl(__$("details"));
+      var pos = checkCtrl(__$("patient-dashboard-applicationname"));
       // [w, h, t, l]
 
-      var nextTask = document.createElement("nextTask");
+      var nextTask = document.createElement("div");
       nextTask.id = "nextTask";
-      nextTask.style.position = "absolute";
-      nextTask.style.left = (pos[3] + 450) + "px";
-      nextTask.style.top = (pos[2] + pos[1] - 50) + "px";
+      // nextTask.style.position = "absolute";
+      // nextTask.style.left = (pos[3] + (pos[0]/2) - (270/2)) + "px";
+      // nextTask.style.top = (pos[1] + 40) + "px";
 
-      document.body.appendChild(nextTask);
+      __$("patient-dashboard-application").appendChild(nextTask);
     }
 
     __$("nextTask").innerHTML = "<b>Next Task:</b><br /><i><%= next_task.titleize %></i>";
@@ -29,7 +34,7 @@ next_task = @task.encounter_type.gsub('_',' ') rescue nil
 <% if !next_task.nil? %>
     setTimeout("showNexttask()", 500);
 <% end %>
-  
+
 </script>
 
 <style type="text/css">
@@ -71,16 +76,19 @@ next_task = @task.encounter_type.gsub('_',' ') rescue nil
     z-index: 100;
     text-align: center;
     -moz-user-select: none;
+    margin-top: 5px;
+    margin-left: auto;
+    margin-right: auto;
   }
 </style>
 
-<div id='content'>
+<div id='contented'>
   <div id='description' style='color:#777;position:absolute;margin-top:-70px;'>
     <form id = 'dashboard' action='home.html'>
       <div>Patient Dashboard</div>
       <div id='project_name'>
-        <div style="margin-top: 0px; color: #6281A7; font-size: 0.5em;">
-          <%= @project %>
+        <div style="margin-top: 0px; color: #6281A7; font-size: 0.55em;">
+          <%= @project.split(" ").join("<br />") %>
         </div>
       </div>
       <span id='patient_name'>
@@ -88,7 +96,7 @@ next_task = @task.encounter_type.gsub('_',' ') rescue nil
       </span>
       <span id='patient_id'><%= "#{@patient.national_id}" %></span>
       <span id='patient_residence'><%= "#{@patient.address}" %></span>
-      <span id='patient_age'><%= "#{@patient.age}" %></span>
+      <span id='patient_age'><%= "#{(@patient.age > 0 ? @patient.age : "#{@patient.age_in_months} months")}" %></span>
       <span id='patient_gender'><%= "#{@patient.gender}" %></span>
       <select id="tabs">
         <option value='/patients/current_visit/<%= @patient.id %>?user_id=<%= @user.id %>'>Current Visit</option>
@@ -98,9 +106,28 @@ next_task = @task.encounter_type.gsub('_',' ') rescue nil
 
         <% @links.each do |encounter, link| %>
 
-          <option value='<%= link %>'>
-            <%= (!@task.labels[encounter.downcase].nil? ? @task.labels[encounter.downcase] : encounter) %>
-          </option>
+          <% unless @links[encounter].class.to_s.upcase == "HASH" %>
+
+            <optgroup value='<%= link %>' label="<%= (!@task.labels[encounter.downcase].nil? ?
+                          @task.labels[encounter.downcase] : encounter) %>" >
+            </optgroup>
+
+          <% else %>
+
+            <optgroup label="<%= (!@task.labels[encounter.downcase].nil? ?
+                          @task.labels[encounter.downcase] : encounter) %>" >
+
+              <% link.each do |label, path| %>
+
+                          <option value="<%= path %>">
+                            <%= label %>
+                          </option>
+
+              <% end %>
+
+            </optgroup>
+
+          <% end %>
 
         <% end %>
 

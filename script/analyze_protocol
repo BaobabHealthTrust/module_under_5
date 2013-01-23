@@ -5,6 +5,8 @@ require "json"
 
 @pages = []
 
+@subpages = {}
+
 @flow = []
 
 @questions = {"order" => {}}
@@ -41,6 +43,10 @@ def expand(obj, original)
         @questions[obj["root"]]["includejs"] = obj["attributes"]["includejs"] if !obj["attributes"]["includejs"].nil?
 
         @questions[obj["root"]]["includecss"] = obj["attributes"]["includecss"] if !obj["attributes"]["includecss"].nil?
+
+        @questions[obj["root"]]["pos"] = obj["attributes"]["pos"] if !obj["attributes"]["pos"].nil?
+
+        @questions[obj["root"]]["parent"] = obj["attributes"]["parent"] if !obj["attributes"]["parent"].nil?
 
         @questions[obj["root"]]["ignore"] = obj["attributes"]["ignore"] if !obj["attributes"]["ignore"].nil?
 
@@ -624,7 +630,18 @@ Dir.foreach(File.expand_path('../../spec', __FILE__)) do |filename|
 
       @written["#{(!label.nil? ? labeltxt : name)}"] = true
 
-      @pages << "#{(!label.nil? ? labeltxt : name)}" if (value["ignore"].downcase != "true" rescue true)
+      @pages << [value["pos"].to_i, "#{(!label.nil? ? labeltxt : name)}"] if (value["ignore"].downcase != "true" rescue true) and
+        (value["parent"].nil?)
+
+      unless value["parent"].nil?
+        unless @subpages[value["parent"].to_i].nil?
+          @subpages[value["parent"].to_i] << [value["pos"].to_i, "#{(!label.nil? ? 
+            labeltxt : name)}"] if (value["ignore"].downcase != "true" rescue true)
+        else
+          @subpages[value["parent"].to_i] = [[value["pos"].to_i, "#{(!label.nil? ? 
+              labeltxt : name)}"]] if (value["ignore"].downcase != "true" rescue true)
+        end
+      end
 
       @scope[(!label.nil? ? labeltxt : name)] = value["scope"] rescue "TODAY"
 
@@ -676,14 +693,27 @@ Dir.foreach(File.expand_path('../../spec', __FILE__)) do |filename|
 
 end
 
-# puts @scope.inspect
+# @subpages.inspect
 
 # puts "\n#{@pages.inspect}\n\n"
 
 s = File.open("#{File.expand_path('../../config', __FILE__)}/protocol_task_flow.yml", "w")
 
 string = "\nproduction:\r\n" +
-  "  clinical.encounters.sequential.list: " + @pages.collect{|p| p.gsub(/_/, " ").upcase}.join(",") + "\r\n" +
+  "  clinical.encounters.sequential.list: " + @pages.sort.collect{|p| 
+  unless @subpages[p[0]].nil?
+    @subpages[p[0].to_i].sort.collect{|i| i[1].gsub(/_/, " ").upcase}.join(",")
+  else
+    p[1].gsub(/_/, " ").upcase
+  end
+}.join(",") + "\r\n" +
+  "  clinical.encounters.display.list: " + @pages.sort.collect{|p|
+  unless @subpages[p[0].to_i].nil?
+    p[1].gsub(/_/, " ").upcase + "|" + @subpages[p[0]].sort.collect{|i| i[1].gsub(/_/, " ").upcase}.join(",")
+  else
+    p[1].gsub(/_/, " ").upcase
+  end
+}.join(";") + "\r\n" +
   "  scope: " + @scope.collect { |k,v| "#{k.gsub(/_/, " ").upcase}|#{v}" }.join(",") +
   (!@concept.empty? ? "\r\n" +
     "  concept: " + @concept.collect { |k,v| "#{k.gsub(/_/, " ").upcase}|#{v}" }.join(",")  : "") +
@@ -696,7 +726,20 @@ string = "\nproduction:\r\n" +
   (!@label.empty? ? "\r\n" +
     "  label: " + @label.collect { |k,v| "#{k.gsub(/_/, " ").upcase}|#{v}" }.join(",")  : "") +
   "\r\n\r\ndevelopment:\r\n" +
-  "  clinical.encounters.sequential.list: " + @pages.collect{|p| p.gsub(/_/, " ").upcase}.join(",") + "\r\n" +
+  "  clinical.encounters.sequential.list: " + @pages.sort.collect{|p|
+  unless @subpages[p[0]].nil?
+    @subpages[p[0].to_i].sort.collect{|i| i[1].gsub(/_/, " ").upcase}.join(",")
+  else
+    p[1].gsub(/_/, " ").upcase
+  end
+}.join(",") + "\r\n" +
+  "  clinical.encounters.display.list: " + @pages.sort.collect{|p|
+  unless @subpages[p[0]].nil?
+    p[1].gsub(/_/, " ").upcase + "|" + @subpages[p[0].to_i].sort.collect{|i| i[1].gsub(/_/, " ").upcase}.join(",")
+  else
+    p[1].gsub(/_/, " ").upcase
+  end
+}.join(";") + "\r\n" +
   "  scope: " + @scope.collect { |k,v| "#{k.gsub(/_/, " ").upcase}|#{v}" }.join(",") +
   (!@concept.empty? ? "\r\n" +
     "  concept: " + @concept.collect { |k,v| "#{k.gsub(/_/, " ").upcase}|#{v}" }.join(",")  : "") +
@@ -709,7 +752,20 @@ string = "\nproduction:\r\n" +
   (!@label.empty? ? "\r\n" +
     "  label: " + @label.collect { |k,v| "#{k.gsub(/_/, " ").upcase}|#{v}" }.join(",")  : "") +
   "\r\n\r\ntest: &TEST\r\n" +
-  "  clinical.encounters.sequential.list: " + @pages.collect{|p| p.gsub(/_/, " ").upcase}.join(",") + "\r\n" +
+  "  clinical.encounters.sequential.list: " + @pages.sort.collect{|p|
+  unless @subpages[p[0]].nil?
+    @subpages[p[0].to_i].sort.collect{|i| i[1].gsub(/_/, " ").upcase}.join(",")
+  else
+    p[1].gsub(/_/, " ").upcase
+  end
+}.join(",") + "\r\n" +
+  "  clinical.encounters.display.list: " + @pages.sort.collect{|p|
+  unless @subpages[p[0]].nil?
+    p[1].gsub(/_/, " ").upcase + "|" + @subpages[p[0].to_i].sort.collect{|i| i[1].gsub(/_/, " ").upcase}.join(",")
+  else
+    p[1].gsub(/_/, " ").upcase
+  end
+}.join(";") + "\r\n" +
   "  scope: " + @scope.collect { |k,v| "#{k.gsub(/_/, " ").upcase}|#{v}" }.join(",") +
   (!@concept.empty? ? "\r\n" +
     "  concept: " + @concept.collect { |k,v| "#{k.gsub(/_/, " ").upcase}|#{v}" }.join(",")  : "") +

@@ -20,15 +20,31 @@ class PatientsController < ApplicationController
 
     @links = {}
 
-    @task.tasks.each{|task|
+    @task.display_tasks.each{|task|
 
-      next if task.downcase == "update baby outcome" and @patient.current_babies.length == 0
+      unless task.class.to_s.upcase == "ARRAY"
 
-      @links[task.titleize] = "/protocol_patients/#{task.gsub(/\s/, "_")}?patient_id=#{
-      @patient.id}&user_id=#{params[:user_id]}" + (task.downcase == "update baby outcome" ?
-          "&baby=1&baby_total=#{@patient.current_babies.length}" : "")
-      
+        next if task.downcase == "update baby outcome" and @patient.current_babies.length == 0
+
+        @links[task.titleize] = "/protocol_patients/#{task.gsub(/\s/, "_").downcase}?patient_id=#{
+        @patient.id}&user_id=#{params[:user_id]}" + (task.downcase == "update baby outcome" ?
+            "&baby=1&baby_total=#{@patient.current_babies.length}" : "")
+
+      else
+
+        @links[task[0].titleize] = {}
+
+        task[1].each{|t|
+          @links[task[0].titleize][t.titleize] = "/protocol_patients/#{t.gsub(/\s/, "_").downcase}?patient_id=#{
+          @patient.id}&user_id=#{params[:user_id]}" + (t.downcase == "update baby outcome" ?
+              "&baby=1&baby_total=#{@patient.current_babies.length}" : "")
+        }
+
+      end
+            
     }
+
+    # raise @links.inspect
 
     @project = get_global_property_value("project.name") rescue "Unknown"
 
