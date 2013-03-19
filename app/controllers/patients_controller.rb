@@ -37,7 +37,7 @@ class PatientsController < ApplicationController
     if !@demographics_url.nil?
       @demographics_url = @demographics_url + "/demographics/#{@patient.id}?user_id=#{@user.id}&ext=true"
     end
-
+		@demographics_url = "http://" + @demographics_url if (!@demographics_url.match(/http:/) rescue false)
     @task.next_task
 
     @babies = @patient.current_babies rescue []
