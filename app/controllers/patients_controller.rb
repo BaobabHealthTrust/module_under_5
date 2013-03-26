@@ -32,7 +32,7 @@ class PatientsController < ApplicationController
 
     @project = get_global_property_value("project.name") rescue "Unknown"
 
-    @demographics_url = get_global_property_value("patient.registation.url") rescue nil
+    @demographics_url = get_global_property_value("patient.registration.url") rescue nil
 
     if !@demographics_url.nil?
       @demographics_url = @demographics_url + "/demographics/#{@patient.id}?user_id=#{@user.id}&ext=true"
