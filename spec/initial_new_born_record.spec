@@ -64,9 +64,9 @@ O.1.13.2. Abnormal
 O.1.13.3. Other
 Q.1.13.3.1. Specify rectum abnormality [concept: Specify, tt_onLoad: __$("nextButton").style.display = "block", pos: 21]
 
-Q.1.14. Observation on suckling reflex [pos: 22, tt_onLoad: __$("nextButton").style.display = "block"]
+Q.1.14. Observation on suckling reflex [pos: 22, tt_onLoad: __$("nextButton").style.display = "block"; __$("nextButton").innerHTML = "<span>Finish</span>"]
 O.1.14.1. Normal
 O.1.14.2. Abnormal
 O.1.14.3. Other
-Q.1.14.3.1. Specify suckling reflex abnormality [concept: Specify, tt_onLoad: __$("nextButton").style.display = "block", pos: 23]
+Q.1.14.3.1. Specify suckling reflex abnormality [concept: Specify, pos: 23]
 

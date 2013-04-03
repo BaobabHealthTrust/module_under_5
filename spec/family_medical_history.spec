@@ -4,7 +4,7 @@ Q.1.1. Has family a history of allergies? [pos: 0, tt_requirenextclick: false, t
 O.1.1.1. Yes
 O.1.1.2. No
 
-Q.1.2. has the family a history of mental disorders? [pos: 1, tt_requirenextclick: false, tt_onLoad: __$("nextButton").style.display = "none"]
+Q.1.2. Has the family a history of mental disorders? [pos: 1, tt_requirenextclick: false, tt_onLoad: __$("nextButton").style.display = "none"]
 O.1.2.1. Yes
 O.1.2.2. No
 

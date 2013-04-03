@@ -24,7 +24,7 @@ Q.1.6. Child ever had a mental disorder? [pos: 5, tt_requirenextclick: false, tt
 O.1.6.1. Yes
 O.1.6.2. No
 
-Q.1.7. Child ever had a pneumonia? [pos: 6, tt_requirenextclick: false, tt_onLoad: __$("nextButton").style.display = "none"]
+Q.1.7. Child ever had pneumonia? [pos: 6, concept: Child ever had a pneumonia?,  tt_requirenextclick: false, tt_onLoad: __$("nextButton").style.display = "none"]
 O.1.7.1. Yes
 O.1.7.2. No
 
