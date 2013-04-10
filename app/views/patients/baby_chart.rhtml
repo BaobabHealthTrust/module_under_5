@@ -1,0 +1,227 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+    <link rel="stylesheet" href="/touchscreentoolkit/lib/stylesheets/touch-fancy.css" type="text/css" />
+    <link rel="stylesheet" href="/touchscreentoolkit/lib/stylesheets/form.css" type="text/css" />
+    <style type="text/css">
+
+
+      .buttonDiv {
+        position: absolute;
+        background-color: #333333;
+        display: block;
+        height: 82px;
+        width:  100%;
+        bottom: 0px;
+      }
+
+      #myCanvas {
+        margin: 0px;
+      }
+
+      #chartBorder{
+        border-style: solid;
+        border-width: 1px;
+        height: 450px;
+        width: 900px;
+        margin-top: 10px;
+        margin-bottom: 30px;
+        margin-left: 35px;
+        margin-right: 20px;
+      }
+
+      #boundary{
+        background: #0066FF;
+        width: 955px;
+        height:	490px;
+        padding-top: 10px;
+        padding-bottom: 30px;
+        padding-left: 35px;
+        padding-right: 20px;
+        margin: 40px;
+
+      }
+
+      #y-label{
+        color: white;
+        position: absolute;
+        -moz-transform: rotate(-90deg);
+        text-align: center;
+        vertical-align: middle;
+        left: 25px;
+        top: 40%;
+      }
+
+    </style>
+
+    <script type="text/javascript">
+      tt_cancel_destination = "/patients/charts/<%= params[:patient_id]%>?user_id=<%=params[:user_id]%>&patient_id=<%=params[:patient_id]%>"
+    </script>
+  </head>
+  <body id="mateme">
+
+    <div id = "boundary">
+      <div id="y-label">
+        Weight (kg)
+      </div>
+      <div id = "chartBorder" >
+
+        <canvas id="myCanvas" width="900" height="450"></canvas><br/>
+
+        <div id = "x-axis-cal" width = "900" height = "15" style ="max-width: 900; overflow: hidden; color: white; vertical-align: top; font-size: 0.7em;">
+          <span></span>
+        </div>
+
+        <div width = "900" style ="position: relative; margin-top: 15px; color: white; text-align: center;" >
+
+				Age (completed months)
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <div id="footer" class="buttonDiv">
+      <!--div id="buttons" class="buttonDiv"-->
+      <button id="finishButton" class="button navButton green"
+              onclick="if (tt_cancel_destination) window.location = tt_cancel_destination;">
+        <span>Finish</span>
+      </button>
+      <!--/div-->
+      <div id="tt_extraButtons"/>
+    </div>
+
+    </div>
+
+    <script type="text/javascript">
+
+      CanvasRenderingContext2D.prototype.dashedLine = function(x1, y1, x2, y2, dashLen) {
+        if (dashLen == undefined) dashLen = 2;
+
+        this.beginPath();
+        this.moveTo(x1, y1);
+
+        var dX = x2 - x1;
+        var dY = y2 - y1;
+        var dashes = Math.floor(Math.sqrt(dX * dX + dY * dY) / dashLen);
+        var dashX = dX / dashes;
+        var dashY = dY / dashes;
+
+        var q = 0;
+        while (q++ < dashes) {
+          x1 += dashX;
+          y1 += dashY;
+          this[q % 2 == 0 ? 'moveTo' : 'lineTo'](x1, y1);
+        }
+        this[q % 2 == 0 ? 'moveTo' : 'lineTo'](x2, y2);
+
+        this.stroke();
+        this.closePath();
+      };
+
+      var objCanvas = document.getElementById("myCanvas");
+      var objContext = objCanvas.getContext("2d");
+      var intGridWidth = Math.floor(objCanvas.width/60);
+      var intGridHeight = Math.floor(objCanvas.height/64);
+
+
+      function drawBackground(){
+
+
+        objContext.clearRect(0, 0, objCanvas.width, objCanvas.height);
+
+
+        objContext.fillStyle = 'white';
+        objContext.fillRect(0, 0, objCanvas.width, objCanvas.height);
+
+        objContext.strokeStyle = "black";
+
+        for (var i = 1; i < objCanvas.width / intGridWidth; i++ )
+        {
+          var x = Math.floor(i*intGridWidth)+0.5;
+          if(i%12 != 0){
+            objContext.dashedLine(x, 0, x, objCanvas.height);
+          }else{
+            objContext.moveTo(x, 0);
+            objContext.lineTo(x, objCanvas.height);
+            objContext.stroke();
+          }
+        }
+
+        for (var i = 1; i < (objCanvas.height / intGridHeight)-1; i++)
+        {
+          var y = Math.floor(i*intGridHeight)+0.5
+          if(i%4 != 0){
+            //objContext.moveTo(0, y);
+            //objContext.lineTo(objCanvas.height, 0);
+            //objContext.moveTo(0, y);
+            //objContext.lineTo(y, objCanvas.height);
+            //objContext.moveTo(y, 0);
+            //objContext.lineTo(objCanvas.height, y);
+            //objContext.stroke();
+            objContext.dashedLine(0, y, objCanvas.width, y);
+          }else{
+            objContext.moveTo(0, y);
+            objContext.lineTo(objCanvas.width, y);
+            objContext.stroke();
+          }
+        }
+
+      }
+      drawBackground();
+
+      var xaxisCalibrations = "";
+
+      for (i = 0; i < 60; i ++){
+
+        xaxisCalibrations += " " + ((i%12==0)? "<span style= 'font-weight: bold;'>" + pad(i) + "</span>" : pad(i));
+
+      }
+
+      document.getElementById("x-axis-cal").innerHTML = xaxisCalibrations;
+
+      var objImage = new Image();
+      objImage.src = "weightChart.png";
+
+      objContext.drawImage(objImage, 750, 400);
+
+      function pad(num){
+        return (num < 10)? ((num == 0)? "&nbsp&nbsp": "0" + num) : num
+      }
+
+      function getMousePos(objCanvas, evt){
+
+        var objContext = objCanvas;
+        var dblTop = 0;
+        var dblLeft = 0;
+        while (objContext && objContext.tagName != 'BODY') {
+          dblTop += objContext.offsetTop;
+          dblLeft += objContext.offsetLeft;
+          objContext = objContext.offsetParent;
+        }
+
+        var dblX = evt.clientX - dblLeft + window.pageXOffset;
+        var dblY = evt.clientY - dblTop + window.pageYOffset;
+        return {
+          x: dblX,
+          y: dblY
+        };
+      }
+
+      objCanvas.addEventListener('click', function(evt){
+
+        var mousePos = getMousePos(objCanvas, evt);
+
+        drawBackground();
+
+        objContext.drawImage(objImage, mousePos.x - (objImage.width / 2), mousePos.y - (objImage.height / 2));
+
+      })
+
+    </script>
+  </body>
+</html>
+

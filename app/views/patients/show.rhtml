@@ -214,6 +214,8 @@ next_task = @task.encounter_type.gsub('_',' ') rescue nil
         <% if @task.url != "/patients/show/#{@patient.id}?user_id=#{@user.id}" %>
           <option link="<%= @task.url  %>" ttSize = "160px">Continue</option>
         <% end %>
+        <%id = params[:id] || params[:patient_id]%>
+         <option link="/patients/charts?patient_id=<%= id %>&user_id=<%=params[:user_id]%>" ttSize = "160px">Charts</option>
 
       </select>
 
