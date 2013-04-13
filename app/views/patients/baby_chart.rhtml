@@ -3,8 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
   <head>
     <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
-    <link rel="stylesheet" href="/touchscreentoolkit/lib/stylesheets/touch-fancy.css" type="text/css" />
-    <link rel="stylesheet" href="/touchscreentoolkit/lib/stylesheets/form.css" type="text/css" />
+
     <style type="text/css">
 
 
@@ -33,7 +32,6 @@
       }
 
       #boundary{
-        background: #0066FF;
         width: 955px;
         height:	490px;
         padding-top: 10px;
@@ -54,18 +52,39 @@
         top: 40%;
       }
 
+      #y-axis-cal{
+        color: white;
+        position: absolute;       
+        text-align: left;        
+        left: 85px;
+        padding-left: 0px;
+        top: 53px;
+      }
+
+      .y_cal{
+        min-height: 28px;
+      }
+
+
+
     </style>
 
     <script type="text/javascript">
-      tt_cancel_destination = "/patients/charts/<%= params[:patient_id]%>?user_id=<%=params[:user_id]%>&patient_id=<%=params[:patient_id]%>"
+      tt_cancel_destination = "/patients/show/<%=params[:patient_id]%>?user_id=<%=params[:user_id]%>&patient_id=<%=params[:patient_id]%>"
     </script>
   </head>
   <body id="mateme">
 
     <div id = "boundary">
-      <div id="y-label">
-        Weight (kg)
+
+      <div id = "y-axis-cal">
+
       </div>
+
+      <div id="y-label">
+        Weight (kg) 
+      </div>
+
       <div id = "chartBorder" >
 
         <canvas id="myCanvas" width="900" height="450"></canvas><br/>
@@ -79,6 +98,13 @@
 				Age (completed months)
 
         </div>
+
+
+        <input id ="L" type="hidden"/>
+
+        <input id ="M" type="hidden"/>
+
+        <input id ="S" type="hidden"/>
 
       </div>
 
@@ -126,19 +152,42 @@
       var objContext = objCanvas.getContext("2d");
       var intGridWidth = Math.floor(objCanvas.width/60);
       var intGridHeight = Math.floor(objCanvas.height/64);
+      var check = false;
+      var result = "";
+      
+      var file = "<%= @file.join(":") %>"
+     
+      var aUrl = "/patients/chart_values?user_id=<%= params[:user_id]%>&type=standard_curve&field_type=file&gender=M&age=0"
 
+      function request(file, type, params_type, age){
+        //hack into the requested line
+        var file_array = file.split(":")
+        var request_line = "";
+        var header = file_array[0]
+        return_string = [age];
+        
+        for ( line = 0; line < file_array.length; line ++){
+          if (file_array[line].split(",")[0] == age){
+            request_line = file_array[line]
+          }
+        }
 
+        if (type == "standard_curve"){
+          pars = params_type.split(",");
+          for(i = 0; i < pars.length; i++){
+            line_arr = request_line.split(",");
+            header_arr = header.split(",");
+            index = header_arr.indexOf(pars[i]);
+            return_string.push(line_arr[index]);
+          }
+        }
+        return_string = return_string.join(",")
+       
+        return return_string
+      }
+    
       function drawBackground(){
-
-
-        objContext.clearRect(0, 0, objCanvas.width, objCanvas.height);
-
-
-        objContext.fillStyle = 'white';
-        objContext.fillRect(0, 0, objCanvas.width, objCanvas.height);
-
-        objContext.strokeStyle = "black";
-
+       
         for (var i = 1; i < objCanvas.width / intGridWidth; i++ )
         {
           var x = Math.floor(i*intGridWidth)+0.5;
@@ -155,13 +204,6 @@
         {
           var y = Math.floor(i*intGridHeight)+0.5
           if(i%4 != 0){
-            //objContext.moveTo(0, y);
-            //objContext.lineTo(objCanvas.height, 0);
-            //objContext.moveTo(0, y);
-            //objContext.lineTo(y, objCanvas.height);
-            //objContext.moveTo(y, 0);
-            //objContext.lineTo(objCanvas.height, y);
-            //objContext.stroke();
             objContext.dashedLine(0, y, objCanvas.width, y);
           }else{
             objContext.moveTo(0, y);
@@ -169,25 +211,9 @@
             objContext.stroke();
           }
         }
-
       }
-      drawBackground();
-
-      var xaxisCalibrations = "";
-
-      for (i = 0; i < 60; i ++){
-
-        xaxisCalibrations += " " + ((i%12==0)? "<span style= 'font-weight: bold;'>" + pad(i) + "</span>" : pad(i));
-
-      }
-
-      document.getElementById("x-axis-cal").innerHTML = xaxisCalibrations;
-
-      var objImage = new Image();
-      objImage.src = "weightChart.png";
-
-      objContext.drawImage(objImage, 750, 400);
-
+      curve();
+     
       function pad(num){
         return (num < 10)? ((num == 0)? "&nbsp&nbsp": "0" + num) : num
       }
@@ -214,13 +240,184 @@
       objCanvas.addEventListener('click', function(evt){
 
         var mousePos = getMousePos(objCanvas, evt);
-
+       
         drawBackground();
 
         objContext.drawImage(objImage, mousePos.x - (objImage.width / 2), mousePos.y - (objImage.height / 2));
 
       })
+      
+      function calculateHeight(L, M, S, Z){
+      
+        if (L != 0){
+          return (M * ( Math.pow(( 1 + L * S * Z ), (1/L))));
+        }else if(L == 0){
+          return Math.pow(M, S * Z);
+        }else{
+          
+        }
+      }
 
+      function standardCurve(z, fill){
+        var result = "";
+        var response = [];
+        for (age = 0; age <= 60; age++){
+          result = request(file, "standard_curve", "L,M,S", age);
+          response = result.split(",");
+          drawBabyCurve(response, z, fill);
+        }
+      }
+
+      function drawBabyCurve(response, zed, fill){
+        age = response[0];
+        L = response[1];
+        M = response[2];
+        S = response[3];
+
+        if (response.length > 0){
+
+          weight = calculateHeight(L, M, S, zed);
+         
+          if(age == 0){
+            if (zed == 3 || zed == -3){
+              objContext.strokeStyle = '#ff0000';
+            }else if (zed == 2 || zed == -2){
+              objContext.strokeStyle = 'green';
+            }else if (zed == 0){
+              objContext.strokeStyle = 'black';
+            }
+          }
+          
+          graphToPoint(age,  weight, fill);
+         
+        }
+      }
+
+      function graphToPoint(age, weight, fill){
+
+        y_scale = objCanvas.height/32;
+        x_scale = objCanvas.width/60;
+
+        y = objCanvas.height - y_scale * weight;
+       
+        x = x_scale * age;
+ 
+        if (age == 0 ){
+          
+          objContext.moveTo(0, y);
+        }
+        
+        objContext.lineTo(x,y);
+        if (fill != "false"){
+          objContext.stroke();
+        }
+         
+      }
+
+      function updateChartGenderColorMatch(){
+       
+        gender = "<%= @baby.gender%>";
+        
+        document.getElementById("boundary").style.background = gender.match(/F/i)? "#CC0055": "#0066FF";
+
+
+      }
+
+      function curve(){
+        objContext.clearRect(0, 0, objCanvas.width, objCanvas.height);
+
+        objContext.fillStyle = 'white';
+
+        objContext.fillRect(0, 0, objCanvas.width, objCanvas.height);
+
+        objContext.strokeStyle = "black";
+
+        var xaxisCalibrations = "";
+
+        for (i = 0; i < 60; i ++){
+
+          xaxisCalibrations += " " + ((i%12==0)? "<span style= 'font-weight: bold;'>" + pad(i) + "</span>" : pad(i));
+
+        }
+
+        document.getElementById("x-axis-cal").innerHTML = xaxisCalibrations;
+        
+        var yaxisCalibrations = "";
+
+        for (var n = 32; n >= 0; n --){
+
+          yaxisCalibrations += " " + ((n%2 == 0)? "<div class='y_cal' style = 'color=white;font-size:0.9em;'>" + n + "</div>" : "")
+
+        }
+       
+        document.getElementById("y-axis-cal").innerHTML = yaxisCalibrations;
+        
+       
+
+        updateChartGenderColorMatch();
+        var objImage = new Image();
+        objImage.src = "weightChart.png";
+
+        objContext.drawImage(objImage, 900, 450);
+
+        colorChart(3, -3, "yellow");
+        resetPath();
+        colorChart(2, -2, "yellowgreen");
+        
+        resetPath();
+        standardCurve(3);
+        resetPath();
+        standardCurve(-3);
+        resetPath();
+        standardCurve(2);
+        resetPath();
+        standardCurve(-2);
+        resetPath();
+        standardCurve(0);
+        resetPath();
+        drawBackground();
+      }
+     
+      function colorChart(z1, z2, color){
+
+        objContext.fillStyle = color;
+       
+        standardCurve(z1, "false");
+        
+        result = request(file, "standard_curve", "L,M,S", 0);
+        response = result.split(",");
+        weight = calculateHeight(response[1], response[2], response[3], z1);
+         
+        pH = objCanvas.height - weight*(objCanvas.height/32);
+       
+        objContext.moveTo(0, pH);
+      
+        result = request(file, "standard_curve", "L,M,S", 0);
+        response = result.split(",");
+        weight = calculateHeight(response[1], response[2], response[3], z2);
+        pW = objCanvas.height - weight*(objCanvas.height/32)
+        objContext.lineTo(0, pW)
+       
+        standardCurve(z2, "false");
+
+        result = request(file, "standard_curve", "L,M,S", 60);
+        response = result.split(",");
+        weight = calculateHeight(response[1], response[2], response[3], z1);
+        pT = objCanvas.height - weight*(objCanvas.height/32)
+        
+        objContext.lineTo(objCanvas.width, pT)
+        objContext.lineTo(0, pH)
+        objContext.closePath();
+       
+        objContext.fill();
+        
+      }
+
+      function resetPath(){
+        objContext.closePath();
+        objContext.beginPath();
+      }
+      
     </script>
   </body>
 </html>

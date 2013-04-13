@@ -127,20 +127,27 @@ class PatientsController < ApplicationController
     render :text => (count.first.to_i > 0 ? {params[:date] => count}.to_json : 0)
   end
 
-  def charts
-    
-    @patient = Patient.find(params[:id] || params[:patient_id]) rescue nil
-
-    @children = Relationship.find(:all, :conditions => ["person_b = ? AND relationship = ? AND voided = 0",
-        @patient.id, RelationshipType.find_by_b_is_to_a("Parent").id])
-
-    @demographics_url = get_global_property_value("patient.registration.url") rescue nil
-    
-  end
-
   def baby_chart   
-    
+
     @patient = Patient.find(params[:id] || params[:patient_id]) rescue nil
+    @baby = Patient.find(params[:baby_id])
+
+    if (@baby.gender.downcase == "f")
+      file =  File.open(RAILS_ROOT + "/public/data/weight_for_age_girls.txt", "r")
+    elsif (@baby.gender.downcase == "m")
+      file =  File.open(RAILS_ROOT + "/public/data/weight_for_age_boys.txt", "r")
+    end
+    @file = []
+    
+    file.each{ |parameters|
+
+      line = parameters  
+      line = line.split(" ").join(",")
+      @file << line 
+
+    }
+
+    #get available weights
    
   end
   
