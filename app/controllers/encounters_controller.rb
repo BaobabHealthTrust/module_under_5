@@ -1,6 +1,10 @@
 
 class EncountersController < ApplicationController
 
+	before_filter :check_user, :except => [:missing_program, :static_locations,
+		  :missing_concept, :no_user, :no_patient, :check_role_activities,
+		  :missing_encounter_type, :diagnoses]
+
   def create
 
     User.current = User.find(@user["user_id"]) rescue nil

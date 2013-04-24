@@ -1,6 +1,8 @@
 
 class ProtocolPatientsController < ApplicationController
 
+	before_filter :check_user
+
 	def assessment
 
 	@patient = Patient.find(params[:patient_id]) rescue nil

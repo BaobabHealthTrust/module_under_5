@@ -61,8 +61,28 @@
         top: 53px;
       }
 
+      #y2-axis-cal{
+        color: white;
+        position: absolute;    
+        text-align: right;
+        padding-right: 0px;       
+        left: 1025px;      
+        bottom: 220px;
+      }
+
+      #x-years{
+        width: 100%;
+        position: absolute;
+        color: white;
+        font-size: 13px;        
+      }
+
       .y_cal{
         min-height: 28px;
+      }
+
+      .x5{
+        margin-right: -15px;
       }
 
 
@@ -93,9 +113,18 @@
           <span></span>
         </div>
 
-        <div width = "900" style ="position: relative; margin-top: 15px; color: white; text-align: center;" >
+        <div id ="x-years" >
 
+        </div>
+
+        <div width = "900" style ="position: relative; padding-bottom: 1px; margin-top: 15px; color: white; text-align: center;" >
 				Age (completed months)
+        </div>
+
+        <div id = "y2-axis-cal">
+        </div>
+
+        <div width = "900" style ="position: relative; margin-top: 15px; color: white; text-align: center;" >
 
         </div>
 
@@ -156,6 +185,17 @@
       var result = "";
       
       var file = "<%= @file.join(":") %>"
+      var weights = "<%= @weights.join(":")%>"
+      weights = weights.split(":")
+      weights_arr = []
+      weights_hash = {}
+
+      for (var i = 0; i < weights.length; i ++){
+        weights_arr.push(weights[i].split(",")[0])
+        weights_hash[weights[i].split(",")[0]] = weights[i].split(",")[1]       
+      }
+
+     
      
       var aUrl = "/patients/chart_values?user_id=<%= params[:user_id]%>&type=standard_curve&field_type=file&gender=M&age=0"
 
@@ -240,9 +280,7 @@
       objCanvas.addEventListener('click', function(evt){
 
         var mousePos = getMousePos(objCanvas, evt);
-       
-        drawBackground();
-
+        
         objContext.drawImage(objImage, mousePos.x - (objImage.width / 2), mousePos.y - (objImage.height / 2));
 
       })
@@ -289,6 +327,8 @@
           }
           
           graphToPoint(age,  weight, fill);
+
+          //plot z-score value
          
         }
       }
@@ -323,6 +363,30 @@
 
       }
 
+      function babyWeightsCurve(){
+     
+        y_scale = objCanvas.height/32;
+        x_scale = objCanvas.width/(60*30);
+
+        resetPath();
+
+        for(var a = 0; a < weights_arr.length; a++){
+
+          var y = objCanvas.height - y_scale * weights_hash[weights_arr[a]];
+          var x = x_scale * weights_arr[a];
+
+          if(a == 0){
+            objContext.moveTo(x, y);
+          }
+
+          objContext.lineTo(x, y);
+          objContext.lineWidth = 2;
+          objContext.strokeStyle = "indigo";
+          objContext.stroke();
+          
+        }
+      }
+
       function curve(){
         objContext.clearRect(0, 0, objCanvas.width, objCanvas.height);
 
@@ -333,14 +397,22 @@
         objContext.strokeStyle = "black";
 
         var xaxisCalibrations = "";
+        var xaxisCalibrationsYears = "";
 
-        for (i = 0; i < 60; i ++){
+        for (ii = 0; ii < 60; ii ++){
 
-          xaxisCalibrations += " " + ((i%12==0)? "<span style= 'font-weight: bold;'>" + pad(i) + "</span>" : pad(i));
+          xaxisCalibrations += " " + ((ii%12==0)? "<span style= 'font-weight: bold;'>" + pad(ii) + "</span>" : pad(ii));
+          tenth = ii%12;
+          
+          if (tenth == 0 || ii == 59){
+            if (ii == 59){ii = 60}
+            xaxisCalibrationsYears += (ii == 0)? "<span style='margin-left: -15px; margin-right: 16%px;'> Birth </span>"  : "<span class = x" + ii/12 + " style ='margin-left: 10%; margin-right: 6px;'>" + (ii/12) + " year" + ((ii == 12)? "" : "s") + "</span>"
+          }
 
         }
 
-        document.getElementById("x-axis-cal").innerHTML = xaxisCalibrations;
+        document.getElementById("x-axis-cal").innerHTML = xaxisCalibrations;       
+        document.getElementById("x-years").innerHTML = xaxisCalibrationsYears;
         
         var yaxisCalibrations = "";
 
@@ -351,6 +423,7 @@
         }
        
         document.getElementById("y-axis-cal").innerHTML = yaxisCalibrations;
+        document.getElementById("y2-axis-cal").innerHTML = yaxisCalibrations;
         
        
 
@@ -374,8 +447,10 @@
         standardCurve(-2);
         resetPath();
         standardCurve(0);
-        resetPath();
+        resetPath();       
         drawBackground();
+        resetPath();
+        babyWeightsCurve();       
       }
      
       function colorChart(z1, z2, color){
