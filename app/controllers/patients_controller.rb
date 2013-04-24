@@ -132,9 +132,9 @@ class PatientsController < ApplicationController
     @patient = Patient.find(params[:id] || params[:patient_id]) rescue nil
     @baby = Patient.find(params[:baby_id])
 
-    if (@baby.gender.downcase == "f")
+    if (@baby.gender.downcase.match(/f/i))
       file =  File.open(RAILS_ROOT + "/public/data/weight_for_age_girls.txt", "r")
-    elsif (@baby.gender.downcase == "m")
+    else
       file =  File.open(RAILS_ROOT + "/public/data/weight_for_age_boys.txt", "r")
     end
     @file = []
@@ -148,7 +148,20 @@ class PatientsController < ApplicationController
     }
 
     #get available weights
-   
+
+    @weights = []
+    birthdate_sec = @patient.person.birthdate
+
+    ids = ConceptName.find(:all, :conditions => ["name IN (?)", ["WEIGHT", "BIRTH WEIGHT"]]).collect{|concept|
+      concept.concept_id}
+ 
+    Observation.find(:all, :conditions => ["person_id = ? AND concept_id IN (?)",
+        @patient.id, ids]).each do |ob|
+      age = ((ob.date_created.to_date - birthdate_sec).days.to_i/(60*60*24)).to_s rescue nil
+      weight = ob.answer_string rescue nil
+      
+      @weights << age + "," + weight if !age.blank? && !weight.blank?
+    end  
   end
   
 end
