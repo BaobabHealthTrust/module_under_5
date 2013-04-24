@@ -13,6 +13,7 @@ Rails::Initializer.run do |config|
   config.log_level = :debug
   config.action_controller.session_store = :active_record_store
   config.active_record.schema_format = :sql
+  config.reload_plugins = true
 
   config.action_controller.session = {
     :session_key => 'mateme_session',

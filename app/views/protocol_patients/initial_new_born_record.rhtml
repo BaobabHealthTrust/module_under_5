@@ -15,7 +15,7 @@
 				Place of birth 
 			</td>
 			<td>
-<select id='1.1' name='concept[Place of birth ]' helpText='Place of birth ' tt_requirenextclick='false'  pos='0'  tt_onLoad='__$("nextButton").style.display = "none"' >
+<select id='1.1' name='concept[Place of birth ]' helpText='Place of birth ' tt_onLoad='__$("nextButton").style.display = "none"'  tt_requirenextclick='false'  pos='0' >
 <option></option>
 <option value='Health facility'>Health facility</option>
  <option value='Home'>Home</option>
@@ -27,7 +27,7 @@
 				Birth weight in grams (g) 
 			</td>
 			<td>
-<input type='text' id='1.2'  name='concept[Birth weight]' helpText='Birth weight in grams (g) '  validationRule='^\d+\.\d+$|^Unknown$'  tt_pageStyleClass='NumbersWithUnknownAndDecimal'  pos='1'  validationMessage='Not a valid weight'  tt_onLoad='__$("nextButton").style.display = "block"'  field_type='number' />
+<input type='text' id='1.2'  name='concept[Birth weight]' helpText='Birth weight in grams (g) '  validationRule='^\d+\.\d+$|^Unknown$'  tt_onLoad='__$("nextButton").style.display = "block"'  pos='1'  tt_pageStyleClass='NumbersWithUnknownAndDecimal'  validationMessage='Not a valid weight'  field_type='number' />
 			</td>
 		</tr>
 		<tr>
@@ -35,7 +35,7 @@
 				Birth length in centimeters (cm) 
 			</td>
 			<td>
-<input type='text' id='1.3'  name='concept[Birth length]' helpText='Birth length in centimeters (cm) '  tt_pageStyleClass='NumbersWithUnknownAndDecimal'  pos='2'  tt_onLoad='__$("nextButton").style.display = "block"'  field_type='number' />
+<input type='text' id='1.3'  name='concept[Birth length]' helpText='Birth length in centimeters (cm) '  tt_onLoad='__$("nextButton").style.display = "block"'  pos='2'  tt_pageStyleClass='NumbersWithUnknownAndDecimal'  field_type='number' />
 			</td>
 		</tr>
 		<tr>
@@ -43,7 +43,7 @@
 				Head circumference 
 			</td>
 			<td>
-<input type='text' id='1.4'  name='concept[Head circumference ]' helpText='Head circumference '  tt_pageStyleClass='NumbersWithUnknownAndDecimal'  pos='3'  tt_onLoad='__$("nextButton").style.display = "block"'  field_type='number' />
+<input type='text' id='1.4'  name='concept[Head circumference ]' helpText='Head circumference '  tt_onLoad='__$("nextButton").style.display = "block"'  pos='3'  tt_pageStyleClass='NumbersWithUnknownAndDecimal'  field_type='number' />
 			</td>
 		</tr>
 		<tr>
@@ -51,7 +51,7 @@
 				Observation on eyes 
 			</td>
 			<td>
-<select id='1.5' name='concept[Observation on eyes ]' helpText='Observation on eyes ' tt_requirenextclick='false'  pos='4'  tt_onLoad='__$("nextButton").style.display = "none"' >
+<select id='1.5' name='concept[Observation on eyes ]' helpText='Observation on eyes ' tt_onLoad='__$("nextButton").style.display = "none"'  tt_requirenextclick='false'  pos='4' >
 <option></option>
 <option value='Other'>Other</option>
  <option value='Abnormal'>Abnormal</option>
@@ -64,7 +64,7 @@
 				Specify eyes abnormality 
 			</td>
 			<td>
-<input type='text' id='1.5.3.1'  name='concept[Specify]' helpText='Specify eyes abnormality '  condition='__$("1.5").value == "Other"'  pos='5'  tt_onLoad='__$("nextButton").style.display = "block"' />
+<input type='text' id='1.5.3.1'  name='concept[Specify]' helpText='Specify eyes abnormality '  condition='__$("1.5").value == "Other"'  tt_onLoad='__$("nextButton").style.display = "block"'  pos='5' />
 			</td>
 		</tr>
 		<tr>
@@ -72,7 +72,7 @@
 				Observation on mouth 
 			</td>
 			<td>
-<select id='1.6' name='concept[Observation on mouth ]' helpText='Observation on mouth ' tt_requirenextclick='false'  pos='6'  tt_onLoad='__$("nextButton").style.display = "none"' >
+<select id='1.6' name='concept[Observation on mouth ]' helpText='Observation on mouth ' tt_onLoad='__$("nextButton").style.display = "none"'  tt_requirenextclick='false'  pos='6' >
 <option></option>
 <option value='Other'>Other</option>
  <option value='Abnormal'>Abnormal</option>
@@ -85,7 +85,7 @@
 				Specify mouth abnormality 
 			</td>
 			<td>
-<input type='text' id='1.6.3.1'  name='concept[Specify]' helpText='Specify mouth abnormality '  condition='__$("1.6").value == "Other"'  pos='7'  tt_onLoad='__$("nextButton").style.display = "block"' />
+<input type='text' id='1.6.3.1'  name='concept[Specify]' helpText='Specify mouth abnormality '  condition='__$("1.6").value == "Other"'  tt_onLoad='__$("nextButton").style.display = "block"'  pos='7' />
 			</td>
 		</tr>
 		<tr>
@@ -93,7 +93,7 @@
 				Observation on umbilicus 
 			</td>
 			<td>
-<select id='1.7' name='concept[Observation on umbilicus ]' helpText='Observation on umbilicus ' tt_requirenextclick='false'  pos='8'  tt_onLoad='__$("nextButton").style.display = "none"' >
+<select id='1.7' name='concept[Observation on umbilicus ]' helpText='Observation on umbilicus ' tt_onLoad='__$("nextButton").style.display = "none"'  tt_requirenextclick='false'  pos='8' >
 <option></option>
 <option value='Other'>Other</option>
  <option value='Abnormal'>Abnormal</option>
@@ -106,7 +106,7 @@
 				Specify umbilicus abnormality 
 			</td>
 			<td>
-<input type='text' id='1.7.3.1'  name='concept[Specify]' helpText='Specify umbilicus abnormality '  condition='__$("1.7").value == "Other"'  pos='9'  tt_onLoad='__$("nextButton").style.display = "block"' />
+<input type='text' id='1.7.3.1'  name='concept[Specify]' helpText='Specify umbilicus abnormality '  condition='__$("1.7").value == "Other"'  tt_onLoad='__$("nextButton").style.display = "block"'  pos='9' />
 			</td>
 		</tr>
 		<tr>
@@ -114,7 +114,7 @@
 				Observation on fingers 
 			</td>
 			<td>
-<select id='1.8' name='concept[Observation on fingers ]' helpText='Observation on fingers ' tt_requirenextclick='false'  pos='10'  tt_onLoad='__$("nextButton").style.display = "none"' >
+<select id='1.8' name='concept[Observation on fingers ]' helpText='Observation on fingers ' tt_onLoad='__$("nextButton").style.display = "none"'  tt_requirenextclick='false'  pos='10' >
 <option></option>
 <option value='Other'>Other</option>
  <option value='Abnormal'>Abnormal</option>
@@ -127,7 +127,7 @@
 				Specify fingers abnormality 
 			</td>
 			<td>
-<input type='text' id='1.8.3.1'  name='concept[Specify]' helpText='Specify fingers abnormality '  condition='__$("1.8").value == "Other"'  pos='11'  tt_onLoad='__$("nextButton").style.display = "block"' />
+<input type='text' id='1.8.3.1'  name='concept[Specify]' helpText='Specify fingers abnormality '  condition='__$("1.8").value == "Other"'  tt_onLoad='__$("nextButton").style.display = "block"'  pos='11' />
 			</td>
 		</tr>
 		<tr>
@@ -135,7 +135,7 @@
 				Observation on toes 
 			</td>
 			<td>
-<select id='1.9' name='concept[Observation on toes ]' helpText='Observation on toes ' tt_requirenextclick='false'  pos='12'  tt_onLoad='__$("nextButton").style.display = "none"' >
+<select id='1.9' name='concept[Observation on toes ]' helpText='Observation on toes ' tt_onLoad='__$("nextButton").style.display = "none"'  tt_requirenextclick='false'  pos='12' >
 <option></option>
 <option value='Other'>Other</option>
  <option value='Abnormal'>Abnormal</option>
@@ -148,7 +148,7 @@
 				Specify toes abnormality 
 			</td>
 			<td>
-<input type='text' id='1.9.3.1'  name='concept[Specify]' helpText='Specify toes abnormality '  condition='__$("1.9").value == "Other"'  pos='13'  tt_onLoad='__$("nextButton").style.display = "block"' />
+<input type='text' id='1.9.3.1'  name='concept[Specify]' helpText='Specify toes abnormality '  condition='__$("1.9").value == "Other"'  tt_onLoad='__$("nextButton").style.display = "block"'  pos='13' />
 			</td>
 		</tr>
 		<tr>
@@ -156,7 +156,7 @@
 				Observation on feet 
 			</td>
 			<td>
-<select id='1.10' name='concept[Observation on feet ]' helpText='Observation on feet ' tt_requirenextclick='false'  pos='14'  tt_onLoad='__$("nextButton").style.display = "none"' >
+<select id='1.10' name='concept[Observation on feet ]' helpText='Observation on feet ' tt_onLoad='__$("nextButton").style.display = "none"'  tt_requirenextclick='false'  pos='14' >
 <option></option>
 <option value='Other'>Other</option>
  <option value='Abnormal'>Abnormal</option>
@@ -169,7 +169,7 @@
 				Specify feet abnormality 
 			</td>
 			<td>
-<input type='text' id='1.10.3.1'  name='concept[Specify]' helpText='Specify feet abnormality '  condition='__$("1.10").value == "Other"'  pos='15'  tt_onLoad='__$("nextButton").style.display = "block"' />
+<input type='text' id='1.10.3.1'  name='concept[Specify]' helpText='Specify feet abnormality '  condition='__$("1.10").value == "Other"'  tt_onLoad='__$("nextButton").style.display = "block"'  pos='15' />
 			</td>
 		</tr>
 		<tr>
@@ -177,7 +177,7 @@
 				Observation on spine 
 			</td>
 			<td>
-<select id='1.11' name='concept[Observation on spine ]' helpText='Observation on spine ' tt_requirenextclick='false'  pos='16'  tt_onLoad='__$("nextButton").style.display = "none"' >
+<select id='1.11' name='concept[Observation on spine ]' helpText='Observation on spine ' tt_onLoad='__$("nextButton").style.display = "none"'  tt_requirenextclick='false'  pos='16' >
 <option></option>
 <option value='Other'>Other</option>
  <option value='Abnormal'>Abnormal</option>
@@ -190,7 +190,7 @@
 				Specify spine abnormality 
 			</td>
 			<td>
-<input type='text' id='1.11.3.1'  name='concept[Specify]' helpText='Specify spine abnormality '  condition='__$("1.11").value == "Other"'  pos='17'  tt_onLoad='__$("nextButton").style.display = "block"' />
+<input type='text' id='1.11.3.1'  name='concept[Specify]' helpText='Specify spine abnormality '  condition='__$("1.11").value == "Other"'  tt_onLoad='__$("nextButton").style.display = "block"'  pos='17' />
 			</td>
 		</tr>
 		<tr>
@@ -198,7 +198,7 @@
 				Observation on genitalia 
 			</td>
 			<td>
-<select id='1.12' name='concept[Observation on genitalia ]' helpText='Observation on genitalia ' tt_requirenextclick='false'  pos='18'  tt_onLoad='__$("nextButton").style.display = "none"' >
+<select id='1.12' name='concept[Observation on genitalia ]' helpText='Observation on genitalia ' tt_onLoad='__$("nextButton").style.display = "none"'  tt_requirenextclick='false'  pos='18' >
 <option></option>
 <option value='Other'>Other</option>
  <option value='Abnormal'>Abnormal</option>
@@ -211,7 +211,7 @@
 				Specify genitalia abnormality 
 			</td>
 			<td>
-<input type='text' id='1.12.3.1'  name='concept[Specify]' helpText='Specify genitalia abnormality '  condition='__$("1.12").value == "Other"'  pos='19'  tt_onLoad='__$("nextButton").style.display = "block"' />
+<input type='text' id='1.12.3.1'  name='concept[Specify]' helpText='Specify genitalia abnormality '  condition='__$("1.12").value == "Other"'  tt_onLoad='__$("nextButton").style.display = "block"'  pos='19' />
 			</td>
 		</tr>
 		<tr>
@@ -219,7 +219,7 @@
 				Observation on rectum 
 			</td>
 			<td>
-<select id='1.13' name='concept[Observation on rectum ]' helpText='Observation on rectum ' tt_requirenextclick='false'  pos='20'  tt_onLoad='__$("nextButton").style.display = "none"' >
+<select id='1.13' name='concept[Observation on rectum ]' helpText='Observation on rectum ' tt_onLoad='__$("nextButton").style.display = "none"'  tt_requirenextclick='false'  pos='20' >
 <option></option>
 <option value='Other'>Other</option>
  <option value='Abnormal'>Abnormal</option>
@@ -232,7 +232,7 @@
 				Specify rectum abnormality 
 			</td>
 			<td>
-<input type='text' id='1.13.3.1'  name='concept[Specify]' helpText='Specify rectum abnormality '  condition='__$("1.13").value == "Other"'  pos='21'  tt_onLoad='__$("nextButton").style.display = "block"' />
+<input type='text' id='1.13.3.1'  name='concept[Specify]' helpText='Specify rectum abnormality '  condition='__$("1.13").value == "Other"'  tt_onLoad='__$("nextButton").style.display = "block"'  pos='21' />
 			</td>
 		</tr>
 		<tr>
@@ -240,7 +240,7 @@
 				Observation on suckling reflex 
 			</td>
 			<td>
-<select id='1.14' name='concept[Observation on suckling reflex ]' helpText='Observation on suckling reflex ' pos='22'  tt_onLoad='__$("nextButton").style.display = "block"; __$("nextButton").innerHTML = "<span>Finish</span>"' >
+<select id='1.14' name='concept[Observation on suckling reflex ]' helpText='Observation on suckling reflex ' tt_onLoad='__$("nextButton").style.display = "block"; __$("nextButton").innerHTML = "<span>Finish</span>"'  pos='22' >
 <option></option>
 <option value='Other'>Other</option>
  <option value='Abnormal'>Abnormal</option>
