@@ -32,13 +32,14 @@
       }
 
       #boundary{
-        width: 955px;
+        width: 985px;
         height:	490px;
         padding-top: 10px;
         padding-bottom: 30px;
         padding-left: 35px;
         padding-right: 20px;
         margin: 40px;
+        margin-top: 80px;
 
       }
 
@@ -49,7 +50,7 @@
         text-align: center;
         vertical-align: middle;
         left: 25px;
-        top: 40%;
+        top: 45%;
       }
 
       #y-axis-cal{
@@ -58,7 +59,7 @@
         text-align: left;        
         left: 85px;
         padding-left: 0px;
-        top: 53px;
+        top: 93px;
       }
 
       #y2-axis-cal{
@@ -66,8 +67,8 @@
         position: absolute;    
         text-align: right;
         padding-right: 0px;       
-        left: 1025px;      
-        bottom: 220px;
+        left: 1055px;
+        bottom: 180px;
       }
 
       #x-years{
@@ -85,6 +86,38 @@
         margin-right: -15px;
       }
 
+      #z-labels{
+        position: absolute;
+        background: black;
+        height: 451.9px;
+        width: 30px;
+        font-size: 1.0em;
+        left: 1011px;
+        bottom: 198px;
+        padding-right: 2px;
+      }
+
+      .z-data{
+        background: white;
+        margin: 1px;       
+        height: 27.125px;
+        width: 30px;
+      }
+
+      .sentinel{
+        height: 28px;
+      }
+
+      #header{
+        height: 10px;
+        position: absolute;
+        top: 20px;
+        margin-left: 8%;
+        font-size: 1.8em;
+        text-decoration: underline;
+        font-weight: bold;
+      }
+
 
 
     </style>
@@ -94,6 +127,14 @@
     </script>
   </head>
   <body id="mateme">
+
+    <div id="header">
+      Weight-for-age Graph For <%=@patient.name rescue "..............................................."%>
+    </div>
+    <img src="/images/emblem.gif" alt="emblem"  height="75" width="72" style="position: absolute; top:0px;margin-left:1000px;" />
+    <div style="margin-left:8%;position: absolute; top: 55px;">
+      Birth to 5 years (z-scores)
+    </div>
 
     <div id = "boundary">
 
@@ -122,6 +163,10 @@
         </div>
 
         <div id = "y2-axis-cal">
+        </div>
+
+        <div id = "z-labels">
+
         </div>
 
         <div width = "900" style ="position: relative; margin-top: 15px; color: white; text-align: center;" >
@@ -280,8 +325,9 @@
       objCanvas.addEventListener('click', function(evt){
 
         var mousePos = getMousePos(objCanvas, evt);
+        //display diagones if any, weight and height for clicked point
         
-        objContext.drawImage(objImage, mousePos.x - (objImage.width / 2), mousePos.y - (objImage.height / 2));
+        //objContext.drawImage(objImage, mousePos.x - (objImage.width / 2), mousePos.y - (objImage.height / 2));
 
       })
       
@@ -359,6 +405,7 @@
         gender = "<%= @baby.gender%>";
         
         document.getElementById("boundary").style.background = gender.match(/F/i)? "#CC0055": "#0066FF";
+        document.getElementById("header").style.color = gender.match(/F/i)? "#CC0055": "#0066FF";
 
 
       }
@@ -398,6 +445,7 @@
 
         var xaxisCalibrations = "";
         var xaxisCalibrationsYears = "";
+        var zCalibrations = "";
 
         for (ii = 0; ii < 60; ii ++){
 
@@ -411,87 +459,113 @@
 
         }
 
-        document.getElementById("x-axis-cal").innerHTML = xaxisCalibrations;       
-        document.getElementById("x-years").innerHTML = xaxisCalibrationsYears;
+        for (j = 0; j < 16; j ++){
+          gender = "<%=  @patient.gender rescue 'Male'%>"
+
+          if (gender.match(/F/i)){
+            zVal = {1 : "<span style='color:red;'>3</span>",
+              3 : "<span style='color:green;'>2</span>",
+              7 : "<span style=''>0</span>",
+              9 : "<span style='color:green;'>-2</span>",
+              10  : "<span style='color:red;'>-3</span>"
+            }
+          }else{
+            zVal = {2 : "<span style='color:red;'>3</span>",
+              4 : "<span style='color:green;'>2</span>",
+              7 : "<span style=''>0</span>",
+              9 : "<span style='color:green;'>-2</span>",
+              10  : "<span style='color:red;'>-3</span>"
+            }
+          }
+            if (zVal[j] != undefined){
+              zStr = zVal[j];
+            }else{zStr = ""}
+            zCalibrations += (j < 15) ? "<div class = 'z-data'>" +   zStr  + "</div>" : "<div class = 'z-data sentinel' style='height:29;'></div>"
+          }
+
+          document.getElementById("x-axis-cal").innerHTML = xaxisCalibrations;
+          document.getElementById("x-years").innerHTML = xaxisCalibrationsYears;
+          document.getElementById("z-labels").innerHTML = zCalibrations;
+          
         
-        var yaxisCalibrations = "";
+          var yaxisCalibrations = "";
 
-        for (var n = 32; n >= 0; n --){
+          for (var n = 32; n >= 0; n --){
 
-          yaxisCalibrations += " " + ((n%2 == 0)? "<div class='y_cal' style = 'color=white;font-size:0.9em;'>" + n + "</div>" : "")
+            yaxisCalibrations += " " + ((n%2 == 0)? "<div class='y_cal' style = 'color=white;font-size:0.9em;'>" + n + "</div>" : "")
 
+          }
+       
+          document.getElementById("y-axis-cal").innerHTML = yaxisCalibrations;
+          document.getElementById("y2-axis-cal").innerHTML = yaxisCalibrations;
+        
+       
+
+          updateChartGenderColorMatch();
+          var objImage = new Image();
+          objImage.src = "weightChart.png";
+
+          objContext.drawImage(objImage, 900, 450);
+
+          colorChart(3, -3, "yellow");
+          resetPath();
+          colorChart(2, -2, "yellowgreen");
+        
+          resetPath();
+          standardCurve(3);
+          resetPath();
+          standardCurve(-3);
+          resetPath();
+          standardCurve(2);
+          resetPath();
+          standardCurve(-2);
+          resetPath();
+          standardCurve(0);
+          resetPath();
+          drawBackground();
+          resetPath();
+          babyWeightsCurve();
         }
-       
-        document.getElementById("y-axis-cal").innerHTML = yaxisCalibrations;
-        document.getElementById("y2-axis-cal").innerHTML = yaxisCalibrations;
-        
-       
-
-        updateChartGenderColorMatch();
-        var objImage = new Image();
-        objImage.src = "weightChart.png";
-
-        objContext.drawImage(objImage, 900, 450);
-
-        colorChart(3, -3, "yellow");
-        resetPath();
-        colorChart(2, -2, "yellowgreen");
-        
-        resetPath();
-        standardCurve(3);
-        resetPath();
-        standardCurve(-3);
-        resetPath();
-        standardCurve(2);
-        resetPath();
-        standardCurve(-2);
-        resetPath();
-        standardCurve(0);
-        resetPath();       
-        drawBackground();
-        resetPath();
-        babyWeightsCurve();       
-      }
      
-      function colorChart(z1, z2, color){
+        function colorChart(z1, z2, color){
 
-        objContext.fillStyle = color;
+          objContext.fillStyle = color;
        
-        standardCurve(z1, "false");
+          standardCurve(z1, "false");
         
-        result = request(file, "standard_curve", "L,M,S", 0);
-        response = result.split(",");
-        weight = calculateHeight(response[1], response[2], response[3], z1);
+          result = request(file, "standard_curve", "L,M,S", 0);
+          response = result.split(",");
+          weight = calculateHeight(response[1], response[2], response[3], z1);
          
-        pH = objCanvas.height - weight*(objCanvas.height/32);
+          pH = objCanvas.height - weight*(objCanvas.height/32);
        
-        objContext.moveTo(0, pH);
+          objContext.moveTo(0, pH);
       
-        result = request(file, "standard_curve", "L,M,S", 0);
-        response = result.split(",");
-        weight = calculateHeight(response[1], response[2], response[3], z2);
-        pW = objCanvas.height - weight*(objCanvas.height/32)
-        objContext.lineTo(0, pW)
+          result = request(file, "standard_curve", "L,M,S", 0);
+          response = result.split(",");
+          weight = calculateHeight(response[1], response[2], response[3], z2);
+          pW = objCanvas.height - weight*(objCanvas.height/32)
+          objContext.lineTo(0, pW)
        
-        standardCurve(z2, "false");
+          standardCurve(z2, "false");
 
-        result = request(file, "standard_curve", "L,M,S", 60);
-        response = result.split(",");
-        weight = calculateHeight(response[1], response[2], response[3], z1);
-        pT = objCanvas.height - weight*(objCanvas.height/32)
+          result = request(file, "standard_curve", "L,M,S", 60);
+          response = result.split(",");
+          weight = calculateHeight(response[1], response[2], response[3], z1);
+          pT = objCanvas.height - weight*(objCanvas.height/32)
         
-        objContext.lineTo(objCanvas.width, pT)
-        objContext.lineTo(0, pH)
-        objContext.closePath();
+          objContext.lineTo(objCanvas.width, pT)
+          objContext.lineTo(0, pH)
+          objContext.closePath();
        
-        objContext.fill();
+          objContext.fill();
         
-      }
+        }
 
-      function resetPath(){
-        objContext.closePath();
-        objContext.beginPath();
-      }
+        function resetPath(){
+          objContext.closePath();
+          objContext.beginPath();
+        }
       
     </script>
   </body>
