@@ -160,9 +160,10 @@ class PatientsController < ApplicationController
     Observation.find(:all, :conditions => ["person_id = ? AND concept_id IN (?)",
         @patient.id, ids]).each do |ob|
       age = ((((ob.value_datetime.to_date rescue ob.obs_datetime.to_date) rescue ob.date_created.to_date) - birthdate_sec).days.to_i/(60*60*24)).to_s rescue nil
-      weight = ob.answer_string rescue nil
-      
-      @weights << age + "," + weight if !age.blank? && !weight.blank?
+      weight = ob.answer_string.to_i rescue nil
+      next if age.blank? || weight.blank?
+      weight = (weight > 100) ? weight/1000.0 : weight # quick check of weight in grams and that in KG's
+      @weights << age + "," + weight.to_s if !age.blank? && !weight.blank?
     end  
   end
   
