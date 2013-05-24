@@ -424,11 +424,11 @@ class EncountersController < ApplicationController
 
   def diagnoses
 
-    search_string         = (params[:search] || '').upcase
+    search_string         = (params[:search_string] || '').upcase
 
     diagnosis_concepts    = Concept.find_by_name("Qech outpatient diagnosis list").concept_members.collect{|c| c.concept.fullname}.sort.uniq rescue ["Unknown"]
 
-    @results = diagnosis_concepts.collect{|e| e}.delete_if{|x| !x.upcase.match(/^#{search_string}/)}
+    @results = diagnosis_concepts.collect{|e| e}.delete_if{|x| !x.upcase.match("#{search_string}")}
 
     render :text => "<li>" + @results.join("</li><li>") + "</li>"
 
