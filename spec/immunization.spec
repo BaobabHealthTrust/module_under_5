@@ -1,6 +1,6 @@
 P.1. IMMUNIZATION RECORD [program: UNDER 5 PROGRAM]
 C.1. Record immunization of baby
-Q.1.1. BCG immunization was given at birth? [pos: 0]
+Q.1.1. BCG immunization was given at birth? [pos: 0, tt_onLoad: tt_cancel_destination += "&skip_flow=true";  skipFlow("<%= params["skip_flow"]%>")]
 O.1.1.1. No
 O.1.1.2. Yes
 Q.1.1.2.1. Immunization year [pos: 1, field_type: number, tt_pageStyleClass: NumbersWithUnknown, tt_onUnLoad: populateMonth("1.1.2.2"), absoluteMin: <%= @patient.person.birthdate.to_date.year %>, absoluteMax: <%= Date.today.year %>]
@@ -80,7 +80,3 @@ Q.1.13.2.1. Childs current HIV status [pos: 30]
 O.1.13.2.1.1. HIV infected
 O.1.13.2.1.2. Not HIV infected
 O.1.13.2.1.3. Not confirmed diagnosis
-
-
-
-

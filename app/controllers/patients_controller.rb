@@ -4,6 +4,7 @@ class PatientsController < ApplicationController
   before_filter :check_user
 
   def show
+    
     @patient = Patient.find(params[:id] || params[:patient_id]) rescue nil
 
     if @patient.nil?
@@ -44,6 +45,41 @@ class PatientsController < ApplicationController
 
     @babies = @patient.current_babies rescue []
 
+    @recent_encounters = []
+
+    @programs = @patient.program_encounters.current.each{|p|
+
+      p.program_encounter_types.each{|e|
+        
+        @recent_encounters << (e.encounter.type.name.downcase if p.program.name.match(/UNDER 5 PROGRAM/i) && e.encounter.encounter_datetime > 1.day.ago)
+      
+      } if !@patient.nil?      
+    }
+
+    @flow_destination = ""
+    
+    @routes = {"UNDER 5 VISIT" => "/protocol_patients/under_5_visit",
+      "REASON FOR SPECIAL CARE" => "/protocol_patients/reason_for_special_care",
+      "MEDICAL HISTORY" => "/protocol_patients/medical_history",
+      "FAMILY MEDICAL HISTORY" => "/protocol_patients/family_medical_history",
+      "IMMUNIZATION RECORD" => "/protocol_patients/immunization_record"
+    }
+ 
+    @route_names = YAML.load_file("#{Rails.root}/config/application.yml")["#{Rails.env
+        }"]["auto_flow_encounters.sequentially"].split(",") rescue []
+
+    @route_names.each do |flow|
+
+      next if !@flow_destination.blank?
+      @flow_destination = flow if !@recent_encounters.include?(flow.downcase)
+      
+    end
+  
+    @destinationn = @routes["#{@flow_destination}"]
+    unless params[:skip_flow] && params[:skip_flow].to_s == "true"
+      redirect_to "#{@destinationn}/#{params[:id]}?user_id=#{params[:user_id]}&patient_id=#{params[:id]}&id=#{params[:id]}" and return if !@destinationn.blank?
+    end
+    
   end
 
   def current_visit
@@ -129,7 +165,7 @@ class PatientsController < ApplicationController
     render :text => (count.first.to_i > 0 ? {params[:date] => count}.to_json : 0)
   end
 
-  def baby_chart   
+  def baby_chart
 
     @patient = Patient.find(params[:id] || params[:patient_id]) rescue nil
     @baby = Patient.find(params[:baby_id])
@@ -143,9 +179,9 @@ class PatientsController < ApplicationController
     
     file.each{ |parameters|
 
-      line = parameters  
+      line = parameters
       line = line.split(" ").join(",")
-      @file << line 
+      @file << line
 
     }
 
@@ -164,7 +200,7 @@ class PatientsController < ApplicationController
       next if age.blank? || weight.blank?
       weight = (weight > 100) ? weight/1000.0 : weight # quick check of weight in grams and that in KG's
       @weights << age + "," + weight.to_s if !age.blank? && !weight.blank?
-    end  
+    end
   end
   
 end

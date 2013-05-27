@@ -1,6 +1,6 @@
 P.1. INITIAL NEW-BORN RECORD [program: UNDER 5 PROGRAM]
 C.1. Capture details about the birth of the child if the data does not exist in the system
-Q.1.1. Place of birth [pos: 0, tt_requirenextclick: false, tt_onLoad: __$("nextButton").style.display = "none"]
+Q.1.1. Place of birth [pos: 0, tt_requirenextclick: false, tt_onLoad: __$("nextButton").style.display = "none"; skipFlow("<%= params["skip_flow"]%>")]
 O.1.1.1. Home
 O.1.1.2. Health facility
 
@@ -69,4 +69,6 @@ O.1.14.1. Normal
 O.1.14.2. Abnormal
 O.1.14.3. Other
 Q.1.14.3.1. Specify suckling reflex abnormality [concept: Specify, pos: 23]
+
+
 

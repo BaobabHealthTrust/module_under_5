@@ -5,15 +5,18 @@ production:
   facility.name: Test Centre
   patient.registration.url: http://localhost:3005
   user.management.url: http://localhost:3004
+  auto_flow_encounters.sequentially: UNDER 5 VISIT,REASON FOR SPECIAL CARE,MEDICAL HISTORY,FAMILY MEDICAL HISTORY,IMMUNIZATION RECORD
 
 development:
   project.name: U5
   facility.name: Test Centre
   patient.registration.url: http://localhost:3005
   user.management.url: http://localhost:3004
+  auto_flow_encounters.sequentially: UNDER 5 VISIT,REASON FOR SPECIAL CARE,MEDICAL HISTORY,FAMILY MEDICAL HISTORY,IMMUNIZATION RECORD
 
 test: &TEST
   project.name: U5
   facility.name: Test Centre
   patient.registration.url: http://localhost:3005
   user.management.url: http://localhost:3004
+  auto_flow_encounters.sequentially: UNDER 5 VISIT,REASON FOR SPECIAL CARE,MEDICAL HISTORY,FAMILY MEDICAL HISTORY,IMMUNIZATION RECORD

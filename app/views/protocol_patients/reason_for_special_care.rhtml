@@ -15,7 +15,7 @@
 				Weight less than 2500g 
 			</td>
 			<td>
-<select id='1.1' name='concept[Weight less than 2500g ]' helpText='Weight less than 2500g ' tt_requirenextclick='false'  pos='0'  tt_onLoad='__$("nextButton").style.display = "none"' >
+<select id='1.1' name='concept[Weight less than 2500g ]' helpText='Weight less than 2500g ' tt_requirenextclick='false'  pos='0'  tt_onLoad='tt_cancel_destination += "&skip_flow=true"; __$("nextButton").style.display = "none"; skipFlow("<%= params["skip_flow"]%>")' >
 <option></option>
 <option value='No'>No</option>
  <option value='Yes'>Yes</option>

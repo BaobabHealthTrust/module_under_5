@@ -67,3 +67,12 @@ function populateMonth(id){
     }
 
 }
+
+function skipFlow(val){
+str = document.getElementsByTagName("form")[0].action			 
+if (str.match(/\?/))
+	document.getElementsByTagName("form")[0].action += "&skip_flow=" + val;		
+else{
+	document.getElementsByTagName("form")[0].action += "?skip_flow=" + val;		
+}
+}

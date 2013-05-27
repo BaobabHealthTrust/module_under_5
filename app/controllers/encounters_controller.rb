@@ -2,8 +2,8 @@
 class EncountersController < ApplicationController
 
 	before_filter :check_user, :except => [:missing_program, :static_locations,
-		  :missing_concept, :no_user, :no_patient, :check_role_activities,
-		  :missing_encounter_type, :diagnoses]
+    :missing_concept, :no_user, :no_patient, :check_role_activities,
+    :missing_encounter_type, :diagnoses]
 
   def create
 
@@ -341,9 +341,10 @@ class EncountersController < ApplicationController
 
       @task = TaskFlow.new(params[:user_id] || User.first.id, patient.id)
 
-      redirect_to params[:next_url] and return if !params[:next_url].nil?
-
-      redirect_to @task.next_task.url and return
+      task = params[:next_url] if !params[:next_url].blank?
+      task = @task.next_task.url if params[:next_url].blank?
+      task += "&skip_flow=true" if (params[:skip_flow] && params[:skip_flow] == "true") && !task.match("skip_flow")
+      redirect_to task and return
 
     end
     

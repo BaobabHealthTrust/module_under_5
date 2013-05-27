@@ -15,7 +15,7 @@
 				BCG immunization was given at birth? 
 			</td>
 			<td>
-<select id='1.1' name='concept[BCG immunization was given at birth? ]' helpText='BCG immunization was given at birth? ' pos='0' >
+<select id='1.1' name='concept[BCG immunization was given at birth? ]' helpText='BCG immunization was given at birth? ' pos='0'  tt_onLoad='tt_cancel_destination += "&skip_flow=true";  skipFlow("<%= params["skip_flow"]%>")' >
 <option></option>
 <option value='Yes'>Yes</option>
  <option value='No'>No</option>
@@ -27,7 +27,7 @@
 				Immunization year 
 			</td>
 			<td>
-<input type='text' id='1.1.2.1'  name='concept[Immunization year ]' helpText='Immunization year '  condition='__$("1.1").value == "Yes"'  absoluteMax='<%= Date.today.year %>'  tt_pageStyleClass='NumbersWithUnknown'  pos='1'  tt_onUnLoad='populateMonth("1.1.2.2")'  field_type='number'  absoluteMin='<%= @patient.person.birthdate.to_date.year %>' />
+<input type='text' id='1.1.2.1'  name='concept[Immunization year ]' helpText='Immunization year '  condition='__$("1.1").value == "Yes"'  tt_onUnLoad='populateMonth("1.1.2.2")'  pos='1'  absoluteMin='<%= @patient.person.birthdate.to_date.year %>'  field_type='number'  absoluteMax='<%= Date.today.year %>'  tt_pageStyleClass='NumbersWithUnknown' />
 			</td>
 		</tr>
 		<tr>
@@ -35,7 +35,7 @@
 				Immunization month 
 			</td>
 			<td>
-<select id='1.1.2.2' name='concept[Immunization month ]' helpText='Immunization month ' tt_pageStyleClass='NoKeyboard'  pos='2'  condition='__$("1.1.2.1").value.trim() != "Unknown"' >
+<select id='1.1.2.2' name='concept[Immunization month ]' helpText='Immunization month ' pos='2'  condition='__$("1.1.2.1").value.trim() != "Unknown"'  tt_pageStyleClass='NoKeyboard' >
 <option></option>
 <option value='Unknown'>Unknown</option>
  </select>
@@ -46,7 +46,7 @@
 				Immunization day 
 			</td>
 			<td>
-<input type='text' id='1.1.2.3'  name='concept[Immunization day ]' helpText='Immunization day '  pos='3'  tt_onLoad='findDates()'  condition='__$("1.1.2.2").value.trim() != "Unknown"' />
+<input type='text' id='1.1.2.3'  name='concept[Immunization day ]' helpText='Immunization day '  pos='3'  condition='__$("1.1.2.2").value.trim() != "Unknown"'  tt_onLoad='findDates()' />
 			</td>
 		</tr>
 		<tr>

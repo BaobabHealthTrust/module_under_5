@@ -28,7 +28,7 @@ next_task = @task.encounter_type.gsub('_',' ') rescue nil
       __$("patient-dashboard-application").appendChild(nextTask);
     }
 
-    __$("nextTask").innerHTML = "<b>Next Task:</b><br /><i><%= next_task.titleize %></i>";
+    __$("nextTask").innerHTML = "<b>Next Task:</b><br /><i><%= (@flow_destination.present?? @flow_destination.titleize : next_task.titleize ) rescue next_task.titleize%></i>";
   }
 
 <% if !next_task.nil? %>
@@ -108,7 +108,7 @@ next_task = @task.encounter_type.gsub('_',' ') rescue nil
 
           <% unless @links[encounter].class.to_s.upcase == "HASH" %>
 
-            <optgroup value='<%= link %>' label="<%= (!@task.labels[encounter.downcase].nil? ?
+            <optgroup value='<%= link + "&skip_flow=true"  %>' label="<%= (!@task.labels[encounter.downcase].nil? ?
                           @task.labels[encounter.downcase] : encounter) %>" >
             </optgroup>
 
@@ -119,7 +119,7 @@ next_task = @task.encounter_type.gsub('_',' ') rescue nil
 
               <% link.each do |label, path| %>
 
-                          <option value="<%= path %>">
+                          <option value="<%= path + "&skip_flow=true" %>">
                             <%= label %>
                           </option>
 
@@ -229,13 +229,14 @@ next_task = @task.encounter_type.gsub('_',' ') rescue nil
             Demographics
           </option>
         <% end %>
-
-        <% if @task.url != "/patients/show/#{@patient.id}?user_id=#{@user.id}" %>
-          <option link="<%= @task.url  %>" ttSize = "160px">Continue</option>
-        <% end %>
+        
         <%id = params[:id] || params[:patient_id]%>
          <option link="/patients/baby_chart?patient_id=<%= id %>&user_id=<%=params[:user_id]%>&baby_id=<%= id %>" ttSize = "160px">Weight Chart</option>
 
+         <% if (@task.url != "/patients/show/#{@patient.id}?user_id=#{@user.id}") || (params[:skip_flow] && !@destinationn.blank?) %>
+          <option link="<%= @destinationn.present?? "#{@destinationn}/#{params[:id]}?user_id=#{params[:user_id]}&patient_id=#{params[:id]}&id=#{params[:id]}" : @task.url  %>" ttSize = "160px">Continue</option>
+        <% end %>
+          
       </select>
 
       <input type='submit' value='Finish' />
