@@ -72,7 +72,7 @@ Q.1.3. Treatment [tt_onLoad: generateGenerics(<%= @patient.id %>); showCategory(
 
 Q.1.4. Height (cm) [pos: 32, tt_pageStyleClass: NumbersWithUnknownAndDecimal, tt_onLoad: showCategory("Under 5 Visit"); __$("category").style.fontSize = "30px", field_type: number]
 
-Q.1.5. Weight (Grams) [pos: 33, tt_onLoad: showCategory("Under 5 Visit"); __$("category").style.fontSize = "30px", validationRule: ^\d+\.\d+$|^Unknown$, validationMessage: Not a valid weight, tt_pageStyleClass: NumbersWithUnknownAndDecimal, field_type: number]
+Q.1.5. Weight (grams) [pos: 33, concept: Weight, tt_onLoad: showCategory("Under 5 Visit"); __$("category").style.fontSize = "30px", validationRule: ^\d+\.\d+$|^Unknown$, validationMessage: Not a valid weight, tt_pageStyleClass: NumbersWithUnknownAndDecimal, field_type: number]
 
 Q.1.6. Notes [pos: 34, tt_onLoad: showCategory("Under 5 Visit"); __$("category").style.fontSize = "30px", field_type: textarea, optional: true]
 

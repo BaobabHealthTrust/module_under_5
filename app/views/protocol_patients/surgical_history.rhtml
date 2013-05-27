@@ -15,7 +15,7 @@
 				Ever had any surgical procedure? 
 			</td>
 			<td>
-<select id='1.1' name='concept[Ever had any surgical procedure? ]' helpText='Ever had any surgical procedure? ' pos='0'  tt_onLoad='tt_cancel_destination += "&skip_flow=true"; showCategory("Surgical History"); __$("category").style.fontSize = "30px"; skipFlow("<%= params["skip_flow"]%>")' >
+<select id='1.1' name='concept[Ever had any surgical procedure? ]' helpText='Ever had any surgical procedure? ' tt_onLoad='tt_cancel_destination += "&skip_flow=true"; showCategory("Surgical History"); __$("category").style.fontSize = "30px"; skipFlow("<%= params["skip_flow"]%>")'  pos='0' >
 <option></option>
 <option value='Yes'>Yes</option>
  <option value='No'>No</option>
@@ -27,7 +27,7 @@
 				Diagnosis 
 			</td>
 			<td>
-<input type='text' id='1.1.3'   helpText='Diagnosis '  name='concept[Diagnosis][]'  pos='1'  ajaxURL='/encounters/diagnoses?search_string='  condition='__$("1.1").value.trim() == "Yes"'  tt_onLoad='showCategory("Surgical History"); __$("category").style.fontSize = "30px"' />
+<input type='text' id='1.1.3'   helpText='Diagnosis '  tt_onLoad='showCategory("Surgical History"); __$("category").style.fontSize = "30px"'  name='concept[Diagnosis][]'  pos='1'  condition='__$("1.1").value.trim() == "Yes"'  ajaxURL='/encounters/diagnoses?search_string=' />
 			</td>
 		</tr>
 		<tr>
@@ -35,7 +35,7 @@
 				Diagnosis date 
 			</td>
 			<td>
-<input type='text' id='1.1.4'   helpText='Diagnosis date '  name='concept[Diagnosis date][]'  pos='2'  field_type='date'  condition='__$("1.1").value.trim() == "Yes"'  tt_onLoad='showCategory("Surgical History"); __$("category").style.fontSize = "30px";' />
+<input type='text' id='1.1.4'   helpText='Diagnosis date '  field_type='date'  tt_onLoad='showCategory("Surgical History"); __$("category").style.fontSize = "30px";'  name='concept[Diagnosis date][]'  pos='2'  condition='__$("1.1").value.trim() == "Yes"' />
 			</td>
 		</tr>
 		<tr>
@@ -43,7 +43,7 @@
 				Diagnosis 
 			</td>
 			<td>
-<input type='text' id='1.1.5'   helpText='Diagnosis '  optional='true'  name='concept[Diagnosis][]'  pos='3'  ajaxURL='/encounters/diagnoses?search_string='  condition='__$("1.1").value.trim() == "Yes" && __$("1.1.3").value.trim().length > 0'  tt_onLoad='showCategory("Surgical History"); __$("category").style.fontSize = "30px";' />
+<input type='text' id='1.1.5'   helpText='Diagnosis '  tt_onLoad='showCategory("Surgical History"); __$("category").style.fontSize = "30px";'  name='concept[Diagnosis][]'  pos='3'  condition='__$("1.1").value.trim() == "Yes" && __$("1.1.3").value.trim().length > 0'  ajaxURL='/encounters/diagnoses?search_string='  optional='true' />
 			</td>
 		</tr>
 		<tr>
@@ -51,7 +51,7 @@
 				Diagnosis date 
 			</td>
 			<td>
-<input type='text' id='1.1.6'   helpText='Diagnosis date '  name='concept[Diagnosis date][]'  pos='4'  field_type='date'  condition='__$("1.1").value.trim() == "Yes" && __$("1.1.5").value.trim().length > 0'  tt_onLoad='showCategory("Surgical History"); __$("category").style.fontSize = "30px"' />
+<input type='text' id='1.1.6'   helpText='Diagnosis date '  field_type='date'  tt_onLoad='showCategory("Surgical History"); __$("category").style.fontSize = "30px"'  name='concept[Diagnosis date][]'  pos='4'  condition='__$("1.1").value.trim() == "Yes" && __$("1.1.5").value.trim().length > 0' />
 			</td>
 		</tr>
 		<tr>
@@ -59,7 +59,7 @@
 				Diagnosis 
 			</td>
 			<td>
-<input type='text' id='1.1.7'   helpText='Diagnosis '  optional='true'  name='concept[Diagnosis][]'  pos='5'  ajaxURL='/encounters/diagnoses?search_string='  condition='__$("1.1").value.trim() == "Yes" && __$("1.1.5").value.trim().length > 0'  tt_onLoad='showCategory("Surgical History"); __$("category").style.fontSize = "30px";' />
+<input type='text' id='1.1.7'   helpText='Diagnosis '  tt_onLoad='showCategory("Surgical History"); __$("category").style.fontSize = "30px";'  name='concept[Diagnosis][]'  pos='5'  condition='__$("1.1").value.trim() == "Yes" && __$("1.1.5").value.trim().length > 0'  ajaxURL='/encounters/diagnoses?search_string='  optional='true' />
 			</td>
 		</tr>
 		<tr>
@@ -67,7 +67,7 @@
 				Diagnosis date 
 			</td>
 			<td>
-<input type='text' id='1.1.8'   helpText='Diagnosis date '  name='concept[Diagnosis date][]'  pos='6'  field_type='date'  condition='__$("1.1").value.trim() == "Yes" && __$("1.1.7").value.trim().length > 0' />
+<input type='text' id='1.1.8'   helpText='Diagnosis date '  field_type='date'  name='concept[Diagnosis date][]'  pos='6'  condition='__$("1.1").value.trim() == "Yes" && __$("1.1.7").value.trim().length > 0' />
 			</td>
 		</tr>
 		<tr>
@@ -75,7 +75,7 @@
 				Diagnosis 
 			</td>
 			<td>
-<input type='text' id='1.1.9'   helpText='Diagnosis '  optional='true'  name='concept[Diagnosis][]'  pos='7'  ajaxURL='/encounters/diagnoses?search_string='  condition='__$("1.1").value.trim() == "Yes" && __$("1.1.7").value.trim().length > 0'  tt_onLoad='showCategory("Surgical History"); __$("category").style.fontSize = "30px";' />
+<input type='text' id='1.1.9'   helpText='Diagnosis '  tt_onLoad='showCategory("Surgical History"); __$("category").style.fontSize = "30px";'  name='concept[Diagnosis][]'  pos='7'  condition='__$("1.1").value.trim() == "Yes" && __$("1.1.7").value.trim().length > 0'  ajaxURL='/encounters/diagnoses?search_string='  optional='true' />
 			</td>
 		</tr>
 		<tr>
@@ -83,7 +83,7 @@
 				Diagnosis date 
 			</td>
 			<td>
-<input type='text' id='1.1.10'   helpText='Diagnosis date '  name='concept[Diagnosis date][]'  pos='8'  field_type='date'  condition='__$("1.1").value.trim() == "Yes" && __$("1.1.9").value.trim().length > 0'  tt_onLoad='showCategory("Surgical History"); __$("category").style.fontSize = "30px";' />
+<input type='text' id='1.1.10'   helpText='Diagnosis date '  field_type='date'  tt_onLoad='showCategory("Surgical History"); __$("category").style.fontSize = "30px";'  name='concept[Diagnosis date][]'  pos='8'  condition='__$("1.1").value.trim() == "Yes" && __$("1.1.9").value.trim().length > 0' />
 			</td>
 		</tr>
 		<tr>
@@ -91,7 +91,7 @@
 				Diagnosis 
 			</td>
 			<td>
-<input type='text' id='1.1.11'   helpText='Diagnosis '  optional='true'  name='concept[Diagnosis][]'  pos='9'  ajaxURL='/encounters/diagnoses?search_string='  condition='__$("1.1").value.trim() == "Yes" && __$("1.1.9").value.trim().length > 0'  tt_onLoad='showCategory("Surgical History"); __$("category").style.fontSize = "30px";' />
+<input type='text' id='1.1.11'   helpText='Diagnosis '  tt_onLoad='showCategory("Surgical History"); __$("category").style.fontSize = "30px";'  name='concept[Diagnosis][]'  pos='9'  condition='__$("1.1").value.trim() == "Yes" && __$("1.1.9").value.trim().length > 0'  ajaxURL='/encounters/diagnoses?search_string='  optional='true' />
 			</td>
 		</tr>
 		<tr>
@@ -99,7 +99,7 @@
 				Diagnosis date 
 			</td>
 			<td>
-<input type='text' id='1.1.12'   helpText='Diagnosis date '  name='concept[Diagnosis date][]'  pos='10'  field_type='date'  condition='__$("1.1").value.trim() == "Yes" && __$("1.1.11").value.trim().length > 0'  tt_onLoad='showCategory("Surgical History"); __$("category").style.fontSize = "30px";' />
+<input type='text' id='1.1.12'   helpText='Diagnosis date '  field_type='date'  tt_onLoad='showCategory("Surgical History"); __$("category").style.fontSize = "30px";'  name='concept[Diagnosis date][]'  pos='10'  condition='__$("1.1").value.trim() == "Yes" && __$("1.1.11").value.trim().length > 0' />
 			</td>
 		</tr>
 	</table>

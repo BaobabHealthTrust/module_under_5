@@ -15,7 +15,7 @@
 				BCG immunization was given at birth? 
 			</td>
 			<td>
-<select id='1.1' name='concept[BCG immunization was given at birth? ]' helpText='BCG immunization was given at birth? ' pos='0'  tt_onLoad='tt_cancel_destination += "&skip_flow=true";  skipFlow("<%= params["skip_flow"]%>")' >
+<select id='1.1' name='concept[BCG immunization was given at birth? ]' helpText='BCG immunization was given at birth? ' tt_onLoad='tt_cancel_destination += "&skip_flow=true";  skipFlow("<%= params["skip_flow"]%>"); showCategory("Immunization Record"); __$("category").style.fontSize = "30px"'  pos='0' >
 <option></option>
 <option value='Yes'>Yes</option>
  <option value='No'>No</option>
@@ -24,29 +24,10 @@
 		</tr>
 		<tr>
 			<td>
-				Immunization year 
-			</td>
-			<td>
-<input type='text' id='1.1.2.1'  name='concept[Immunization year ]' helpText='Immunization year '  condition='__$("1.1").value == "Yes"'  tt_onUnLoad='populateMonth("1.1.2.2")'  pos='1'  absoluteMin='<%= @patient.person.birthdate.to_date.year %>'  field_type='number'  absoluteMax='<%= Date.today.year %>'  tt_pageStyleClass='NumbersWithUnknown' />
-			</td>
-		</tr>
-		<tr>
-			<td>
-				Immunization month 
-			</td>
-			<td>
-<select id='1.1.2.2' name='concept[Immunization month ]' helpText='Immunization month ' pos='2'  condition='__$("1.1.2.1").value.trim() != "Unknown"'  tt_pageStyleClass='NoKeyboard' >
-<option></option>
-<option value='Unknown'>Unknown</option>
- </select>
-			</td>
-		</tr>
-		<tr>
-			<td>
 				Immunization day 
 			</td>
 			<td>
-<input type='text' id='1.1.2.3'  name='concept[Immunization day ]' helpText='Immunization day '  pos='3'  condition='__$("1.1.2.2").value.trim() != "Unknown"'  tt_onLoad='findDates()' />
+<input type='text' id='1.1.2.1'  name='concept[Immunization day ]'   condition='__$("1.1").value == "Yes"'  absoluteMin='<%= @patient.person.birthdate.to_date %>'  field_type='date'  absoluteMax='<%= (session["datetime"].to_date rescue  Date.today) %>'  pos='1'  helpText='Immunization Date'  tt_onUnLoad='showCategory("Immunization Record"); __$("category").style.fontSize = "30px"' />
 			</td>
 		</tr>
 		<tr>
@@ -54,7 +35,7 @@
 				Has immunization scar been seen? 
 			</td>
 			<td>
-<select id='1.1.2.4' name='concept[Has immunization scar been seen? ]' helpText='Has immunization scar been seen? ' condition='__$("1.1").value == "Yes"'  pos='4' >
+<select id='1.1.2.4' name='concept[Has immunization scar been seen? ]' helpText='Has immunization scar been seen? ' condition='__$("1.1").value == "Yes"'  pos='4'  tt_onUnLoad='showCategory("Immunization Record"); __$("category").style.fontSize = "30px"' >
 <option></option>
 <option value='No'>No</option>
  <option value='Yes'>Yes</option>
@@ -66,7 +47,7 @@
 				Repeat BCG immunization given? 
 			</td>
 			<td>
-<select id='1.1.2.4.2.1' name='concept[Repeat BCG immunization given? ]' helpText='Repeat BCG immunization given? ' pos='5'  condition='var d = checkBCGDate(); d > 12;' >
+<select id='1.1.2.4.2.1' name='concept[Repeat BCG immunization given? ]' helpText='Repeat BCG immunization given? ' pos='5'  condition='var d = checkBCGDate("<%= session["datetime"].to_date rescue Date.today%>"); d > 12;'  tt_onUnLoad='showCategory("Immunization Record"); __$("category").style.fontSize = "30px"' >
 <option></option>
 <option value='Yes'>Yes</option>
  <option value='No'>No</option>
@@ -78,7 +59,7 @@
 				Repeat immunization dose date 
 			</td>
 			<td>
-<input type='text' id='1.1.2.4.2.1.2.1'  name='concept[Repeat immunization dose date ]' helpText='Repeat immunization dose date '  condition='__$("1.1.2.4.2.1").value == "Yes"'  pos='6'  field_type='date' />
+<input type='text' id='1.1.2.4.2.1.2.1'  name='concept[Repeat immunization dose date ]' helpText='Repeat immunization dose date '  condition='__$("1.1.2.4.2.1").value == "Yes"'  field_type='date'  pos='6'  tt_onUnLoad='showCategory("Immunization Record"); __$("category").style.fontSize = "30px"' />
 			</td>
 		</tr>
 		<tr>
@@ -86,7 +67,7 @@
 				Was DPT-HepB-Hib 1 vaccine given at 6 weeks or later? 
 			</td>
 			<td>
-<select id='1.2' name='concept[Was DPT-HepB-Hib 1 vaccine given at 6 weeks or later? ]' helpText='Was DPT-HepB-Hib 1 vaccine given at 6 weeks or later? ' pos='7'  condition='<%= @patient.age_in_months > 1.5 and !@patient.dpt1.downcase == "yes" %>' >
+<select id='1.2' name='concept[Was DPT-HepB-Hib 1 vaccine given at 6 weeks or later? ]' helpText='Was DPT-HepB-Hib 1 vaccine given at 6 weeks or later? ' pos='7'  condition='<%= @patient.age_in_months > 1.5 and !@patient.dpt1.downcase == "yes" %>'  tt_onUnLoad='showCategory("Immunization Record"); __$("category").style.fontSize = "30px"' >
 <option></option>
 <option value='Yes'>Yes</option>
  <option value='No'>No</option>
@@ -98,7 +79,7 @@
 				Date DPT-HepB-Hib 1 vaccine given 
 			</td>
 			<td>
-<input type='text' id='1.2.2.1'  name='concept[Date DPT-HepB-Hib 1 vaccine given ]' helpText='Date DPT-HepB-Hib 1 vaccine given '  condition='__$("1.2").value == "Yes"'  pos='8'  field_type='date' />
+<input type='text' id='1.2.2.1'  name='concept[Date DPT-HepB-Hib 1 vaccine given ]' helpText='Date DPT-HepB-Hib 1 vaccine given '  condition='__$("1.2").value == "Yes"'  field_type='date'  pos='8'  tt_onUnLoad='showCategory("Immunization Record"); __$("category").style.fontSize = "30px"' />
 			</td>
 		</tr>
 		<tr>
@@ -106,7 +87,7 @@
 				Was DPT-HepB-Hib 2 vaccine given at 1 month after first dose? 
 			</td>
 			<td>
-<select id='1.3' name='concept[Was DPT-HepB-Hib 2 vaccine given at 1 month after first dose? ]' helpText='Was DPT-HepB-Hib 2 vaccine given at 1 month after first dose? ' pos='9'  condition='<%= @patient.age_in_months > 2 and !@patient.dpt2.downcase == "yes" %>' >
+<select id='1.3' name='concept[Was DPT-HepB-Hib 2 vaccine given at 1 month after first dose? ]' helpText='Was DPT-HepB-Hib 2 vaccine given at 1 month after first dose? ' pos='9'  condition='<%= @patient.age_in_months > 2 and !@patient.dpt2.downcase == "yes" %>'  tt_onUnLoad='showCategory("Immunization Record"); __$("category").style.fontSize = "30px"' >
 <option></option>
 <option value='Yes'>Yes</option>
  <option value='No'>No</option>
@@ -118,7 +99,7 @@
 				Date DPT-HepB-Hib 2 vaccine given 
 			</td>
 			<td>
-<input type='text' id='1.3.2.1'  name='concept[Date DPT-HepB-Hib 2 vaccine given ]' helpText='Date DPT-HepB-Hib 2 vaccine given '  condition='__$("1.3").value == "Yes"'  pos='10'  field_type='date' />
+<input type='text' id='1.3.2.1'  name='concept[Date DPT-HepB-Hib 2 vaccine given ]' helpText='Date DPT-HepB-Hib 2 vaccine given '  condition='__$("1.3").value == "Yes"'  field_type='date'  pos='10'  tt_onUnLoad='showCategory("Immunization Record"); __$("category").style.fontSize = "30px"' />
 			</td>
 		</tr>
 		<tr>
@@ -126,7 +107,7 @@
 				Was DPT-HepB-Hib 3 vaccine given at 1 month after second dose? 
 			</td>
 			<td>
-<select id='1.4' name='concept[Was DPT-HepB-Hib 3 vaccine given at 1 month after second dose? ]' helpText='Was DPT-HepB-Hib 3 vaccine given at 1 month after second dose? ' pos='11'  condition='<%= @patient.age_in_months > 2 and !@patient.dpt3.downcase == "yes" %>' >
+<select id='1.4' name='concept[Was DPT-HepB-Hib 3 vaccine given at 1 month after second dose? ]' helpText='Was DPT-HepB-Hib 3 vaccine given at 1 month after second dose? ' pos='11'  condition='<%= @patient.age_in_months > 2 and !@patient.dpt3.downcase == "yes" %>'  tt_onUnLoad='showCategory("Immunization Record"); __$("category").style.fontSize = "30px"' >
 <option></option>
 <option value='Yes'>Yes</option>
  <option value='No'>No</option>
@@ -138,7 +119,7 @@
 				Date DPT-HepB-Hib 3 vaccine given 
 			</td>
 			<td>
-<input type='text' id='1.4.2.1'  name='concept[Date DPT-HepB-Hib 3 vaccine given ]' helpText='Date DPT-HepB-Hib 3 vaccine given '  condition='__$("1.4").value == "Yes"'  pos='12'  field_type='date' />
+<input type='text' id='1.4.2.1'  name='concept[Date DPT-HepB-Hib 3 vaccine given ]' helpText='Date DPT-HepB-Hib 3 vaccine given '  condition='__$("1.4").value == "Yes"'  field_type='date'  pos='12'  tt_onUnLoad='showCategory("Immunization Record"); __$("category").style.fontSize = "30px"' />
 			</td>
 		</tr>
 		<tr>
@@ -146,7 +127,7 @@
 				PCV 1 vaccine given at 6 weeks or later? 
 			</td>
 			<td>
-<select id='1.5' name='concept[PCV 1 vaccine given at 6 weeks or later? ]' helpText='PCV 1 vaccine given at 6 weeks or later? ' pos='13'  condition='<%= @patient.age_in_months > 1.5 and !@patient.pcv1.downcase == "yes" %>' >
+<select id='1.5' name='concept[PCV 1 vaccine given at 6 weeks or later? ]' helpText='PCV 1 vaccine given at 6 weeks or later? ' pos='13'  condition='<%= @patient.age_in_months > 1.5 and !@patient.pcv1.downcase == "yes" %>'  tt_onUnLoad='showCategory("Immunization Record"); __$("category").style.fontSize = "30px"' >
 <option></option>
 <option value='Yes'>Yes</option>
  <option value='No'>No</option>
@@ -158,7 +139,7 @@
 				Date PCV 1 vaccine given 
 			</td>
 			<td>
-<input type='text' id='1.5.2.1'  name='concept[Date PCV 1 vaccine given ]' helpText='Date PCV 1 vaccine given '  condition='__$("1.5").value == "Yes"'  pos='14'  field_type='date' />
+<input type='text' id='1.5.2.1'  name='concept[Date PCV 1 vaccine given ]' helpText='Date PCV 1 vaccine given '  condition='__$("1.5").value == "Yes"'  field_type='date'  pos='14'  tt_onUnLoad='showCategory("Immunization Record"); __$("category").style.fontSize = "30px"' />
 			</td>
 		</tr>
 		<tr>
@@ -166,7 +147,7 @@
 				PCV 2 vaccine given at 1 month after first dose? 
 			</td>
 			<td>
-<select id='1.6' name='concept[PCV 2 vaccine given at 1 month after first dose? ]' helpText='PCV 2 vaccine given at 1 month after first dose? ' pos='15'  condition='<%= @patient.age_in_months > 1.5 and !@patient.pcv2.downcase == "yes" %>' >
+<select id='1.6' name='concept[PCV 2 vaccine given at 1 month after first dose? ]' helpText='PCV 2 vaccine given at 1 month after first dose? ' pos='15'  condition='<%= @patient.age_in_months > 1.5 and !@patient.pcv2.downcase == "yes" %>'  tt_onUnLoad='showCategory("Immunization Record"); __$("category").style.fontSize = "30px"' >
 <option></option>
 <option value='Yes'>Yes</option>
  <option value='No'>No</option>
@@ -178,7 +159,7 @@
 				Date PCV 2 vaccine given 
 			</td>
 			<td>
-<input type='text' id='1.6.2.1'  name='concept[Date PCV 2 vaccine given ]' helpText='Date PCV 2 vaccine given '  condition='__$("1.6").value == "Yes"'  pos='16'  field_type='date' />
+<input type='text' id='1.6.2.1'  name='concept[Date PCV 2 vaccine given ]' helpText='Date PCV 2 vaccine given '  condition='__$("1.6").value == "Yes"'  field_type='date'  pos='16'  tt_onUnLoad='showCategory("Immunization Record"); __$("category").style.fontSize = "30px"' />
 			</td>
 		</tr>
 		<tr>
@@ -186,7 +167,7 @@
 				PCV 3 vaccine given at 1 month after second dose? 
 			</td>
 			<td>
-<select id='1.7' name='concept[PCV 3 vaccine given at 1 month after second dose? ]' helpText='PCV 3 vaccine given at 1 month after second dose? ' pos='17'  condition='<%= @patient.age_in_months >= 1.5 and !@patient.pcv3.downcase == "yes" %>' >
+<select id='1.7' name='concept[PCV 3 vaccine given at 1 month after second dose? ]' helpText='PCV 3 vaccine given at 1 month after second dose? ' pos='17'  condition='<%= @patient.age_in_months >= 1.5 and !@patient.pcv3.downcase == "yes" %>'  tt_onUnLoad='showCategory("Immunization Record"); __$("category").style.fontSize = "30px"' >
 <option></option>
 <option value='Yes'>Yes</option>
  <option value='No'>No</option>
@@ -198,7 +179,7 @@
 				Date PCV 31 vaccine given 
 			</td>
 			<td>
-<input type='text' id='1.7.2.1'  name='concept[Date PCV 31 vaccine given ]' helpText='Date PCV 31 vaccine given '  condition='__$("1.7").value == "Yes"'  pos='18'  field_type='date' />
+<input type='text' id='1.7.2.1'  name='concept[Date PCV 31 vaccine given ]' helpText='Date PCV 31 vaccine given '  condition='__$("1.7").value == "Yes"'  field_type='date'  pos='18'  tt_onUnLoad='showCategory("Immunization Record"); __$("category").style.fontSize = "30px"' />
 			</td>
 		</tr>
 		<tr>
@@ -206,7 +187,7 @@
 				First polio vaccine at birth 
 			</td>
 			<td>
-<select id='1.8' name='concept[First polio vaccine at birth ]' helpText='First polio vaccine at birth ' pos='19'  condition='<%= @patient.age_in_months < 0.5 and !@patient.polio0.downcase == "yes" %>' >
+<select id='1.8' name='concept[First polio vaccine at birth ]' helpText='First polio vaccine at birth ' pos='19'  condition='<%= @patient.age_in_months < 0.5 and !@patient.polio0.downcase == "yes" %>'  tt_onUnLoad='showCategory("Immunization Record"); __$("category").style.fontSize = "30px"' >
 <option></option>
 <option value='Yes'>Yes</option>
  <option value='No'>No</option>
@@ -218,7 +199,7 @@
 				Date first Polio vaccine given 
 			</td>
 			<td>
-<input type='text' id='1.8.2.1'  name='concept[Date first Polio vaccine given ]' helpText='Date first Polio vaccine given '  condition='__$("1.8").value == "Yes"'  pos='20'  field_type='date' />
+<input type='text' id='1.8.2.1'  name='concept[Date first Polio vaccine given ]' helpText='Date first Polio vaccine given '  condition='__$("1.8").value == "Yes"'  field_type='date'  pos='20'  tt_onUnLoad='showCategory("Immunization Record"); __$("category").style.fontSize = "30px"' />
 			</td>
 		</tr>
 		<tr>
@@ -226,7 +207,7 @@
 				Second polio vaccine at 1.5 months 
 			</td>
 			<td>
-<select id='1.9' name='concept[Second polio vaccine at 1.5 months ]' helpText='Second polio vaccine at 1.5 months ' pos='21'  condition='<%= @patient.age_in_months >= 1.5 and !@patient.polio1.downcase == "yes" %>' >
+<select id='1.9' name='concept[Second polio vaccine at 1.5 months ]' helpText='Second polio vaccine at 1.5 months ' pos='21'  condition='<%= @patient.age_in_months >= 1.5 and !@patient.polio1.downcase == "yes" %>'  tt_onUnLoad='showCategory("Immunization Record"); __$("category").style.fontSize = "30px"' >
 <option></option>
 <option value='Yes'>Yes</option>
  <option value='No'>No</option>
@@ -238,7 +219,7 @@
 				Date second Polio vaccine given 
 			</td>
 			<td>
-<input type='text' id='1.9.2.1'  name='concept[Date second Polio vaccine given ]' helpText='Date second Polio vaccine given '  condition='__$("1.9").value == "Yes"'  pos='22'  field_type='date' />
+<input type='text' id='1.9.2.1'  name='concept[Date second Polio vaccine given ]' helpText='Date second Polio vaccine given '  condition='__$("1.9").value == "Yes"'  field_type='date'  pos='22'  tt_onUnLoad='showCategory("Immunization Record"); __$("category").style.fontSize = "30px"' />
 			</td>
 		</tr>
 		<tr>
@@ -246,7 +227,7 @@
 				Third polio vaccine at 2.5 months 
 			</td>
 			<td>
-<select id='1.10' name='concept[Third polio vaccine at 2.5 months ]' helpText='Third polio vaccine at 2.5 months ' pos='23'  condition='<%= @patient.age_in_months >= 2.5 and !@patient.polio2.downcase == "yes" %>' >
+<select id='1.10' name='concept[Third polio vaccine at 2.5 months ]' helpText='Third polio vaccine at 2.5 months ' pos='23'  condition='<%= @patient.age_in_months >= 2.5 and !@patient.polio2.downcase == "yes" %>'  tt_onUnLoad='showCategory("Immunization Record"); __$("category").style.fontSize = "30px"' >
 <option></option>
 <option value='Yes'>Yes</option>
  <option value='No'>No</option>
@@ -258,7 +239,7 @@
 				Date third Polio vaccine given 
 			</td>
 			<td>
-<input type='text' id='1.10.2.1'  name='concept[Date third Polio vaccine given ]' helpText='Date third Polio vaccine given '  condition='__$("1.10").value == "Yes"'  pos='24'  field_type='date' />
+<input type='text' id='1.10.2.1'  name='concept[Date third Polio vaccine given ]' helpText='Date third Polio vaccine given '  condition='__$("1.10").value == "Yes"'  field_type='date'  pos='24'  tt_onUnLoad='showCategory("Immunization Record"); __$("category").style.fontSize = "30px"' />
 			</td>
 		</tr>
 		<tr>
@@ -266,7 +247,7 @@
 				Fourth polio vaccine at 3.5 months 
 			</td>
 			<td>
-<select id='1.11' name='concept[Fourth polio vaccine at 3.5 months ]' helpText='Fourth polio vaccine at 3.5 months ' pos='25'  condition='<%= @patient.age_in_months >= 3.5 and !@patient.polio3.downcase == "yes" %>' >
+<select id='1.11' name='concept[Fourth polio vaccine at 3.5 months ]' helpText='Fourth polio vaccine at 3.5 months ' pos='25'  condition='<%= @patient.age_in_months >= 3.5 and !@patient.polio3.downcase == "yes" %>'  tt_onUnLoad='showCategory("Immunization Record"); __$("category").style.fontSize = "30px"' >
 <option></option>
 <option value='Yes'>Yes</option>
  <option value='No'>No</option>
@@ -278,7 +259,7 @@
 				Date fourth Polio vaccine given 
 			</td>
 			<td>
-<input type='text' id='1.11.2.1'  name='concept[Date fourth Polio vaccine given ]' helpText='Date fourth Polio vaccine given '  condition='__$("1.11").value == "Yes"'  pos='26'  field_type='date' />
+<input type='text' id='1.11.2.1'  name='concept[Date fourth Polio vaccine given ]' helpText='Date fourth Polio vaccine given '  condition='__$("1.11").value == "Yes"'  field_type='date'  pos='26'  tt_onUnLoad='showCategory("Immunization Record"); __$("category").style.fontSize = "30px"' />
 			</td>
 		</tr>
 		<tr>
@@ -286,7 +267,7 @@
 				Measles vaccine at 9 months 
 			</td>
 			<td>
-<select id='1.12' name='concept[Measles vaccine at 9 months ]' helpText='Measles vaccine at 9 months ' pos='27' >
+<select id='1.12' name='concept[Measles vaccine at 9 months ]' helpText='Measles vaccine at 9 months ' pos='27'  tt_onUnLoad='showCategory("Immunization Record"); __$("category").style.fontSize = "30px"' >
 <option></option>
 <option value='Yes'>Yes</option>
  <option value='No'>No</option>
@@ -298,7 +279,7 @@
 				Date measles vaccine given 
 			</td>
 			<td>
-<input type='text' id='1.12.2.1'  name='concept[Date measles vaccine given ]' helpText='Date measles vaccine given '  condition='__$("1.12").value == "Yes"'  pos='28' />
+<input type='text' id='1.12.2.1'  name='concept[Date measles vaccine given ]' helpText='Date measles vaccine given '  condition='__$("1.12").value == "Yes"'  field_type='date'  pos='28'  tt_onUnLoad='showCategory("Immunization Record"); __$("category").style.fontSize = "30px"' />
 			</td>
 		</tr>
 		<tr>
@@ -306,7 +287,7 @@
 				Mother HIV Status 
 			</td>
 			<td>
-<select id='1.13' name='concept[Mother HIV Status ]' helpText='Mother HIV Status ' pos='29' >
+<select id='1.13' name='concept[Mother HIV Status ]' helpText='Mother HIV Status ' pos='29'  tt_onUnLoad='showCategory("Immunization Record"); __$("category").style.fontSize = "30px"' >
 <option></option>
 <option value='Positive'>Positive</option>
  <option value='Negative'>Negative</option>
@@ -315,10 +296,10 @@
 		</tr>
 		<tr>
 			<td>
-				Childs current HIV status 
+				Child's current HIV status 
 			</td>
 			<td>
-<select id='1.13.2.1' name='concept[Childs current HIV status ]' helpText='Childs current HIV status ' condition='__$("1.13").value == "Positive"'  pos='30' >
+<select id='1.13.2.1' name='concept[Child's current HIV status ]' helpText='Child's current HIV status ' condition='__$("1.13").value == "Positive"'  pos='30'  tt_onUnLoad='showCategory("Immunization Record"); __$("category").style.fontSize = "30px"' >
 <option></option>
 <option value='Not confirmed diagnosis'>Not confirmed diagnosis</option>
  <option value='Not HIV infected'>Not HIV infected</option>

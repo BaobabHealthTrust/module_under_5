@@ -15,7 +15,7 @@
 				Vitamin A 100,000 IU given? 
 			</td>
 			<td>
-<select id='1.1' name='concept[Vitamin A 100,000 IU given? ]' helpText='Vitamin A 100,000 IU given? ' pos='0'  condition='<%= @patient.age_in_months(session["datetime"] || Date.today).to_i < 12 && @patient.age_in_months(session["datetime"] || Date.today).to_i > 6 && @patient.age_in_months(session["datetime"] || Date.today).to_i < 60 %>'  tt_onLoad='showCategory("Supplementation"); __$("category").style.fontSize = "30px"; skipFlow("<%= params["skip_flow"]%>")' >
+<select id='1.1' name='concept[Vitamin A 100,000 IU given? ]' helpText='Vitamin A 100,000 IU given? ' tt_onLoad='showCategory("Supplementation"); __$("category").style.fontSize = "30px"; skipFlow("<%= params["skip_flow"]%>")'  pos='0'  condition='<%= @patient.age_in_months(session["datetime"] || Date.today).to_i < 12 && @patient.age_in_months(session["datetime"] || Date.today).to_i > 6 && @patient.age_in_months(session["datetime"] || Date.today).to_i < 60 %>' >
 <option></option>
 <option value='No'>No</option>
  <option value='Yes'>Yes</option>
@@ -27,7 +27,7 @@
 				Vitamin A 200,000 IU given? 
 			</td>
 			<td>
-<select id='1.2' name='concept[Vitamin A 200,000 IU given? ]' helpText='Vitamin A 200,000 IU given? ' pos='1'  condition='<%= @patient.age_in_months(session["datetime"] || Date.today).to_i >= 12 && @patient.age_in_months(session["datetime"] || Date.today).to_i > 6 && @patient.age_in_months(session["datetime"] || Date.today).to_i < 60 %>'  tt_onLoad='showCategory("Supplementation"); __$("category").style.fontSize = "30px"' >
+<select id='1.2' name='concept[Vitamin A 200,000 IU given? ]' helpText='Vitamin A 200,000 IU given? ' tt_onLoad='showCategory("Supplementation"); __$("category").style.fontSize = "30px"'  pos='1'  condition='<%= @patient.age_in_months(session["datetime"] || Date.today).to_i >= 12 && @patient.age_in_months(session["datetime"] || Date.today).to_i > 6 && @patient.age_in_months(session["datetime"] || Date.today).to_i < 60 %>' >
 <option></option>
 <option value='No'>No</option>
  <option value='Yes'>Yes</option>
@@ -39,7 +39,7 @@
 				Select drug type to be given 
 			</td>
 			<td>
-<select id='1.3.1' name='concept[Select drug type to be given ]' helpText='Select drug type to be given ' disabled='disabled'  pos='3'  condition='<%= @patient.age_in_months(session["datetime"] || Date.today).to_i >= 12 && @patient.age_in_months(session["datetime"] || Date.today).to_i <= 59 %>'  tt_onLoad='showCategory("Supplementation"); __$("category").style.fontSize = "30px"' >
+<select id='1.3.1' name='concept[Select drug type to be given ]' helpText='Select drug type to be given ' disabled='disabled'  tt_onLoad='showCategory("Supplementation"); __$("category").style.fontSize = "30px"'  pos='3'  condition='<%= @patient.age_in_months(session["datetime"] || Date.today).to_i >= 12 && @patient.age_in_months(session["datetime"] || Date.today).to_i <= 59 %>' >
 <option></option>
 <option value='Mebendazole'>Mebendazole</option>
  <option value='Albendazole'>Albendazole</option>
@@ -51,7 +51,7 @@
 				Has 1 tablet Albendazole been given? 
 			</td>
 			<td>
-<input type='text' id='1.3.1.1.2'  name='concept[Has 1 tablet Albendazole been given? ]' helpText='Has 1 tablet Albendazole been given? '  pos='5'  condition='<%= @patient.age_in_months(session["datetime"] || Date.today).to_i >= 24 && @patient.age_in_months(session["datetime"] || Date.today).to_i <= 59 %>'  tt_onLoad='showCategory("Supplementation"); __$("category").style.fontSize = "30px"' />
+<input type='text' id='1.3.1.1.2'  name='concept[Has 1 tablet Albendazole been given? ]' helpText='Has 1 tablet Albendazole been given? '  tt_onLoad='showCategory("Supplementation"); __$("category").style.fontSize = "30px"'  pos='5'  condition='<%= @patient.age_in_months(session["datetime"] || Date.today).to_i >= 24 && @patient.age_in_months(session["datetime"] || Date.today).to_i <= 59 %>' />
 			</td>
 		</tr>
 		<tr>
@@ -59,7 +59,7 @@
 				Has 1 tablet Mebendazole been given? 
 			</td>
 			<td>
-<input type='text' id='1.3.1.2.1'  name='concept[Has 1 tablet Mebendazole been given? ]' helpText='Has 1 tablet Mebendazole been given? '  pos='6'  condition='<%= @patient.age_in_months(session["datetime"] || Date.today).to_i >= 12 && @patient.age_in_months(session["datetime"] || Date.today).to_i <= 59 %>'  tt_onLoad='showCategory("Supplementation"); __$("category").style.fontSize = "30px"' />
+<input type='text' id='1.3.1.2.1'  name='concept[Has 1 tablet Mebendazole been given? ]' helpText='Has 1 tablet Mebendazole been given? '  tt_onLoad='showCategory("Supplementation"); __$("category").style.fontSize = "30px"'  pos='6'  condition='<%= @patient.age_in_months(session["datetime"] || Date.today).to_i >= 12 && @patient.age_in_months(session["datetime"] || Date.today).to_i <= 59 %>' />
 			</td>
 		</tr>
 		<tr>
@@ -67,7 +67,7 @@
 				Have long-lasting insecticidal nets for malaria been given? 
 			</td>
 			<td>
-<select id='1.4.1' name='concept[Have long-lasting insecticidal nets for malaria been given? ]' helpText='Have long-lasting insecticidal nets for malaria been given? ' pos='8'  tt_onLoad='showCategory("Supplementation"); __$("category").style.fontSize = "30px"' >
+<select id='1.4.1' name='concept[Have long-lasting insecticidal nets for malaria been given? ]' helpText='Have long-lasting insecticidal nets for malaria been given? ' tt_onLoad='showCategory("Supplementation"); __$("category").style.fontSize = "30px"'  pos='8' >
 <option></option>
 <option value='Yes'>Yes</option>
  <option value='No'>No</option>
@@ -79,7 +79,7 @@
 				Date nets received 
 			</td>
 			<td>
-<input type='text' id='1.4.1.2.1'  name='concept[Date nets received ]' helpText='Date nets received '  condition='__$("1.4.1").value == "Yes"'  pos='9'  field_type='date'  tt_onLoad='showCategory("Supplementation"); __$("category").style.fontSize = "30px"' />
+<input type='text' id='1.4.1.2.1'  name='concept[Date nets received ]' helpText='Date nets received '  condition='__$("1.4.1").value == "Yes"'  field_type='date'  tt_onLoad='showCategory("Supplementation"); __$("category").style.fontSize = "30px"'  pos='9' />
 			</td>
 		</tr>
 	</table>
