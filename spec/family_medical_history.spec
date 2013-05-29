@@ -1,4 +1,4 @@
-P.1. FAMILY MEDICAL HISTORY [program: UNDER 5 PROGRAM]
+P.1. FAMILY MEDICAL HISTORY [program: UNDER 5 PROGRAM, concept: Has family a history of allergies?, scope: RECENT]
 C.1. Find out any relevant family medical history for the child as follows:
 Q.1.1. Has family a history of allergies? [pos: 0, tt_requirenextclick: false, tt_onLoad: tt_cancel_destination += "&skip_flow=true"; showCategory("Family Medical History"); __$("category").style.fontSize = "30px";  skipFlow("<%= params["skip_flow"]%>"); __$("nextButton").style.display = "none"]
 O.1.1.1. Yes

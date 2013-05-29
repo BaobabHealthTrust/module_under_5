@@ -345,8 +345,14 @@ class ClinicController < ApplicationController
 
   def check_user_activities
     activities = {}
-
-    @user["roles"].each do |role|
+    
+    if @user[:user_id].present?
+      @roles = UserRole.find_all_by_user_id(@user.id).collect{|r| r.role} rescue []
+    else
+      @roles = @user["roles"] rescue []
+    end
+   
+    (@roles).each do |role|
 
       role = role.downcase.gsub(/\s/,".") rescue nil
 
@@ -387,10 +393,10 @@ class ClinicController < ApplicationController
 
     unless @project.nil? || params[:activity].nil?
 
-      user = UserProperty.find_by_user_id_and_property(@user["user_id"],
+      user = UserProperty.find_by_user_id_and_property(@user["user_id"] ? @user["user_id"] : params[:user_id],
         "#{@project}.activities")
 
-      unless user.nil?
+      unless user.blank?
         properties = user.property_value.split(",")
 
         properties << params[:activity]
@@ -413,7 +419,13 @@ class ClinicController < ApplicationController
     
     activities = {}
 
-    @user["roles"].each do |role|
+    if @user[:user_id].present?
+      @roles = UserRole.find_all_by_user_id(@user.id).collect{|r| r.role} rescue []
+    else
+      @roles = @user["roles"] rescue []
+    end
+
+    (@roles).each do |role|
 
       role = role.downcase.gsub(/\s/,".") rescue nil
 
@@ -453,7 +465,7 @@ class ClinicController < ApplicationController
 
     unless @project.nil? || params[:activity].nil?
 
-      user = UserProperty.find_by_user_id_and_property(@user["user_id"],
+      user = UserProperty.find_by_user_id_and_property(@user["user_id"]? @user["user_id"] : params[:user_id],
         "#{@project}.activities")
 
       unless user.nil?
@@ -468,7 +480,13 @@ class ClinicController < ApplicationController
 
     activities = {}
 
-    @user["roles"].each do |role|
+    if @user[:user_id].present?
+      @roles = UserRole.find_all_by_user_id(@user.id).collect{|r| r.role} rescue []
+    else
+      @roles = @user["roles"] rescue []
+    end
+
+    (@roles).each do |role|
 
       role = role.downcase.gsub(/\s/,".") rescue nil
 

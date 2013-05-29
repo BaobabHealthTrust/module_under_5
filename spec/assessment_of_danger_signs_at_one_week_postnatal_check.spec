@@ -1,4 +1,4 @@
-P.1. ASSESSMENT AT ONE WEEK POSTNATAL CHECK [program: UNDER 5 PROGRAM, label: Assessment]
+P.1. ASSESSMENT AT ONE WEEK POSTNATAL CHECK [program: UNDER 5 PROGRAM, label: Assessment, scope: TODAY, concept: Cyanosis]
 C.1. One week after the child is born, conduct the following checks:
 Q.1.1. Does the child have fever? [pos: 0, tt_requirenextclick: false, tt_onLoad: tt_cancel_destination += "&skip_flow=true"; __$("nextButton").style.display = "none"; skipFlow("<%= params["skip_flow"]%>"); showCategory("Assessment"); __$("category").style.fontSize = "30px";]
 O.1.1.1. Yes

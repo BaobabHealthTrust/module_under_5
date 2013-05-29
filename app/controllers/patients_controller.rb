@@ -44,7 +44,8 @@ class PatientsController < ApplicationController
     @task.next_task
 
     @babies = @patient.current_babies rescue []
-
+    
+=begin
     @recent_encounters = []
 
     @programs = @patient.program_encounters.current.each{|p|
@@ -62,7 +63,11 @@ class PatientsController < ApplicationController
       "REASON FOR SPECIAL CARE" => "/protocol_patients/reason_for_special_care",
       "MEDICAL HISTORY" => "/protocol_patients/medical_history",
       "FAMILY MEDICAL HISTORY" => "/protocol_patients/family_medical_history",
-      "IMMUNIZATION RECORD" => "/protocol_patients/immunization_record"
+      "IMMUNIZATION RECORD" => "/protocol_patients/immunization_record",
+      "ASSESSMENT" => "/protocol_patients/assessment",
+      "SUPPLIMENTATION" => "/protocol_patients/supplementation",
+      "SURGICAL HISTORY" => "/protocol_patients/surgical_history",
+      "INITIAL NEW BORN RECORD" => "/protocol_patients/initial_new_born_record"
     }
  
     @route_names = YAML.load_file("#{Rails.root}/config/application.yml")["#{Rails.env
@@ -79,7 +84,7 @@ class PatientsController < ApplicationController
     unless params[:skip_flow] && params[:skip_flow].to_s == "true"
       redirect_to "#{@destinationn}/#{params[:id]}?user_id=#{params[:user_id]}&patient_id=#{params[:id]}&id=#{params[:id]}" and return if !@destinationn.blank?
     end
-    
+=end
   end
 
   def current_visit

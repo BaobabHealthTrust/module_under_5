@@ -1,4 +1,4 @@
-P.1. UNDER 5 VISIT [program: UNDER 5 PROGRAM, includejs: dispense;generics, includecss: dispense;drug-style]
+P.1. UNDER 5 VISIT [program: UNDER 5 PROGRAM, includejs: dispense;generics, includecss: dispense;drug-style, concept: Weight, scope: TODAY]
 C.1. On each regular child under 5 visit, capture the following details:
 Q.1.1. Are there any diagnoses to be captured? [pos: 0, disabled: disabled, tt_requirenextclick: false, tt_onLoad: tt_cancel_destination += "&skip_flow=true"; __$("nextButton").style.display = "none"; skipFlow("<%= params["skip_flow"]%>"); showCategory("Under 5 Visit"); __$("category").style.fontSize = "30px";]
 O.1.1.1. No

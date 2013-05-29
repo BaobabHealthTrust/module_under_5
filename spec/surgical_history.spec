@@ -1,4 +1,4 @@
-P.1. SURGICAL HISTORY [program: UNDER 5 PROGRAM]
+P.1. SURGICAL HISTORY [program: UNDER 5 PROGRAM, scope: RECENT, concept: Ever had any surgical procedure?]
 Q.1.1. Ever had any surgical procedure? [pos: 0, tt_onLoad: tt_cancel_destination += "&skip_flow=true"; showCategory("Surgical History"); __$("category").style.fontSize = "30px"; skipFlow("<%= params["skip_flow"]%>")]
 O.1.1.1. No
 O.1.1.2. Yes

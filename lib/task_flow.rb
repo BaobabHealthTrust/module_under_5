@@ -107,6 +107,21 @@ class TaskFlow
 
     end
 
+    if File.exists?("#{Rails.root}/config/protocol_task_flow.yml")
+      map = YAML.load_file("#{Rails.root}/config/protocol_task_flow.yml")["#{Rails.env
+        }"]["label.encounter.map"].split(",") rescue []
+    end
+
+    @label_encounter_map = {}
+    
+    map.each{ |tie|
+      label = tie.split("|")[0]
+      encounter = tie.split("|")[1] rescue nil
+
+      @label_encounter_map[label] = encounter if !label.blank? && !encounter.blank?
+     
+    }
+    
     @patient = self.patient
 
     # tasks[task] = [weight, path, encounter_type, concept_id, exception_concept_id, 
@@ -135,9 +150,16 @@ class TaskFlow
     self.task_list = tasks
 
     sorted_tasks = sorted_tasks.sort
-
+    
     sorted_tasks.each do |pos, tsk|
 
+      @encounter_name = @label_encounter_map[tasks[tsk][2]]rescue nil
+
+      if !self.current_user_activities.include?(tsk.downcase) || @encounter_name.blank?
+        normal_flow -= [tsk.downcase]
+        next
+      end
+      
       # next if tasks[tsk][8] == false
       # If user does not have this activity, goto the patient dashboard
       if tasks[tsk][8] == false        
@@ -148,17 +170,18 @@ class TaskFlow
 
       case tasks[tsk][5]
       when "TODAY"
-
+       
         checked_already = false
 
         if !tasks[tsk][3].blank? && checked_already == false    # Check for presence of specific concept_id
           available = Encounter.find(:all, :joins => [:observations], :conditions =>
               ["patient_id = ? AND encounter_type = ? AND obs.concept_id = ? AND DATE(encounter_datetime) = ?",
-              self.patient.id, EncounterType.find_by_name(tasks[tsk][2]), tasks[tsk][3], self.current_date.to_date]) rescue []
-
+              self.patient.id, EncounterType.find_by_name(@encounter_name).id , ConceptName.find_by_name(tasks[tsk][3]).concept_id, self.current_date.to_date]) rescue []
+              
           checked_already = tasks[tsk][7]
+          
           if available.length > 0
-            if normal_flow[0].downcase == tsk.downcase
+            if normal_flow.include?(tsk.downcase)
               normal_flow -= [tsk.downcase]
               next
             end
@@ -168,11 +191,11 @@ class TaskFlow
         if !tasks[tsk][4].blank? && checked_already == false   # Check for concept exclusions from encounter_type group
           available = Encounter.find(:all, :joins => [:observations], :conditions =>
               ["patient_id = ? AND encounter_type = ? AND NOT obs.concept_id = ? AND DATE(encounter_datetime) = ?",
-              self.patient.id, EncounterType.find_by_name(tasks[tsk][2]), tasks[tsk][4], self.current_date.to_date]) rescue []
+              self.patient.id, EncounterType.find_by_name(@encounter_name).id, ConceptName.find_by_name(tasks[tsk][4]).concept_id, self.current_date.to_date]) rescue []
 
           checked_already = tasks[tsk][7]
           if available.length > 0
-            if normal_flow[0].downcase == tsk.downcase
+            if normal_flow.include?(tsk.downcase)
               normal_flow -= [tsk.downcase]
               next
             end
@@ -181,11 +204,11 @@ class TaskFlow
 
         if !tasks[tsk][6].blank? && checked_already == false   # Check for drug concept if available
           available = self.patient.orders.all(:conditions => ["concept_id = ? AND start_date = ?",
-              tasks[tsk][6], self.current_date.to_date]) rescue []
+              ConceptName.find_by_name(tasks[tsk][6]).concept_id, self.current_date.to_date]) rescue []
 
           checked_already = tasks[tsk][7]
           if available.length > 0
-            if normal_flow[0].downcase == tsk.downcase
+            if normal_flow.include?(tsk.downcase)
               normal_flow -= [tsk.downcase]
               next
             end
@@ -196,19 +219,19 @@ class TaskFlow
         if checked_already == false
           available = Encounter.find(:all, :joins => [:observations], :conditions =>
               ["patient_id = ? AND encounter_type = ? AND DATE(encounter_datetime) = ?",
-              self.patient.id, EncounterType.find_by_name(tasks[tsk][2]), self.current_date.to_date]) rescue []
-
+              self.patient.id, EncounterType.find_by_name(@encounter_name).id, self.current_date.to_date]) rescue []
+           
           if available.length > 0
-            if normal_flow[0].downcase == tsk.downcase
+            if normal_flow.include?(tsk.downcase)
               normal_flow -= [tsk.downcase]
               next
             end
           end
         end
-
+    
         self.encounter_type = tsk
 
-        if normal_flow[0].downcase == tsk.downcase
+        if normal_flow.include?(tsk.downcase)
           self.url = tasks[tsk][1]
         else
           self.url = "/patients/show/#{self.patient.id}?user_id=#{self.user.id}"
@@ -222,12 +245,13 @@ class TaskFlow
           available = Encounter.find(:all, :joins => [:observations], :conditions =>
               ["patient_id = ? AND encounter_type = ? AND obs.concept_id = ? " +
                 "AND (DATE(encounter_datetime) >= ? AND DATE(encounter_datetime) <= ?)",
-              self.patient.id, EncounterType.find_by_name(tasks[tsk][2]), tasks[tsk][3],
+              self.patient.id, EncounterType.find_by_name(@encounter_name).id, ConceptName.find_by_name(tasks[tsk][3]).concept_id,
               (self.current_date.to_date - 6.month), (self.current_date.to_date + 6.month)]) rescue []
 
           checked_already = tasks[tsk][7]
-          if available.length > 0
-            if normal_flow[0].downcase == tsk.downcase
+          
+          if available.length > 0           
+            if normal_flow.include?(tsk.downcase)
               normal_flow -= [tsk.downcase]
               next
             end
@@ -238,12 +262,12 @@ class TaskFlow
           available = Encounter.find(:all, :joins => [:observations], :conditions =>
               ["patient_id = ? AND encounter_type = ? AND NOT obs.concept_id = ? " +
                 "AND (DATE(encounter_datetime) >= ? AND DATE(encounter_datetime) <= ?)",
-              self.patient.id, EncounterType.find_by_name(tasks[tsk][2]), tasks[tsk][4],
+              self.patient.id, EncounterType.find_by_name(@encounter_name).id, ConceptName.find_by_name(tasks[tsk][4]).concept_id,
               (self.current_date.to_date - 6.month), (self.current_date.to_date + 6.month)]) rescue []
 
           checked_already = tasks[tsk][7]
           if available.length > 0
-            if normal_flow[0].downcase == tsk.downcase
+            if normal_flow.include?(tsk.downcase)
               normal_flow -= [tsk.downcase]
               next
             end
@@ -253,11 +277,11 @@ class TaskFlow
         if !tasks[tsk][6].blank? && checked_already == false   # Check for drug concept if available
           available = self.patient.orders.all(:conditions => ["concept_id = ? AND start_date = ? " +
                 "AND (DATE(start_date) >= ? AND DATE(start_date) <= ?)",
-              tasks[tsk][6], (self.current_date.to_date - 6.month), (self.current_date.to_date + 6.month)]) rescue []
+              ConceptName.find_by_name(tasks[tsk][6]).concept_id, (self.current_date.to_date - 6.month), (self.current_date.to_date + 6.month)]) rescue []
 
           checked_already = tasks[tsk][7]
           if available.length > 0
-            if normal_flow[0].downcase == tsk.downcase
+            if normal_flow.include?(tsk.downcase)
               normal_flow -= [tsk.downcase]
               next
             end
@@ -269,11 +293,11 @@ class TaskFlow
           available = Encounter.find(:all, :joins => [:observations], :conditions =>
               ["patient_id = ? AND encounter_type = ? " +
                 "AND (DATE(encounter_datetime) >= ? AND DATE(encounter_datetime) <= ?)",
-              self.patient.id, EncounterType.find_by_name(tasks[tsk][2]),
+              self.patient.id, EncounterType.find_by_name(@encounter_name).id,
               (self.current_date.to_date - 6.month), (self.current_date.to_date + 6.month)]) rescue []
 
           if available.length > 0
-            if normal_flow[0].downcase == tsk.downcase
+            if normal_flow.include?(tsk.downcase)
               normal_flow -= [tsk.downcase]
               next
             end
@@ -282,7 +306,7 @@ class TaskFlow
 
         self.encounter_type = tsk
 
-        if normal_flow[0].downcase == tsk.downcase
+        if normal_flow.include?(tsk.downcase)
           self.url = tasks[tsk][1]
         else
           self.url = "/patients/show/#{self.patient.id}?user_id=#{self.user.id}"
@@ -295,11 +319,11 @@ class TaskFlow
         if !tasks[tsk][3].blank? && checked_already == false    # Check for presence of specific concept_id
           available = Encounter.find(:all, :joins => [:observations], :conditions =>
               ["patient_id = ? AND encounter_type = ? AND obs.concept_id = ?",
-              self.patient.id, EncounterType.find_by_name(tasks[tsk][2]), tasks[tsk][3]]) rescue []
+              self.patient.id, EncounterType.find_by_name(@encounter_name).id, ConceptName.find_by_name(tasks[tsk][3]).concept_id]) rescue []
 
           checked_already = tasks[tsk][7]
           if available.length > 0
-            if normal_flow[0].downcase == tsk.downcase
+            if normal_flow.include?(tsk.downcase)
               normal_flow -= [tsk.downcase]
               next
             end
@@ -309,11 +333,11 @@ class TaskFlow
         if !tasks[tsk][4].blank? && checked_already == false   # Check for concept exclusions from encounter_type group
           available = Encounter.find(:all, :joins => [:observations], :conditions =>
               ["patient_id = ? AND encounter_type = ? AND NOT obs.concept_id = ?",
-              self.patient.id, EncounterType.find_by_name(tasks[tsk][2]), tasks[tsk][4]]) rescue []
+              self.patient.id, EncounterType.find_by_name(@encounter_name).id, ConceptName.find_by_name(tasks[tsk][4]).concept_id]) rescue []
 
           checked_already = tasks[tsk][7]
           if available.length > 0
-            if normal_flow[0].downcase == tsk.downcase
+            if normal_flow.include?(tsk.downcase)
               normal_flow -= [tsk.downcase]
               next
             end
@@ -322,11 +346,11 @@ class TaskFlow
 
         if !tasks[tsk][6].blank? && checked_already == false   # Check for drug concept if available
           available = self.patient.orders.all(:conditions => ["concept_id = ?",
-              tasks[tsk][6]]) rescue []
+              ConceptName.find_by_name(tasks[tsk][6]).concept_id]) rescue []
 
           checked_already = tasks[tsk][7]
           if available.length > 0
-            if normal_flow[0].downcase == tsk.downcase
+            if normal_flow.include?(tsk.downcase)
               normal_flow -= [tsk.downcase]
               next
             end
@@ -337,10 +361,10 @@ class TaskFlow
         if checked_already == false
           available = Encounter.find(:all, :joins => [:observations], :conditions =>
               ["patient_id = ? AND encounter_type = ?",
-              self.patient.id, EncounterType.find_by_name(tasks[tsk][2])]) rescue []
+              self.patient.id, EncounterType.find_by_name(@encounter_name)]) rescue []
 
           if available.length > 0
-            if normal_flow[0].downcase == tsk.downcase
+            if normal_flow.include?(tsk.downcase)
               normal_flow -= [tsk.downcase]
               next
             end
@@ -349,7 +373,7 @@ class TaskFlow
 
         self.encounter_type = tsk
 
-        if normal_flow[0].downcase == tsk.downcase
+        if normal_flow.include?(tsk.downcase)
           self.url = tasks[tsk][1]
         else
           self.url = "/patients/show/#{self.patient.id}?user_id=#{self.user.id}"

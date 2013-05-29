@@ -1,4 +1,4 @@
-P.1. MEDICAL HISTORY [program: UNDER 5 PROGRAM]
+P.1. MEDICAL HISTORY [program: UNDER 5 PROGRAM, concept: Child ever had asthma?, scope: RECENT]
 C.1. Capture relevant medical history for the child as follows:
 Q.1.1. Child ever had asthma? [pos: 0, tt_requirenextclick: false, tt_onLoad: tt_cancel_destination += "&skip_flow=true"; __$("nextButton").style.display = "none"; showCategory("Medical History"); __$("category").style.fontSize = "30px"; skipFlow("<%= params["skip_flow"]%>")]
 O.1.1.1. Yes
