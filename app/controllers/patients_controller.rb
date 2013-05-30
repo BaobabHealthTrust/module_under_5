@@ -26,7 +26,8 @@ class PatientsController < ApplicationController
     @task.tasks.each{|task|
 
       next if task.downcase == "update baby outcome" and (@patient.current_babies.length == 0 rescue false)
-
+      next if !@task.current_user_activities.include?(task)
+       
       @links[task.titleize] = "/protocol_patients/#{task.gsub(/\s/, "_")}?patient_id=#{
       @patient.id}&user_id=#{params[:user_id]}" + (task.downcase == "update baby outcome" ?
           "&baby=1&baby_total=#{(@patient.current_babies.length rescue 0)}" : "")
