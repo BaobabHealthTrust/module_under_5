@@ -19,6 +19,23 @@ class PatientsController < ApplicationController
     
     redirect_to "/encounters/no_user" and return if @user.nil?
 
+    #check for mother hiv status
+
+    @hiv_concepts = ["MOTHER HIV STATUS", "HIV STATUS", "DNA-PCR Testing Result", "Rapid Antibody Testing Result", "Alive On ART"].collect{|concept| ConceptName.find_by_name(concept).concept_id}.compact rescue []
+    @hiv_encounters = ["IMMUNIZATION RECORD", "UPDATE HIV STATUS", "HIV STATUS AT ENROLLMENT"].collect{|enc| EncounterType.find_by_name(enc).encounter_type_id}.compact rescue []
+
+    @is_positive = false
+    
+    Encounter.find(:all, :conditions => ["encounter_type IN (?)", @hiv_encounters]).collect{|enc|     
+      enc }.compact.each do |enc|
+      next if @is_positive == true
+      @is_positive = (enc.observations.collect{|ob|
+          ob.answer_string if ob.answer_string.match(/Positive|HIV Infected/i)}.compact.length > 0)
+
+    end
+
+   # raise @is_positive.to_yaml
+
     @task = TaskFlow.new(params[:user_id], @patient.id)
 
     @links = {}
@@ -41,7 +58,7 @@ class PatientsController < ApplicationController
     if !@demographics_url.nil?
       @demographics_url = @demographics_url + "/demographics/#{@patient.id}?user_id=#{@user.id}&ext=true"
     end
-		@demographics_url = "http://" + @demographics_url if (!@demographics_url.match(/http:/) rescue false)
+    @demographics_url = "http://" + @demographics_url if (!@demographics_url.match(/http:/) rescue false)
     @task.next_task
 
     @babies = @patient.current_babies rescue []
