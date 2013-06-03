@@ -213,7 +213,7 @@ class PatientsController < ApplicationController
     @weights = []
     birthdate_sec = @patient.person.birthdate
 
-    ids = ConceptName.find(:all, :conditions => ["name IN (?)", ["WEIGHT", "BIRTH WEIGHT"]]).collect{|concept|
+    ids = ConceptName.find(:all, :conditions => ["name IN (?)", ["WEIGHT", "BIRTH WEIGHT", "BIRTH WEIGHT AT ADMISSION", "WEIGHT (KG)"]]).collect{|concept|
       concept.concept_id}
  
     Observation.find(:all, :conditions => ["person_id = ? AND concept_id IN (?)",
