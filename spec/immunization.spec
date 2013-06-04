@@ -71,7 +71,7 @@ Q.1.12.2.1. Date measles vaccine given [tt_onUnLoad: showCategory("Immunization 
 Q.1.13. Mother HIV Status [tt_onUnLoad: showCategory("Immunization Record"); __$("category").style.fontSize = "30px", pos: 29]
 O.1.13.1. Negative
 O.1.13.2. Positive
-Q.1.13.2.1. Child current HIV status [concept: Child's current HIV status, tt_onUnLoad: showCategory("Immunization Record"); __$("category").style.fontSize = "30px", pos: 30]
+Q.1.13.2.1. Child current HIV status [concept: HIV Status, tt_onUnLoad: showCategory("Immunization Record"); __$("category").style.fontSize = "30px", pos: 30]
 O.1.13.2.1.1. HIV infected
 O.1.13.2.1.2. Not HIV infected
 O.1.13.2.1.3. Not confirmed diagnosis
