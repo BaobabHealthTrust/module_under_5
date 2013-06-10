@@ -31,6 +31,19 @@
         margin-right: 20px;
       }
 
+      #info{
+        position: absolute;      
+        height:	490px;
+        border-radius: 5px;
+        padding-top: 10px;
+        padding-bottom: 30px;       
+        margin: 40px;
+        margin-top: 80px;
+        margin-right: 0.35%;
+        top: 0px;
+        background: CornflowerBlue;
+      } 
+
       #boundary{
         width: 985px;
         height:	490px;
@@ -184,6 +197,10 @@
 
     </div>
 
+    <div id ="info">
+
+    </div>
+
     <div id="footer" class="buttonDiv">
       <!--div id="buttons" class="buttonDiv"-->
       <button id="finishButton" class="button navButton green"
@@ -322,14 +339,47 @@
         };
       }
 
-      objCanvas.addEventListener('click', function(evt){
+      objCanvas.addEventListener('mousedown', function(evt){
 
+        //display diagnoses if any, weight and height for clicked point
         var mousePos = getMousePos(objCanvas, evt);
-        //display diagones if any, weight and height for clicked point
-        
+
+        var y_scale = objCanvas.height/32;
+        var x_scale = objCanvas.width/60;
+
+        var calWeight = (objCanvas.height - mousePos.y)/y_scale;
+        var calAge = (mousePos.x)/x_scale;
+
+        var link = "/patients/chart_diagnoses?patient_id=<%= params[:patient_id] %>&baby_id=<%=  params[:baby_id]%>&age=" + calAge + "&weight=" + calWeight + "&user_id=<%= params[:user_id] %>";
+        ajaxCustomRequest(link);
         //objContext.drawImage(objImage, mousePos.x - (objImage.width / 2), mousePos.y - (objImage.height / 2));
 
       })
+
+      function ajaxCustomRequest(aUrl) {
+        var httpRequest = new XMLHttpRequest();
+        httpRequest.onreadystatechange = function() {
+          handleCustomResult(httpRequest);
+        };
+        try {
+          httpRequest.open('GET', aUrl, true);
+          httpRequest.send(null);
+        } catch(e){
+        }
+      }
+
+      function handleCustomResult(aXMLHttpRequest) {
+        if (!aXMLHttpRequest) return;
+
+        if (aXMLHttpRequest.readyState == 4 && (aXMLHttpRequest.status == 200 ||
+          aXMLHttpRequest.status == 304)) {
+          
+          var result = JSON.parse(aXMLHttpRequest.responseText);
+         
+          __$("info").innerHTML = result;
+          document.getElementById("info").style.display = "block";
+        }
+      }
       
       function calculateHeight(L, M, S, Z){
       
@@ -432,6 +482,22 @@
           objContext.stroke();
           
         }
+
+        resetPath();
+
+        for(var a = 0; a < weights_arr.length; a++){
+
+          var y = objCanvas.height - y_scale * weights_hash[weights_arr[a]];
+          var x = x_scale * weights_arr[a];
+
+          objContext.moveTo(x, y);
+          objContext.arc(x, y, 4, 0, 2 * Math.PI, false);
+          objContext.fillStyle = gender.match(/F/i)? "#CC0055": "#0066FF";
+          objContext.fill();
+          objContext.stroke();
+
+        }
+        
       }
 
       function curve(){
@@ -477,95 +543,102 @@
               10  : "<span style='color:red;'>-3</span>"
             }
           }
-            if (zVal[j] != undefined){
-              zStr = zVal[j];
-            }else{zStr = ""}
-            zCalibrations += (j < 15) ? "<div class = 'z-data'>" +   zStr  + "</div>" : "<div class = 'z-data sentinel' style='height:29;'></div>"
-          }
+          if (zVal[j] != undefined){
+            zStr = zVal[j];
+          }else{zStr = ""}
+          zCalibrations += (j < 15) ? "<div class = 'z-data'>" +   zStr  + "</div>" : "<div class = 'z-data sentinel' style='height:29;'></div>"
+        }
 
-          document.getElementById("x-axis-cal").innerHTML = xaxisCalibrations;
-          document.getElementById("x-years").innerHTML = xaxisCalibrationsYears;
-          document.getElementById("z-labels").innerHTML = zCalibrations;
+        document.getElementById("x-axis-cal").innerHTML = xaxisCalibrations;
+        document.getElementById("x-years").innerHTML = xaxisCalibrationsYears;
+        document.getElementById("z-labels").innerHTML = zCalibrations;
           
         
-          var yaxisCalibrations = "";
+        var yaxisCalibrations = "";
 
-          for (var n = 32; n >= 0; n --){
+        for (var n = 32; n >= 0; n --){
 
-            yaxisCalibrations += " " + ((n%2 == 0)? "<div class='y_cal' style = 'color=white;font-size:0.9em;'>" + n + "</div>" : "")
+          yaxisCalibrations += " " + ((n%2 == 0)? "<div class='y_cal' style = 'color=white;font-size:0.9em;'>" + n + "</div>" : "")
 
-          }
-       
-          document.getElementById("y-axis-cal").innerHTML = yaxisCalibrations;
-          document.getElementById("y2-axis-cal").innerHTML = yaxisCalibrations;
-        
-       
-
-          updateChartGenderColorMatch();
-          var objImage = new Image();
-          objImage.src = "weightChart.png";
-
-          objContext.drawImage(objImage, 900, 450);
-
-          colorChart(3, -3, "yellow");
-          resetPath();
-          colorChart(2, -2, "yellowgreen");
-        
-          resetPath();
-          standardCurve(3);
-          resetPath();
-          standardCurve(-3);
-          resetPath();
-          standardCurve(2);
-          resetPath();
-          standardCurve(-2);
-          resetPath();
-          standardCurve(0);
-          resetPath();
-          drawBackground();
-          resetPath();
-          babyWeightsCurve();
         }
+       
+        document.getElementById("y-axis-cal").innerHTML = yaxisCalibrations;
+        document.getElementById("y2-axis-cal").innerHTML = yaxisCalibrations;
+
+
+        var length = document.getElementById("boundary").offsetWidth;
+        
+        document.getElementById("info").style.left =  length + 5 + "px";        
+        document.getElementById("info").style.width =  19.5 + "%";
+        document.getElementById("info").style.overflowY = "auto";
+        document.getElementById("info").style.overflowX = "auto";
+        document.getElementById("info").style.display = "none";
+
+        updateChartGenderColorMatch();
+        var objImage = new Image();
+        objImage.src = "weightChart.png";
+
+        objContext.drawImage(objImage, 900, 450);
+
+        colorChart(3, -3, "yellow");
+        resetPath();
+        colorChart(2, -2, "yellowgreen");
+        
+        resetPath();
+        standardCurve(3);
+        resetPath();
+        standardCurve(-3);
+        resetPath();
+        standardCurve(2);
+        resetPath();
+        standardCurve(-2);
+        resetPath();
+        standardCurve(0);
+        resetPath();
+        drawBackground();
+        resetPath();
+        babyWeightsCurve();
+      }
      
-        function colorChart(z1, z2, color){
+      function colorChart(z1, z2, color){
 
-          objContext.fillStyle = color;
+        objContext.fillStyle = color;
        
-          standardCurve(z1, "false");
+        standardCurve(z1, "false");
         
-          result = request(file, "standard_curve", "L,M,S", 0);
-          response = result.split(",");
-          weight = calculateHeight(response[1], response[2], response[3], z1);
+        result = request(file, "standard_curve", "L,M,S", 0);
+        response = result.split(",");
+        weight = calculateHeight(response[1], response[2], response[3], z1);
          
-          pH = objCanvas.height - weight*(objCanvas.height/32);
+        pH = objCanvas.height - weight*(objCanvas.height/32);
        
-          objContext.moveTo(0, pH);
+        objContext.moveTo(0, pH);
       
-          result = request(file, "standard_curve", "L,M,S", 0);
-          response = result.split(",");
-          weight = calculateHeight(response[1], response[2], response[3], z2);
-          pW = objCanvas.height - weight*(objCanvas.height/32)
-          objContext.lineTo(0, pW)
+        result = request(file, "standard_curve", "L,M,S", 0);
+        response = result.split(",");
+        weight = calculateHeight(response[1], response[2], response[3], z2);
+        pW = objCanvas.height - weight*(objCanvas.height/32)
+        objContext.lineTo(0, pW)
        
-          standardCurve(z2, "false");
+        standardCurve(z2, "false");
 
-          result = request(file, "standard_curve", "L,M,S", 60);
-          response = result.split(",");
-          weight = calculateHeight(response[1], response[2], response[3], z1);
-          pT = objCanvas.height - weight*(objCanvas.height/32)
+        result = request(file, "standard_curve", "L,M,S", 60);
+        response = result.split(",");
+        weight = calculateHeight(response[1], response[2], response[3], z1);
+        pT = objCanvas.height - weight*(objCanvas.height/32)
         
-          objContext.lineTo(objCanvas.width, pT)
-          objContext.lineTo(0, pH)
-          objContext.closePath();
+        objContext.lineTo(objCanvas.width, pT)
+        objContext.lineTo(0, pH)
+        objContext.closePath();
        
-          objContext.fill();
+        objContext.fill();
         
-        }
+      }
 
-        function resetPath(){
-          objContext.closePath();
-          objContext.beginPath();
-        }
+      function resetPath(){
+        objContext.closePath();
+        objContext.beginPath();
+      }
       
     </script>
   </body>

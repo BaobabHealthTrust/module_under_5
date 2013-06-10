@@ -1,4 +1,37 @@
-Instructions for Running Application 
+Instructions for Running Application
+
+NB: The instructions below are ideal for applications intended to run on one database
+
+To complete configuration of an application at a site, you are supposed to have "user managament" and "patient
+registration" modules running, refer to D) on how to configure the two modules
+
+In application.yml, 'user.management.url' should map to link of user management module
+                    'patient.registration.url' should map to link of patient registration module
+
+A I). If a database has not yet been configured by another application
+
+    1. Edit config/database.yml.example to match correct database parameters
+    2. Edit config/application.yml.example to match correct application parameters
+        (The above files with be copied and renamed without .example extension when database initialization starts)
+    3. Copy the protocol_task_flow.yml.example to protocol_task_flow.yml
+
+        cp config/protocol_task_flow.yml.example  config/protocol_task_flow.yml
+
+    4. Run the following command to initialize database while in application folder
+
+        script/initial_database_setup.sh environment site
+
+ I).  If a database has already been configured by another application run the following commands from application folder
+
+       1. cp config/protocol_task_flow.yml.example  config/protocol_task_flow.yml
+          cp config/database.yml.example  config/database.yml
+          cp config/application.yml.example  config/application.yml
+
+       2. Edit the the new files copied above with the right parameters
+
+B.  
+
+
 
 1. With external User Management and Patient Registration Modules.
 
@@ -9,9 +42,10 @@ Instructions for Running Application
  		a. Merge parent application routes with routes in user management and patient registration modules
  		b. Merge parent application library files in /lib with library files in user management and patient registration modules
  		c. Make sure that the line 
- 			 	config.reload_plugins = true
+ 			 config.reload_plugins = true
+
  			 Is available in file config/environment.rb
  		The application link can as well be used as link for user management and patient registration by other applications
 
- Ideally, all applications to use one database
+ 
  		
