@@ -232,21 +232,21 @@ class PatientsController < ApplicationController
     age = params[:age].to_i rescue nil
     date = @patient.person.birthdate.to_date + age.months rescue nil
     result = ""
-      
+     
     Encounter.find_all_by_patient_id(@patient.patient_id).collect{|enc|
     
-      #  if  (enc.encounter_datetime.to_date <= date and enc.encounter_datetime.to_date > (date - 6.months).to_date rescue false)
-      result += "</br><span style='color: white;'>" + enc.name.humanize.upcase + " (" + enc.encounter_datetime.strftime("%d-%b-%Y") + ")</br>" + "</span>"
+      if  ((enc.encounter_datetime.to_date <= date.to_date and enc.encounter_datetime.to_date >= (date - 3.months).to_date) rescue false)
+        result += "</br><span style='color: white;'>" + enc.name.humanize.upcase + " (" + enc.encounter_datetime.strftime("%d-%b-%Y") + ")</br>" + "</span>"
 
-      obs_total = 0
-      enc.observations.each do |obs|
-        result += "&nbsp&nbsp&nbsp" + ConceptName.find_by_concept_id(obs.concept_id).name + "&nbsp : &nbsp" + obs.answer_string + "</br>"
-        obs_total += 1
+        obs_total = 0
+        enc.observations.each do |obs|
+          result += "&nbsp&nbsp&nbsp" + ConceptName.find_by_concept_id(obs.concept_id).name + "&nbsp : &nbsp" + obs.answer_string + "</br>"
+          obs_total += 1
+        end
       end
-      #  end
     }
 
-    result = "</br></br></br>&nbsp&nbsp&nbspNO DATA AVAILABLE</br></br> &nbsp&nbsp&nbspFROM  : #{(date - 6.months).strftime("%d-%b-%Y")}  (6 months back) </br> &nbsp&nbsp&nbspTO  :   #{date.strftime("%d-%b-%Y")} (Pointed)" if result.blank?
+    result = "</br></br></br>&nbsp&nbsp&nbspNO DATA AVAILABLE</br></br> &nbsp&nbsp&nbspFROM  : #{(date - 3.months).strftime("%d-%b-%Y")}  (3 months back) </br> &nbsp&nbsp&nbspTO  :   #{date.strftime("%d-%b-%Y")} (Pointed)" if result.blank?
     result = "<span style='font-weight: bold;'>&nbsp&nbsp&nbsp&nbsp&nbsp&nbspAT #{age.to_s} MONTHS #{} OF AGE<br></span>" + result
     render :text => result.to_json
   end
