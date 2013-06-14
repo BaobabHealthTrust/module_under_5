@@ -3,3 +3,5 @@ tmp/
 nbproject/
 *.swap
 *.yml
+app/controllers/protocol_patients_controller.rb
+app/views/protocol_patients/

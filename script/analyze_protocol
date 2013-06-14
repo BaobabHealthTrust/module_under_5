@@ -7,6 +7,8 @@ require "json"
 
 @subpages = {}
 
+@label_encounter_map = {}
+
 @flow = []
 
 @questions = {"order" => {}}
@@ -307,7 +309,7 @@ end
 
 Dir.mkdir("#{File.expand_path('../../app/views', __FILE__)}/protocol_patients") if !File.exists?(folder)
 
-@controller_content = "\nclass ProtocolPatientsController < ApplicationController\n\n"
+@controller_content = "\nclass ProtocolPatientsController < ApplicationController\n\n\tbefore_filter :check_user\n\n"
 
 @written = {}
 
@@ -612,7 +614,9 @@ Dir.foreach(File.expand_path('../../spec', __FILE__)) do |filename|
 
       @flow << "#{key}" if (!value["ignore"].nil? ? (!value["ignore"].downcase == "true" ? false : true ) : true)
 
-      name = value["text"].strip.downcase.gsub(/\s/, "_").gsub(/\//, "").gsub(/\-/, "_") rescue (raise value.to_yaml)
+      name_label = value["text"].strip.downcase.gsub(/\s/, "_").gsub(/\//, "") rescue (raise value.to_yaml)
+      
+      name = name_label.gsub(/\-/, "_")
 
       label = value["label"] if !value["label"].nil?
 
@@ -620,6 +624,8 @@ Dir.foreach(File.expand_path('../../spec', __FILE__)) do |filename|
 
       labeltxt = label.strip.downcase.gsub(/\s/, "_").gsub(/\//, "").gsub(/\-/, "_") rescue nil
 
+      @label_encounter_map[!label.nil?? labeltxt.upcase : name.gsub(/_/, " ").upcase] = name_label.gsub(/_/, " ").upcase
+      
       @controller_content = @controller_content + "\tdef #{(!label.nil? ? labeltxt : name)}\n\n\t" +
         "@patient = Patient.find(params[:patient_id]) rescue nil\n\n\t" + 
         "redirect_to '/encounters/no_patient' and return if @patient.nil?" +
@@ -700,6 +706,7 @@ end
 s = File.open("#{File.expand_path('../../config', __FILE__)}/protocol_task_flow.yml", "w")
 
 string = "\nproduction:\r\n" +
+  "  label.encounter.map: " + @label_encounter_map.collect{|k, v| "#{k.gsub(/_/, " ").upcase}|#{v}" }.join(",") + "\r\n" +
   "  clinical.encounters.sequential.list: " + @pages.sort.collect{|p| 
   unless @subpages[p[0]].nil?
     @subpages[p[0].to_i].sort.collect{|i| i[1].gsub(/_/, " ").upcase}.join(",")
@@ -726,6 +733,7 @@ string = "\nproduction:\r\n" +
   (!@label.empty? ? "\r\n" +
     "  label: " + @label.collect { |k,v| "#{k.gsub(/_/, " ").upcase}|#{v}" }.join(",")  : "") +
   "\r\n\r\ndevelopment:\r\n" +
+  "  label.encounter.map: " + @label_encounter_map.collect{|k, v| "#{k.gsub(/_/, " ").upcase}|#{v}" }.join(",") + "\r\n" +
   "  clinical.encounters.sequential.list: " + @pages.sort.collect{|p|
   unless @subpages[p[0]].nil?
     @subpages[p[0].to_i].sort.collect{|i| i[1].gsub(/_/, " ").upcase}.join(",")
@@ -752,6 +760,7 @@ string = "\nproduction:\r\n" +
   (!@label.empty? ? "\r\n" +
     "  label: " + @label.collect { |k,v| "#{k.gsub(/_/, " ").upcase}|#{v}" }.join(",")  : "") +
   "\r\n\r\ntest: &TEST\r\n" +
+  "  label.encounter.map: " + @label_encounter_map.collect{|k, v| "#{k.gsub(/_/, " ").upcase}|#{v}" }.join(",") + "\r\n" +
   "  clinical.encounters.sequential.list: " + @pages.sort.collect{|p|
   unless @subpages[p[0]].nil?
     @subpages[p[0].to_i].sort.collect{|i| i[1].gsub(/_/, " ").upcase}.join(",")

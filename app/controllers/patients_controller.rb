@@ -1,7 +1,11 @@
 
 class PatientsController < ApplicationController
 
+  before_filter :sync_user, :except => [:index, :user_login, :user_logout, 
+      :set_datetime, :update_datetime, :reset_datetime]
+
   def show
+    
     @patient = Patient.find(params[:id] || params[:patient_id]) rescue nil
 
     if @patient.nil?
@@ -16,48 +20,50 @@ class PatientsController < ApplicationController
     
     redirect_to "/encounters/no_user" and return if @user.nil?
 
+    #check for mother hiv status
+
+    @hiv_concepts = ["MOTHER HIV STATUS", "HIV STATUS", "DNA-PCR Testing Result", "Rapid Antibody Testing Result", "Alive On ART"].collect{|concept| ConceptName.find_by_name(concept).concept_id}.compact rescue []
+    @hiv_encounters = ["IMMUNIZATION RECORD", "UPDATE HIV STATUS", "HIV STATUS AT ENROLLMENT"].collect{|enc| EncounterType.find_by_name(enc).encounter_type_id}.compact rescue []
+
+    @is_positive = false
+    
+    Encounter.find(:all, :conditions => ["encounter_type IN (?)", @hiv_encounters]).collect{|enc|     
+      enc }.compact.each do |enc|
+      next if @is_positive == true
+      @is_positive = (enc.observations.collect{|ob|
+          ob.answer_string if ob.answer_string.match(/Positive|HIV Infected/i)}.compact.length > 0)
+
+    end
+
+    # raise @is_positive.to_yaml
+
     @task = TaskFlow.new(params[:user_id], @patient.id)
 
     @links = {}
 
-    @task.display_tasks.each{|task|
+    @task.tasks.each{|task|
 
-      unless task.class.to_s.upcase == "ARRAY"
-
-        next if task.downcase == "update baby outcome" and @patient.current_babies.length == 0
-
-        @links[task.titleize] = "/protocol_patients/#{task.gsub(/\s/, "_").downcase}?patient_id=#{
-        @patient.id}&user_id=#{params[:user_id]}" + (task.downcase == "update baby outcome" ?
-            "&baby=1&baby_total=#{@patient.current_babies.length}" : "")
-
-      else
-
-        @links[task[0].titleize] = {}
-
-        task[1].each{|t|
-          @links[task[0].titleize][t.titleize] = "/protocol_patients/#{t.gsub(/\s/, "_").downcase}?patient_id=#{
-          @patient.id}&user_id=#{params[:user_id]}" + (t.downcase == "update baby outcome" ?
-              "&baby=1&baby_total=#{@patient.current_babies.length}" : "")
-        }
-
-      end
-            
+      next if task.downcase == "update baby outcome" and (@patient.current_babies.length == 0 rescue false)
+      next if !@task.current_user_activities.include?(task)
+       
+      @links[task.titleize] = "/protocol_patients/#{task.gsub(/\s/, "_")}?patient_id=#{
+      @patient.id}&user_id=#{params[:user_id]}" + (task.downcase == "update baby outcome" ?
+          "&baby=1&baby_total=#{(@patient.current_babies.length rescue 0)}" : "")
+      
     }
-
-    # raise @links.inspect
 
     @project = get_global_property_value("project.name") rescue "Unknown"
 
-    @demographics_url = get_global_property_value("patient.registation.url") rescue nil
+    @demographics_url = get_global_property_value("patient.registration.url") rescue nil
 
     if !@demographics_url.nil?
       @demographics_url = @demographics_url + "/demographics/#{@patient.id}?user_id=#{@user.id}&ext=true"
     end
-
+    @demographics_url = "http://" + @demographics_url if (!@demographics_url.match(/http:/) rescue false)
     @task.next_task
 
     @babies = @patient.current_babies rescue []
-
+    
   end
 
   def current_visit
@@ -121,8 +127,6 @@ class PatientsController < ApplicationController
       redirect_to "/encounters/no_user" and return
     end
 
-    @user = User.find(params[:user_id]) rescue nil
-
     redirect_to "/encounters/no_user" and return if @user.nil?
 
   end
@@ -143,4 +147,14 @@ class PatientsController < ApplicationController
     render :text => (count.first.to_i > 0 ? {params[:date] => count}.to_json : 0)
   end
   
+protected
+
+  def sync_user
+    if !session[:user].nil?
+      @user = session[:user]
+    else 
+      @user = JSON.parse(RestClient.get("#{@link}/verify/#{(session[:user_id])}")) rescue {}
+    end
+  end
+
 end

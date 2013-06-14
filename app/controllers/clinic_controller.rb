@@ -1,8 +1,11 @@
 
 class ClinicController < ApplicationController
 
-  def index
+  before_filter :sync_user, :except => [:index, :user_login, :user_logout, 
+      :set_datetime, :update_datetime, :reset_datetime]
 
+  def index
+    
     @location = Location.find(session[:location_id]) rescue nil
 
     session[:location_id] = @location.id if !@location.nil?
@@ -583,6 +586,16 @@ class ClinicController < ApplicationController
     }
 
     render :text => @fields.to_json
+  end
+
+protected
+
+  def sync_user
+    if !session[:user].nil?
+      @user = session[:user]
+    else 
+      @user = JSON.parse(RestClient.get("#{@link}/verify/#{(session[:user_id])}")) rescue {}
+    end
   end
 
 end

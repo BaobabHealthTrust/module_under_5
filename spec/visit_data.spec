@@ -1,8 +1,8 @@
-P.1. EID VISIT [program: EARLY INFANT DIAGNOSIS PROGRAM]
+P.1. EID VISIT [program: EARLY INFANT DIAGNOSIS PROGRAM, scope: TODAY]
 C.1. Given an enrolled exposed child under 24 months, when they come for a visit, 	capture the following data:
 Q.1.1. Visit date [pos: 0, field_type: date]
 
-Q.1.2. Current age (yrs) [pos: 1, concept: Age, field_type: number, tt_pageStyleClass: NumbersOnlyWithUnknown, min: 2, max: 5, absoluteMax: 6, absoluteMin: 1]
+Q.1.2. Current age (yrs) [pos: 1, concept: Age, field_type: number, tt_pageStyleClass: NumbersOnlyWithUnknown]
 
 Q.1.3. Height (cm) [pos: 2, field_type: number, tt_pageStyleClass: NumbersOnlyWithUnknown]
 
