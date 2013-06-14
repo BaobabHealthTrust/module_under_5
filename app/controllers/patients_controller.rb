@@ -1,5 +1,6 @@
 
 class PatientsController < ApplicationController
+  unloadable  
 
   before_filter :sync_user, :except => [:index, :user_login, :user_logout, 
       :set_datetime, :update_datetime, :reset_datetime]
