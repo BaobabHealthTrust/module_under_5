@@ -2,6 +2,8 @@
 class ApplicationController < ActionController::Base
   helper :all
 
+  before_filter :start_session
+
   before_filter :check_user, :except => [:user_login, :user_logout, :missing_program,
     :missing_concept, :no_user, :no_patient, :project_users_list, :check_role_activities]
   
@@ -29,7 +31,23 @@ class ApplicationController < ActionController::Base
 
   protected
 
+  def start_session
+    session[:started] = true
+  end
+
   def check_user
+
+    if !params[:token].nil?
+      session[:token] = params[:token]
+    end
+
+    if !params[:user_id].nil?
+      session[:user_id] = params[:user_id]
+    end
+
+    if !params[:location_id].nil?
+      session[:location_id] = params[:location_id]
+    end
 
     link = get_global_property_value("user.management.url").to_s rescue nil
 
@@ -37,11 +55,7 @@ class ApplicationController < ActionController::Base
       flash[:error] = "Missing configuration for <br/>user management connection!"
 
       redirect_to "/no_user" and return
-    end
-
-    @user = JSON.parse(RestClient.get("#{link}/verify/#{(params[:user_id])}")) # rescue {}
-
-    # raise @user.to_yaml
+    end    
 
     # Track final destination
     file = "#{File.expand_path("#{Rails.root}/tmp", __FILE__)}/current.path.yml"
@@ -52,11 +66,7 @@ class ApplicationController < ActionController::Base
 
     f.close
 
-    if @user.empty?
-      redirect_to "/user_login?internal=true" and return
-    end
-
-    if @user["token"].nil?
+    if session[:token].nil?
       redirect_to "/user_login?internal=true" and return
     end
 

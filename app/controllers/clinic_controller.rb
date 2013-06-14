@@ -3,11 +3,7 @@ class ClinicController < ApplicationController
 
   def index
 
-    User.current = User.find(@user["user_id"]) rescue nil
-
-    Location.current = Location.find(params[:location_id] || session[:location_id]) rescue nil
-
-    @location = Location.find(params[:location_id] || session[:location_id]) rescue nil
+    @location = Location.find(session[:location_id]) rescue nil
 
     session[:location_id] = @location.id if !@location.nil?
     
@@ -22,6 +18,10 @@ class ClinicController < ApplicationController
 
     @link = get_global_property_value("user.management.url").to_s rescue nil
 
+    @user = JSON.parse(RestClient.get("#{@link}/verify/#{(session[:user_id])}")) rescue {}
+    
+    session[:user] = @user rescue nil
+    
     if @link.nil?
       flash[:error] = "Missing configuration for <br/>user management connection!"
 
@@ -52,7 +52,8 @@ class ClinicController < ApplicationController
   def user_logout
 
     link = get_global_property_value("user.management.url").to_s rescue nil
-
+    
+    reset_session
 
     if link.nil?
       flash[:error] = "Missing configuration for <br/>user management connection!"
@@ -128,6 +129,11 @@ class ClinicController < ApplicationController
   end
 
   def project_users
+    if !session[:user].nil?
+      @user = session[:user]
+    else 
+      @user = JSON.parse(RestClient.get("#{@link}/verify/#{(session[:user_id])}")) rescue {}
+    end
     render :layout => false
   end
 
@@ -361,7 +367,7 @@ class ClinicController < ApplicationController
 
     unless @project.nil?
       
-      UserProperty.find_by_user_id_and_property(@user["user_id"],
+      UserProperty.find_by_user_id_and_property(session[:user_id],
         "#{@project}.activities").property_value.split(",").each{|activity|
         
         activities[activity.titleize] = 1 if activity.downcase.match("^" +
@@ -380,7 +386,7 @@ class ClinicController < ApplicationController
 
     unless @project.nil? || params[:activity].nil?
 
-      user = UserProperty.find_by_user_id_and_property(@user["user_id"],
+      user = UserProperty.find_by_user_id_and_property(session[:user_id],
         "#{@project}.activities")
 
       unless user.nil?
@@ -395,7 +401,7 @@ class ClinicController < ApplicationController
       else
 
         UserProperty.create(
-          :user_id => @user["user_id"],
+          :user_id => session[:user_id],
           :property => "#{@project}.activities",
           :property_value => params[:activity]
         )
@@ -428,7 +434,7 @@ class ClinicController < ApplicationController
 
     unless @project.nil?
 
-      UserProperty.find_by_user_id_and_property(@user["user_id"],
+      UserProperty.find_by_user_id_and_property(session[:user_id],
         "#{@project}.activities").property_value.split(",").each{|activity|
 
         activities[activity.titleize] = 1
@@ -446,7 +452,7 @@ class ClinicController < ApplicationController
 
     unless @project.nil? || params[:activity].nil?
 
-      user = UserProperty.find_by_user_id_and_property(@user["user_id"],
+      user = UserProperty.find_by_user_id_and_property(session[:user_id],
         "#{@project}.activities")
 
       unless user.nil?
@@ -481,7 +487,7 @@ class ClinicController < ApplicationController
 
     unless @project.nil?
 
-      UserProperty.find_by_user_id_and_property(@user["user_id"],
+      UserProperty.find_by_user_id_and_property(session[:user_id],
         "#{@project}.activities").property_value.split(",").each{|activity|
 
         activities[activity.titleize] = 1
