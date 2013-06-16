@@ -122,7 +122,7 @@ next_task = @task.encounter_type.gsub('_',' ') rescue nil
       </select>
       <select id="links">
 
-        <% @links.each do |encounter, link| %>
+        <% @links.sort.each do |encounter, link| %>
 
           <% unless @links[encounter].class.to_s.upcase == "HASH" %>
 

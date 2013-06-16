@@ -39,7 +39,7 @@
 				Select drug type to be given 
 			</td>
 			<td>
-<select id='1.3.1' name='concept[Select drug type to be given ]' helpText='Select drug type to be given ' disabled='disabled'  tt_onLoad='if(!tt_cancel_destination.match("skip_flow")){tt_cancel_destination += "&skip_flow=true"}; showCategory("Supplementation"); __$("category").style.fontSize = "30px"'  pos='3'  condition='<%= @patient.age_in_months(session["datetime"] || Date.today).to_i >= 12 && @patient.age_in_months(session["datetime"] || Date.today).to_i <= 59 %>' >
+<select id='1.3.1' name='concept[Select drug type to be given ]' helpText='Select drug type to be given ' tt_onLoad='if(!tt_cancel_destination.match("skip_flow")){tt_cancel_destination += "&skip_flow=true"}; showCategory("Supplementation"); __$("category").style.fontSize = "30px"'  pos='3'  disabled='disabled'  condition='<%= @patient.age_in_months(session["datetime"] || Date.today).to_i >= 12 && @patient.age_in_months(session["datetime"] || Date.today).to_i <= 59 %>' >
 <option></option>
 <option value='Mebendazole'>Mebendazole</option>
  <option value='Albendazole'>Albendazole</option>
@@ -67,7 +67,7 @@
 				Visit date 
 			</td>
 			<td>
-<input type='text' id='1.3.2'  name='concept[Visit date ]' helpText='Visit date '  field_type='date'  pos='7'  tt_onLoad='if(!tt_cancel_destination.match("skip_flow")){tt_cancel_destination += "&skip_flow=true"}; showCategory("Supplementation"); __$("category").style.fontSize = "30px"' />
+<input type='text' id='1.3.2'  name='concept[Visit date ]' helpText='Visit date '  pos='7'  tt_onLoad='if(!tt_cancel_destination.match("skip_flow")){tt_cancel_destination += "&skip_flow=true"}; showCategory("Supplementation"); __$("category").style.fontSize = "30px"'  field_type='date' />
 			</td>
 		</tr>
 		<tr>
@@ -87,7 +87,7 @@
 				Date nets received 
 			</td>
 			<td>
-<input type='text' id='1.4.1.2.1'  name='concept[Date nets received ]' helpText='Date nets received '  condition='__$("1.4.1").value == "Yes"'  field_type='date'  tt_onLoad='if(!tt_cancel_destination.match("skip_flow")){tt_cancel_destination += "&skip_flow=true"}; showCategory("Supplementation"); __$("category").style.fontSize = "30px"'  pos='9' />
+<input type='text' id='1.4.1.2.1'  name='concept[Date nets received ]' helpText='Date nets received '  condition='__$("1.4.1").value == "Yes"'  tt_onLoad='if(!tt_cancel_destination.match("skip_flow")){tt_cancel_destination += "&skip_flow=true"}; showCategory("Supplementation"); __$("category").style.fontSize = "30px"'  pos='9'  field_type='date' />
 			</td>
 		</tr>
 	</table>

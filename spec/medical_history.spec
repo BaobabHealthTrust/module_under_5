@@ -41,8 +41,9 @@ O.1.10.1. Yes
 O.1.10.2. No
 
 Q.1.11. Child ever had any other complications? [pos: 10, tt_onLoad: __$("nextButton").style.display = "block"; showCategory("Medical History"); __$("category").style.fontSize = "30px"]
-O.1.11.1. Yes
-Q.1.11.1.1. Specify
-O.1.11.2. No
+O.1.11.1. No
+O.1.11.2. Yes
+Q.1.11.2.1. Specify[pos: 11, concept:  New born complications, helpText: Specify Baby Complication]
+
 
 
