@@ -154,6 +154,85 @@ class PatientsController < ApplicationController
     render :text => (count.first.to_i > 0 ? {params[:date] => count}.to_json : 0)
   end
   
+    def number_of_booked_patients
+    date = params[:date].to_date
+    encounter_type = EncounterType.find_by_name('Kangaroo review visit') rescue nil
+    concept_id = ConceptName.find_by_name('APPOINTMENT DATE').concept_id
+
+    count = Observation.count(:all,
+      :joins => "INNER JOIN encounter e USING(encounter_id)",:group => "value_datetime",
+      :conditions =>["concept_id = ? AND encounter_type = ? AND value_datetime >= ? AND value_datetime <= ?",
+        concept_id,encounter_type.id,date.strftime('%Y-%m-%d 00:00:00'),date.strftime('%Y-%m-%d 23:59:59')]) rescue nil
+
+    count = count.values unless count.blank?
+    count = '0' if count.blank?
+
+    render :text => (count.first.to_i > 0 ? {params[:date] => count}.to_json : 0)
+  end
+
+  def baby_chart
+
+    @patient = Patient.find(params[:id] || params[:patient_id]) rescue nil
+    @baby = Patient.find(params[:baby_id])
+
+    if (@baby.gender.downcase.match(/f/i))
+      file =  File.open(RAILS_ROOT + "/public/data/weight_for_age_girls.txt", "r")
+    else
+      file =  File.open(RAILS_ROOT + "/public/data/weight_for_age_boys.txt", "r")
+    end
+    @file = []
+    
+    file.each{ |parameters|
+
+      line = parameters
+      line = line.split(" ").join(",")
+      @file << line
+
+    }
+
+    #get available weights
+
+    @weights = []
+    birthdate_sec = @patient.person.birthdate
+
+    ids = ConceptName.find(:all, :conditions => ["name IN (?)", ["WEIGHT", "BIRTH WEIGHT", "BIRTH WEIGHT AT ADMISSION", "WEIGHT (KG)"]]).collect{|concept|
+      concept.concept_id}
+ 
+    Observation.find(:all, :conditions => ["person_id = ? AND concept_id IN (?)",
+        @patient.id, ids]).each do |ob|
+      age = ((((ob.value_datetime.to_date rescue ob.obs_datetime.to_date) rescue ob.date_created.to_date) - birthdate_sec).days.to_i/(60*60*24)).to_s rescue nil
+      weight = ob.answer_string.to_i rescue nil
+      next if age.blank? || weight.blank?
+      weight = (weight > 100) ? weight/1000.0 : weight # quick check of weight in grams and that in KG's
+      @weights << age + "," + weight.to_s if !age.blank? && !weight.blank?
+    end
+  end
+
+  def chart_diagnoses
+    @patient = Patient.find(params[:patient_id]) rescue (Patient.find(params[:baby_id]) rescue nil)
+
+    age = params[:age].to_i rescue nil
+    date = @patient.person.birthdate.to_date + age.months rescue nil
+    result = ""
+     
+    Encounter.find_all_by_patient_id(@patient.patient_id).collect{|enc|
+    
+      if  ((enc.encounter_datetime.to_date <= date.to_date and enc.encounter_datetime.to_date >= (date - 3.months).to_date) rescue false)
+        result += "</br><span style='color: white;'>" + enc.name.humanize.upcase + " (" + enc.encounter_datetime.strftime("%d-%b-%Y") + ")</br>" + "</span>"
+
+        obs_total = 0
+        enc.observations.each do |obs|
+          result += "&nbsp&nbsp&nbsp" + ConceptName.find_by_concept_id(obs.concept_id).name + "&nbsp : &nbsp" + obs.answer_string + "</br>"
+          obs_total += 1
+        end
+      end
+    }
+
+    result = "</br></br></br>&nbsp&nbsp&nbspNO DATA AVAILABLE</br></br> &nbsp&nbsp&nbspFROM  : #{(date - 3.months).strftime("%d-%b-%Y")}  (3 months back) </br> &nbsp&nbsp&nbspTO  :   #{date.strftime("%d-%b-%Y")} (Pointed)" if result.blank?
+    result = "<span style='font-weight: bold;'>&nbsp&nbsp&nbsp&nbsp&nbsp&nbspAT #{age.to_s} MONTHS #{} OF AGE<br></span>" + result
+    render :text => result.to_json
+  end
+ 
 protected
 
   def sync_user
