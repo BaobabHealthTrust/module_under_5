@@ -4,7 +4,7 @@ class EncountersController < ApplicationController
 
   def create
 
-    User.current = User.find(@user["user_id"]) rescue nil
+    User.current = User.find(session["user_id"]) rescue nil
 
     Location.current = Location.find(params[:location_id] || session[:location_id]) rescue nil
 
@@ -295,7 +295,7 @@ class EncountersController < ApplicationController
                 DrugOrder.write_order(@encounter, @patient, @diagnosis, @drug,
                   start_date, auto_expire_date, [prescription[:morning_dose],
                     prescription[:afternoon_dose], prescription[:evening_dose],
-                    prescription[:night_dose]], prescription[:type_of_prescription], prn)
+                    prescription[:night_dose]], prescription[:type_of_prescription], prn) rescue nil
 
               end
             end
@@ -429,6 +429,21 @@ class EncountersController < ApplicationController
 
     render :text => "<li>" + @results.join("</li><li>") + "</li>"
 
+  end
+
+  def display
+    unless params[:f].nil?
+      file = File.open("#{File.dirname(File.dirname(__FILE__))}/assets/#{params[:f]}", "r")
+          
+      result = file.read()    
+          
+      file.close
+          
+      render :text => result
+    else 
+      render :text => ""
+    end
+    
   end
 
 end
