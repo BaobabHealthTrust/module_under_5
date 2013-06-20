@@ -9,6 +9,48 @@ next_task = @task.encounter_type.gsub('_',' ') rescue nil
 
 %>
 
+  task_status_map = {};
+  var click_check = 0;
+<%(@task_status_map || {}).each{|t, v|%>
+    task_status_map["<%= t%>"] = "<%= v%>"
+
+<%}%>
+
+  function paintButtons(){
+
+    try{
+      var bts =  document.getElementsByClassName("menu_button");
+      if(bts.length == 0){
+        //invoke error
+        bts.length == 1;
+      }
+      for (var i = 0; i < bts.length; i ++){
+
+        var text = bts[i].innerHTML.toLowerCase().trim();
+        if (task_status_map[text] == "done"){
+          bts[i].className = "menu_button done";
+        }
+      }
+    }catch(ex){
+      setTimeout("paintButtons()", 50)
+    }
+  }
+
+  function setFlags(){
+    try{
+      if (click_check == 0){
+        __$("btnStart").onmousedown = function(){
+          this.onmouseup = function(){
+            setTimeout("paintButtons()", 20)
+          }
+        }
+      }else{}
+    }catch(ex){
+      setTimeout("setFlags()", 100);
+    }
+
+  }
+
   function showNexttask(){
     if(__$("patient-dashboard-application") == null){
       setTimeout("showNexttask()", 500);
@@ -30,7 +72,7 @@ next_task = @task.encounter_type.gsub('_',' ') rescue nil
 
     __$("nextTask").innerHTML = "<b>Next Task:</b><br /><i><%= next_task.titleize %></i>";
   }
-
+  setTimeout("setFlags()", 100);
 <% if !next_task.nil? %>
     setTimeout("showNexttask()", 500);
 <% end %>
@@ -61,6 +103,42 @@ next_task = @task.encounter_type.gsub('_',' ') rescue nil
     z-index: 100;
     text-align: center;
     -moz-user-select: none;
+  }
+
+  .done{
+    height: 60px;
+    margin: 0.5%;
+    cursor: pointer;
+    font-size: 24px;
+    font-weight: 300;
+    color: #fff;
+    -moz-transition: none 0s ease 0s;
+    border: 0 none;
+    border-radius: 15px;
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.1) inset, 0 1px 5px rgba(0, 0, 0, 0.25);
+    color: white;
+    padding: 14px 24px;
+    background-color: #666;
+    background-image: -moz-linear-gradient(center top , #666, #999);
+    background-repeat: repeat-x;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.5);
+    hover: "";
+  }
+
+  .menu_button.done:hover {
+    color: #ffffee;
+    background-color: #006DCC;
+    background-image: -moz-linear-gradient(center top , #777, #666);
+    background-repeat: repeat-x;
+  }
+  .menu_button.done:active {
+    -moz-user-select:none;
+    -moz-user-focus:disabled;
+    color: #ffffcc;
+    background-color: #006DCC;
+    background-image: -moz-linear-gradient(center top , #CC8800, #CC4400);
+    background-repeat: repeat-x;
+    border: 5px inset #000;
   }
 
   #nextTask {
@@ -119,9 +197,9 @@ next_task = @task.encounter_type.gsub('_',' ') rescue nil
 
               <% link.each do |label, path| %>
 
-                          <option value="<%= path %>">
-                            <%= label %>
-                          </option>
+                <option value="<%= path %>">
+                  <%= label %>
+                </option>
 
               <% end %>
 
@@ -132,7 +210,7 @@ next_task = @task.encounter_type.gsub('_',' ') rescue nil
         <% end %>
 
       </select>
-  
+
 
       <select id="navigation_links">
 
@@ -141,7 +219,7 @@ next_task = @task.encounter_type.gsub('_',' ') rescue nil
             Demographics
           </option>
         <% end %>
-        
+
         <%id = params[:id] || params[:patient_id]%>
         <option link="/patients/baby_chart?patient_id=<%= id %>&user_id=<%=params[:user_id]%>&baby_id=<%= id %>" ttSize = "160px">Weight Chart</option>
 
