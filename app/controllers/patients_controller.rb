@@ -3,7 +3,7 @@ class PatientsController < ApplicationController
   unloadable  
 
   before_filter :sync_user, :except => [:index, :user_login, :user_logout, 
-      :set_datetime, :update_datetime, :reset_datetime]
+    :set_datetime, :update_datetime, :reset_datetime]
 
   def show
     
@@ -154,7 +154,7 @@ class PatientsController < ApplicationController
     render :text => (count.first.to_i > 0 ? {params[:date] => count}.to_json : 0)
   end
   
-    def number_of_booked_patients
+  def number_of_booked_patients
     date = params[:date].to_date
     encounter_type = EncounterType.find_by_name('Kangaroo review visit') rescue nil
     concept_id = ConceptName.find_by_name('APPOINTMENT DATE').concept_id
@@ -200,10 +200,13 @@ class PatientsController < ApplicationController
  
     Observation.find(:all, :conditions => ["person_id = ? AND concept_id IN (?)",
         @patient.id, ids]).each do |ob|
-      age = ((((ob.value_datetime.to_date rescue ob.obs_datetime.to_date) rescue ob.date_created.to_date) - birthdate_sec).days.to_i/(60*60*24)).to_s rescue nil
+
+      age =  0 if ConceptName.find_by_concept_id(ob.concept_id).name.match(/birth weight/i) rescue false
+      age = !age.blank?? age.to_s : ((((ob.value_datetime.to_date rescue ob.obs_datetime.to_date) rescue ob.date_created.to_date) - birthdate_sec).days.to_i/(60*60*24)).to_s rescue nil
       weight = ob.answer_string.to_i rescue nil
       next if age.blank? || weight.blank?
       weight = (weight > 100) ? weight/1000.0 : weight # quick check of weight in grams and that in KG's
+
       @weights << age + "," + weight.to_s if !age.blank? && !weight.blank?
     end
   end
@@ -214,9 +217,14 @@ class PatientsController < ApplicationController
     age = params[:age].to_i rescue nil
     date = @patient.person.birthdate.to_date + age.months rescue nil
     result = ""
-     
+
+    birth_encounter = Observation.find_by_concept_id_and_person_id(ConceptName.find_by_name("Birth Weight").concept_id,
+      @patient.id).encounter rescue nil
+
     Encounter.find_all_by_patient_id(@patient.patient_id).collect{|enc|
-    
+
+      enc.encounter_datetime = @patient.person.birthdate.to_date if !birth_encounter.blank? and enc.encounter_id == birth_encounter.encounter_id
+      
       if  ((enc.encounter_datetime.to_date <= date.to_date and enc.encounter_datetime.to_date >= (date - 3.months).to_date) rescue false)
         result += "</br><span style='color: white;'>" + enc.name.humanize.upcase + " (" + enc.encounter_datetime.strftime("%d-%b-%Y") + ")</br>" + "</span>"
 
@@ -233,7 +241,7 @@ class PatientsController < ApplicationController
     render :text => result.to_json
   end
  
-protected
+  protected
 
   def sync_user
     if !session[:user].nil?

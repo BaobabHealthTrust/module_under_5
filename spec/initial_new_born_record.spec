@@ -4,11 +4,11 @@ Q.1.1. Place of birth [pos: 0, tt_requirenextclick: false, tt_onLoad: tt_cancel_
 O.1.1.1. Home
 O.1.1.2. Health facility
 
-Q.1.2. Birth weight (grams) [pos: 1, concept: Birth weight, field_type: number, tt_pageStyleClass: NumbersWithUnknownAndDecimal, absoluteMin: 200.0, absoluteMax: 10000.0, tt_onLoad: __$("nextButton").style.display = "block"; showCategory("Initial New Born Record"); __$("category").style.fontSize = "30px", validationRule: ^\d+\.\d+$|^Unknown$, validationMessage: Not a valid weight]
+Q.1.2. Birth weight (grams) [pos: 1, concept: Birth weight, field_type: number, tt_pageStyleClass: NumbersWithUnknownAndDecimal, absoluteMin: 200.0, absoluteMax: 10000.0, tt_onLoad: __$("nextButton").style.display = "block"; showCategory("Initial New Born Record"); __$("category").style.fontSize = "30px"]
 
 Q.1.3. Birth length (cm) [pos: 2, concept: Birth length, absoluteMin: 10, absoluteMax: 70, field_type: number, tt_pageStyleClass: NumbersWithUnknownAndDecimal, tt_onLoad: __$("nextButton").style.display = "block"; showCategory("Initial New Born Record"); __$("category").style.fontSize = "30px"]
 
-Q.1.4. Head circumference [pos: 3, helpText: Head Circumference (cm), field_type: number, absoluteMin: 20, absoluteMax: 100, tt_pageStyleClass: NumbersWithUnknownAndDecimal, tt_onLoad: __$("nextButton").style.display = "block"; showCategory("Initial New Born Record"); __$("category").style.fontSize = "30px"]
+Q.1.4. Head circumference [pos: 3, helpText: Head Circumference (cm), field_type: number, absoluteMin: 10, absoluteMax: 60, tt_pageStyleClass: NumbersWithUnknownAndDecimal, tt_onLoad: __$("nextButton").style.display = "block"; showCategory("Initial New Born Record"); __$("category").style.fontSize = "30px"]
 
 Q.1.5. Observation on eyes [pos: 4, tt_requirenextclick: false, tt_onLoad: __$("nextButton").style.display = "none"; showCategory("Initial New Born Record"); __$("category").style.fontSize = "30px";]
 O.1.5.1. Normal
