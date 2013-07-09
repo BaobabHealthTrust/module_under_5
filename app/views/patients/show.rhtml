@@ -109,7 +109,7 @@ next_task = @task.encounter_type.gsub('_',' ') rescue nil
     height: 60px;
     margin: 0.5%;
     cursor: pointer;
-    font-size: 24px;
+    font-size: 21px;
     font-weight: 300;
     color: #fff;
     -moz-transition: none 0s ease 0s;
@@ -180,37 +180,39 @@ next_task = @task.encounter_type.gsub('_',' ') rescue nil
         <option value='/patients/current_visit/<%= @patient.id %>?user_id=<%= @user.id %>'>Current Visit</option>
         <option value='/patients/visit_history/<%= @patient.id %>?user_id=<%= @user.id %>'>Visit History</option>
       </select>
-      <select id="links">
 
-        <% @links.sort.each do |encounter, link| %>
+      <% if (@patient.age <= 6 rescue true)%>
+        <select id="links">
 
-          <% unless @links[encounter].class.to_s.upcase == "HASH" %>
+          <% @links.sort.each do |encounter, link| %>
 
-            <optgroup value='<%= link %>' label="<%= (!@task.labels[encounter.downcase].nil? ?
-                          @task.labels[encounter.downcase] : encounter) %>" >
-            </optgroup>
+            <% unless @links[encounter].class.to_s.upcase == "HASH" %>
 
-          <% else %>
+              <optgroup value='<%= link %>' label="<%= (!@task.labels[encounter.downcase].nil? ?
+                            @task.labels[encounter.downcase] : encounter) %>" >
+              </optgroup>
 
-            <optgroup label="<%= (!@task.labels[encounter.downcase].nil? ?
-                          @task.labels[encounter.downcase] : encounter) %>" >
+            <% else %>
 
-              <% link.each do |label, path| %>
+              <optgroup label="<%= (!@task.labels[encounter.downcase].nil? ?
+                            @task.labels[encounter.downcase] : encounter) %>" >
 
-                <option value="<%= path %>">
-                  <%= label %>
-                </option>
+                <% link.each do |label, path| %>
 
-              <% end %>
+                  <option value="<%= path %>">
+                    <%= label %>
+                  </option>
 
-            </optgroup>
+                <% end %>
+
+              </optgroup>
+
+            <% end %>
 
           <% end %>
 
-        <% end %>
-
-      </select>
-
+        </select>
+      <%end%>
 
       <select id="navigation_links">
 
@@ -223,7 +225,7 @@ next_task = @task.encounter_type.gsub('_',' ') rescue nil
         <%id = params[:id] || params[:patient_id]%>
         <option link="/patients/baby_chart?patient_id=<%= id %>&user_id=<%=params[:user_id]%>&baby_id=<%= id %>" ttSize = "160px">Weight Chart</option>
 
-        <% if @task.url != "/patients/show/#{@patient.id}?user_id=#{@user.id}" %>
+        <% if (@task.url != "/patients/show/#{@patient.id}?user_id=#{@user.id}") && (@patient.age <= 6 rescue true)%>
           <option link="<%= @task.url  %>" ttSize = "160px">Continue</option>
         <% end %>
 
