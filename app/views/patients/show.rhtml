@@ -71,6 +71,14 @@ next_task = @task.encounter_type.gsub('_',' ') rescue nil
     }
 
     __$("nextTask").innerHTML = "<b>Next Task:</b><br /><i><%= next_task.titleize %></i>";
+
+<% if ((@patient.is_exposed?).present?) && (@patient.age <= 6 rescue true)%>
+      var exp = document.createElement("div");
+      exp.id = "exposure";
+      __$("mainContainer").appendChild(exp);
+      __$("exposure").innerHTML = "<i>Exp.</i>";
+<%end%>
+  
   }
   setTimeout("setFlags()", 100);
 <% if !next_task.nil? %>
@@ -158,6 +166,14 @@ next_task = @task.encounter_type.gsub('_',' ') rescue nil
     margin-left: auto;
     margin-right: auto;
   }
+  #exposure{
+    position: absolute;
+    z-index: 100;
+    top: 38%;
+    color: #CC4400;
+    right: 4%;
+    float: right;
+  }
 </style>
 
 <div id='contented'>
@@ -176,6 +192,7 @@ next_task = @task.encounter_type.gsub('_',' ') rescue nil
       <span id='patient_residence'><%= "#{@patient.address}" %></span>
       <span id='patient_age'><%= "#{(@patient.age > 0 ? @patient.age : "#{@patient.age_in_months} months")}" %></span>
       <span id='patient_gender'><%= "#{@patient.gender}" %></span>
+
       <select id="tabs">
         <option value='/patients/current_visit/<%= @patient.id %>?user_id=<%= @user.id %>'>Current Visit</option>
         <option value='/patients/visit_history/<%= @patient.id %>?user_id=<%= @user.id %>'>Visit History</option>

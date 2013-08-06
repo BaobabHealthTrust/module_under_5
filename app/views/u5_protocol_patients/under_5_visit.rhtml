@@ -1,11 +1,3 @@
-<link href='/touchscreentoolkit/lib/stylesheets/dispense.css' type='text/css' rel='stylesheet' />
-
-<link href='/touchscreentoolkit/lib/stylesheets/drug-style.css' type='text/css' rel='stylesheet' />
-
-<script type='text/javascript' src='/touchscreentoolkit/lib/javascripts/dispense.js' ></script>
-
-<script type='text/javascript' src='/touchscreentoolkit/lib/javascripts/generics.js' ></script>
-
 <script type='text/javascript' language='javascript'>
 <!--
 	tt_cancel_show = '/patients/show/<%= @patient.id %>?user_id=<%= session[:user_id] %>';
@@ -20,102 +12,34 @@
 	<table>
 		<tr>
 			<td>
-				Are there any diagnoses to be captured? 
+				Diagnosis (Optional) 
 			</td>
 			<td>
-<select id='1.1' name='concept[Are there any diagnoses to be captured? ]' helpText='Are there any diagnoses to be captured? ' tt_requirenextclick='false'  tt_onLoad='tt_cancel_destination += "&skip_flow=true"; __$("nextButton").style.display = "none"; skipFlow("<%= params["skip_flow"]%>"); showCategory("Under 5 Visit"); __$("category").style.fontSize = "30px";'  disabled='disabled'  pos='0' >
-<option></option>
-<option value='Yes'>Yes</option>
- <option value='No'>No</option>
- </select>
+<input type='text' id='1.1.3'   helpText='Diagnosis (Optional) '  allowFreeText='true'  pos='1'  tt_onLoad='__$("nextButton").style.display = "block"; showCategory("Under 5 Visit"); __$("category").style.fontSize = "30px"'  ajaxUrl='/encounters/diagnoses?search='  optional='true'  name='concept[Diagnosis][]' />
 			</td>
 		</tr>
 		<tr>
 			<td>
-				Diagnosis 
+				Next Diagnosis 
 			</td>
 			<td>
-<input type='text' id='1.1.3'   helpText='Diagnosis '  condition='__$("1.1").value.trim() == "Yes"'  name='concept[Diagnosis][]'  tt_onLoad='__$("nextButton").style.display = "block"; showCategory("Under 5 Visit"); __$("category").style.fontSize = "30px";'  ajaxUrl='/encounters/diagnoses?search='  pos='1' />
-			</td>
-		</tr>
-		<tr>
-			<td>
-				Diagnosis 
-			</td>
-			<td>
-<input type='text' id='1.1.4'   helpText='Diagnosis '  condition='__$("1.1").value.trim() == "Yes" && __$("1.1.3").value.trim().length > 0'  name='concept[Diagnosis][]'  tt_onLoad='showCategory("Under 5 Visit"); __$("category").style.fontSize = "30px"'  optional='true'  ajaxUrl='/encounters/diagnoses?search='  pos='2' />
+<input type='text' id='1.1.4'   helpText='Next Diagnosis '  pos='2'  tt_onLoad='showCategory("Under 5 Visit"); __$("category").style.fontSize = "30px"'  ajaxUrl='/encounters/diagnoses?search='  optional='true'  name='concept[Diagnosis][]'  condition='__$("1.1.3").value.trim().length > 0' />
 			</td>
 		</tr>
 		<tr>
 			<td>
-				Diagnosis 
+				Next Diagnosis 
 			</td>
 			<td>
-<input type='text' id='1.1.5'   helpText='Diagnosis '  condition='__$("1.1").value.trim() == "Yes" && __$("1.1.4").value.trim().length > 0'  name='concept[Diagnosis][]'  tt_onLoad='showCategory("Under 5 Visit"); __$("category").style.fontSize = "30px"'  optional='true'  ajaxUrl='/encounters/diagnoses?search='  pos='3' />
-			</td>
-		</tr>
-		<tr>
-			<td>
-				Diagnosis 
-			</td>
-			<td>
-<input type='text' id='1.1.6'   helpText='Diagnosis '  condition='__$("1.1").value.trim() == "Yes" && __$("1.1.5").value.trim().length > 0'  name='concept[Diagnosis][]'  tt_onLoad='showCategory("Under 5 Visit"); __$("category").style.fontSize = "30px"'  optional='true'  ajaxUrl='/encounters/diagnoses?search='  pos='4' />
+<input type='text' id='1.1.5'   helpText='Next Diagnosis '  pos='3'  tt_onLoad='showCategory("Under 5 Visit"); __$("category").style.fontSize = "30px"'  ajaxUrl='/encounters/diagnoses?search='  optional='true'  name='concept[Diagnosis][]'  condition='__$("1.1.4").value.trim().length > 0' />
 			</td>
 		</tr>
 		<tr>
 			<td>
-				Diagnosis 
+				Next Diagnosis 
 			</td>
 			<td>
-<input type='text' id='1.1.7'   helpText='Diagnosis '  condition='__$("1.1").value.trim() == "Yes" && __$("1.1.6").value.trim().length > 0'  name='concept[Diagnosis][]'  tt_onLoad='showCategory("Under 5 Visit"); __$("category").style.fontSize = "30px"'  optional='true'  ajaxUrl='/encounters/diagnoses?search='  pos='5' />
-			</td>
-		</tr>
-		<tr>
-			<td>
-				Diagnosis 
-			</td>
-			<td>
-<input type='text' id='1.1.8'   helpText='Diagnosis '  condition='__$("1.1").value.trim() == "Yes" && __$("1.1.7").value.trim().length > 0'  name='concept[Diagnosis][]'  tt_onLoad='showCategory("Under 5 Visit"); __$("category").style.fontSize = "30px"'  optional='true'  ajaxUrl='/encounters/diagnoses?search='  pos='6' />
-			</td>
-		</tr>
-		<tr>
-			<td>
-				Diagnosis 
-			</td>
-			<td>
-<input type='text' id='1.1.9'   helpText='Diagnosis '  condition='__$("1.1").value.trim() == "Yes" && __$("1.1.8").value.trim().length > 0'  name='concept[Diagnosis][]'  tt_onLoad='showCategory("Under 5 Visit"); __$("category").style.fontSize = "30px"'  optional='true'  ajaxUrl='/encounters/diagnoses?search='  pos='7' />
-			</td>
-		</tr>
-		<tr>
-			<td>
-				Diagnosis 
-			</td>
-			<td>
-<input type='text' id='1.1.10'   helpText='Diagnosis '  condition='__$("1.1").value.trim() == "Yes" && __$("1.1.9").value.trim().length > 0'  name='concept[Diagnosis][]'  tt_onLoad='showCategory("Under 5 Visit"); __$("category").style.fontSize = "30px"'  optional='true'  ajaxUrl='/encounters/diagnoses?search='  pos='8' />
-			</td>
-		</tr>
-		<tr>
-			<td>
-				Diagnosis 
-			</td>
-			<td>
-<input type='text' id='1.1.11'   helpText='Diagnosis '  condition='__$("1.1").value.trim() == "Yes" && __$("1.1.10").value.trim().length > 0'  name='concept[Diagnosis][]'  tt_onLoad='showCategory("Under 5 Visit"); __$("category").style.fontSize = "30px"'  optional='true'  ajaxUrl='/encounters/diagnoses?search='  pos='9' />
-			</td>
-		</tr>
-		<tr>
-			<td>
-				Diagnosis 
-			</td>
-			<td>
-<input type='text' id='1.1.12'   helpText='Diagnosis '  condition='__$("1.1").value.trim() == "Yes" && __$("1.1.11").value.trim().length > 0'  name='concept[Diagnosis][]'  tt_onLoad='__$("nextButton").style.display = "block"'  optional='true'  ajaxUrl='/encounters/diagnoses?search='  pos='10' />
-			</td>
-		</tr>
-		<tr>
-			<td>
-				Treatment 
-			</td>
-			<td>
-<input type='text' id='1.3'  name='concept[Treatment ]' helpText='Treatment '  tt_onUnLoad='removeGenerics()'  tt_pageStyleClass='NoControls'  tt_onLoad='generateGenerics(<%= @patient.id %>); showCategory("Under 5 Visit"); __$("category").style.fontSize = "30px"; __$("nextButton").style.display = "block"'  optional='true'  pos='31' />
+<input type='text' id='1.1.6'   helpText='Next Diagnosis '  pos='4'  tt_onLoad='showCategory("Under 5 Visit"); __$("category").style.fontSize = "30px"'  ajaxUrl='/encounters/diagnoses?search='  optional='true'  name='concept[Diagnosis][]'  condition='__$("1.1.5").value.trim().length > 0' />
 			</td>
 		</tr>
 		<tr>
@@ -123,7 +47,7 @@
 				Height (cm) 
 			</td>
 			<td>
-<input type='text' id='1.4'  name='concept[Height (cm) ]' helpText='Height (cm) '  field_type='number'  min='20'  max='130'  tt_pageStyleClass='NumbersWithUnknownAndDecimal'  tt_onLoad='showCategory("Under 5 Visit"); __$("category").style.fontSize = "30px"'  pos='32' />
+<input type='text' id='1.4'  name='concept[Height (cm) ]' helpText='Height (cm) '  field_type='number'  tt_pageStyleClass='NumbersWithUnknownAndDecimal'  min='20'  pos='32'  tt_onLoad='showCategory("Under 5 Visit"); __$("category").style.fontSize = "30px"'  max='130' />
 			</td>
 		</tr>
 		<tr>
@@ -131,7 +55,7 @@
 				Weight (grams) 
 			</td>
 			<td>
-<input type='text' id='1.5'  name='concept[Weight]' helpText='Weight (grams) '  field_type='number'  min='2500'  max='34000'  tt_pageStyleClass='NumbersOnly'  tt_onLoad='showCategory("Under 5 Visit"); __$("category").style.fontSize = "30px"'  pos='33' />
+<input type='text' id='1.5'  name='concept[Weight]' helpText='Weight (grams) '  field_type='number'  tt_pageStyleClass='NumbersOnly'  min='2500'  pos='33'  tt_onLoad='showCategory("Under 5 Visit"); __$("category").style.fontSize = "30px"'  max='34000' />
 			</td>
 		</tr>
 		<tr>
@@ -139,7 +63,7 @@
 				Notes 
 			</td>
 			<td>
-<input type='text' id='1.6'  name='concept[Notes ]' helpText='Notes '  field_type='textarea'  tt_onLoad='showCategory("Under 5 Visit"); __$("category").style.fontSize = "30px"'  optional='true'  pos='34' />
+<input type='text' id='1.6'  name='concept[Notes ]' helpText='Notes '  field_type='textarea'  pos='34'  tt_onLoad='showCategory("Under 5 Visit"); __$("category").style.fontSize = "30px"'  optional='true' />
 			</td>
 		</tr>
 	</table>

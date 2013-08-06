@@ -1,6 +1,6 @@
 P.1. Reason for special care [program: UNDER 5 PROGRAM, scope: RECENT, concept: Weight less than 2500g]
 C.1. Check if child needs special care
-Q.1.1. Weight less than 2500g [helpText: Child was born with weight less than 2500g?, pos: 0, tt_requirenextclick: false, tt_onLoad: tt_cancel_destination += "&skip_flow=true"; __$("nextButton").style.display = "none"; skipFlow("<%= params["skip_flow"]%>"); showCategory("Reason For Special Care"); __$("category").style.fontSize = "30px"]
+Q.1.1. Weight less than 2500g [helpText: Child was born with weight less than 2500g?, pos: 0, tt_requirenextclick: false, tt_onLoad: try{$("touchscreenInput" + tstCurrentPage).value = "<%= @patient.low_birth_weight? rescue nil%>"}catch(c){}; tt_cancel_destination += "&skip_flow=true"; __$("nextButton").style.display = "none"; skipFlow("<%= params["skip_flow"]%>"); showCategory("Reason For Special Care"); __$("category").style.fontSize = "30px"]
 O.1.1.1. Yes
 O.1.1.2. No
 
@@ -12,7 +12,7 @@ Q.1.3. 2 or more children in family have died? [helpText: Family has two or more
 O.1.3.1. Yes
 O.1.3.2. No
 
-Q.1.4. Child exposed to HIV? [helpText: Child is exposed to HIV?, pos: 3, tt_requirenextclick: false, tt_onLoad: __$("nextButton").style.display = "none"; showCategory("Reason For Special Care"); __$("category").style.fontSize = "30px"]
+Q.1.4. Child exposed to HIV? [helpText: Child is exposed to HIV?, pos: 3, tt_requirenextclick: false, tt_onLoad: try{$("touchscreenInput" + tstCurrentPage).value = "<%= @patient.is_exposed? rescue nil%>"}catch(c){}; __$("nextButton").style.display = "none"; showCategory("Reason For Special Care"); __$("category").style.fontSize = "30px"]
 O.1.4.1. Yes
 O.1.4.2. No
 
@@ -24,7 +24,7 @@ Q.1.6. Fifth or more child [helpText: Child is fifth (or more) in family?, pos: 
 O.1.6.1. Yes
 O.1.6.2. No
 
-Q.1.7. Child a twin [helpText: Child was born as twins?, pos: 6, tt_requirenextclick: false, tt_onLoad: __$("nextButton").style.display = "none"; showCategory("Reason For Special Care"); __$("category").style.fontSize = "30px"]
+Q.1.7. Child a twin [helpText: Child was born as twins?, pos: 6, tt_requirenextclick: false, tt_onLoad: try{$("touchscreenInput" + tstCurrentPage).value = "<%= @patient.twin_outcome? rescue nil%>"}catch(c){}; __$("nextButton").style.display = "none"; showCategory("Reason For Special Care"); __$("category").style.fontSize = "30px"]
 O.1.7.1. Yes
 O.1.7.2. No
 
