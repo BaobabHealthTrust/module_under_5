@@ -544,6 +544,8 @@ class EncountersController < ApplicationController
   def create_prescription
   
     User.current = User.find(session[:user]["user_id"])
+    redirect_to "/patients/show/#{params[:patient_id]}?user_id=#{User.current.user_id}" and return if params[:prescription].blank?
+    
     if params[:prescription]
 
       params[:prescription].each do |prescription|
