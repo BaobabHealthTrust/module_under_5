@@ -1,11 +1,11 @@
 P.1. IMMUNIZATION RECORD [program: UNDER 5 PROGRAM, scope: RECENT, concept: Mother HIV Status]
 C.1. Record immunization of baby
-Q.1.1. BCG immunization was given at birth? [pos: 0, tt_onLoad: tt_cancel_destination += "&skip_flow=true";  skipFlow("<%= params["skip_flow"]%>"); showCategory("Immunization Record"); __$("category").style.fontSize = "30px"]
+Q.1.1. BCG immunization was given at birth? [condition: <%= @patient.bcg0 != "Yes"%>, helpText: Was BCG immunization given at birth?, pos: 0, tt_onLoad: tt_cancel_destination += "&skip_flow=true";  skipFlow("<%= params["skip_flow"]%>"); showCategory("Immunization Record"); __$("category").style.fontSize = "30px"]
 O.1.1.1. No
 O.1.1.2. Yes
 Q.1.1.2.1. Immunization day [pos: 1, helpText: Immunization Date, field_type: date, tt_onUnLoad: showCategory("Immunization Record"); __$("category").style.fontSize = "30px", absoluteMin: <%= @patient.person.birthdate.to_date %>, absoluteMax: <%= (session["datetime"].to_date rescue  Date.today) %>]
 
-Q.1.1.2.4. Has immunization scar been seen? [tt_onUnLoad: showCategory("Immunization Record"); __$("category").style.fontSize = "30px", pos: 4]
+Q.1.1.2.4. Has immunization scar been seen? [condition: <%= @patient.scar != "Yes"%>, tt_onUnLoad: showCategory("Immunization Record"); __$("category").style.fontSize = "30px", pos: 4]
 O.1.1.2.4.1. Yes
 O.1.1.2.4.2. No
 Q.1.1.2.4.2.1. Repeat BCG immunization given? [tt_onUnLoad: showCategory("Immunization Record"); __$("category").style.fontSize = "30px", pos: 5, condition: var d = checkBCGDate("<%= session["datetime"].to_date rescue Date.today%>"); d > 12;]
@@ -43,7 +43,7 @@ O.1.7.1. No
 O.1.7.2. Yes
 Q.1.7.2.1. Date PCV 31 vaccine given [tt_onUnLoad: showCategory("Immunization Record"); __$("category").style.fontSize = "30px", field_type: date, pos: 18]
 
-Q.1.8. First polio vaccine at birth [tt_onUnLoad: showCategory("Immunization Record"); __$("category").style.fontSize = "30px", pos: 19, condition: <%= @patient.age_in_months < 0.5 and @patient.polio0.downcase != "yes" %>]
+Q.1.8. First polio vaccine at birth [helpText: First polio vaccine at birth?, tt_onUnLoad: showCategory("Immunization Record"); __$("category").style.fontSize = "30px", pos: 19, condition: <%= @patient.age_in_months < 0.5 and @patient.polio0.downcase != "yes" %>]
 O.1.8.1. No
 O.1.8.2. Yes
 Q.1.8.2.1. Date first Polio vaccine given [tt_onUnLoad: showCategory("Immunization Record"); __$("category").style.fontSize = "30px", field_type: date, pos: 20]
@@ -63,7 +63,7 @@ O.1.11.1. No
 O.1.11.2. Yes
 Q.1.11.2.1. Date fourth Polio vaccine given [tt_onUnLoad: showCategory("Immunization Record"); __$("category").style.fontSize = "30px", field_type: date, pos: 26]
 
-Q.1.12. Measles vaccine at 9 months [tt_onUnLoad: showCategory("Immunization Record"); __$("category").style.fontSize = "30px", pos: 27]
+Q.1.12. Measles vaccine at 9 months [condition: <%= @patient.age_in_months >= 9 and @patient.measles9.downcase != "yes" %>, tt_onUnLoad: showCategory("Immunization Record"); __$("category").style.fontSize = "30px", pos: 27]
 O.1.12.1. No
 O.1.12.2. Yes
 Q.1.12.2.1. Date measles vaccine given [tt_onUnLoad: showCategory("Immunization Record"); __$("category").style.fontSize = "30px", pos: 28, field_type: date]

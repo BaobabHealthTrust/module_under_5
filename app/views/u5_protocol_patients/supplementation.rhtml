@@ -15,7 +15,7 @@
 				Vitamin A 100,000 IU given? 
 			</td>
 			<td>
-<select id='1.1' name='concept[Vitamin A 100,000 IU given? ]' helpText='Vitamin A 100,000 IU given? ' condition='<%= @patient.age_in_months(session["datetime"] || Date.today).to_i < 12 && @patient.age_in_months(session["datetime"] || Date.today).to_i > 6 && @patient.age_in_months(session["datetime"] || Date.today).to_i < 60 %>'  tt_onLoad='if(!tt_cancel_destination.match("skip_flow")){tt_cancel_destination += "&skip_flow=true"}; showCategory("Supplementation"); __$("category").style.fontSize = "30px"; skipFlow("<%= params["skip_flow"]%>")'  pos='0' >
+<select id='1.1' name='concept[Vitamin A 100,000 IU given? ]' helpText='Vitamin A 100,000 IU given? ' pos='0'  condition='<%= @patient.age_in_months(session["datetime"] || Date.today).to_i < 12 && @patient.age_in_months(session["datetime"] || Date.today).to_i > 6 && @patient.age_in_months(session["datetime"] || Date.today).to_i < 60 %>'  tt_onLoad='if(!tt_cancel_destination.match("skip_flow")){tt_cancel_destination += "&skip_flow=true"}; showCategory("Supplementation"); __$("category").style.fontSize = "30px"; skipFlow("<%= params["skip_flow"]%>")' >
 <option></option>
 <option value='No'>No</option>
  <option value='Yes'>Yes</option>
@@ -27,7 +27,7 @@
 				Vitamin A 200,000 IU given? 
 			</td>
 			<td>
-<select id='1.2' name='concept[Vitamin A 200,000 IU given? ]' helpText='Vitamin A 200,000 IU given? ' condition='<%= @patient.age_in_months(session["datetime"] || Date.today).to_i >= 12 && @patient.age_in_months(session["datetime"] || Date.today).to_i > 6 && @patient.age_in_months(session["datetime"] || Date.today).to_i < 60 %>'  tt_onLoad='if(!tt_cancel_destination.match("skip_flow")){tt_cancel_destination += "&skip_flow=true"}; showCategory("Supplementation"); __$("category").style.fontSize = "30px"'  pos='1' >
+<select id='1.2' name='concept[Vitamin A 200,000 IU given? ]' helpText='Vitamin A 200,000 IU given? ' pos='1'  condition='<%= @patient.age_in_months(session["datetime"] || Date.today).to_i >= 12 && @patient.age_in_months(session["datetime"] || Date.today).to_i > 6 && @patient.age_in_months(session["datetime"] || Date.today).to_i < 60 %>'  tt_onLoad='if(!tt_cancel_destination.match("skip_flow")){tt_cancel_destination += "&skip_flow=true"}; showCategory("Supplementation"); __$("category").style.fontSize = "30px"' >
 <option></option>
 <option value='No'>No</option>
  <option value='Yes'>Yes</option>
@@ -39,7 +39,7 @@
 				Select drug type to be given 
 			</td>
 			<td>
-<select id='1.3.1' name='concept[Select drug type to be given ]' helpText='Select drug type to be given ' disabled='disabled'  condition='<%= @patient.age_in_months(session["datetime"] || Date.today).to_i >= 12 && @patient.age_in_months(session["datetime"] || Date.today).to_i <= 59 %>'  tt_onLoad='if(!tt_cancel_destination.match("skip_flow")){tt_cancel_destination += "&skip_flow=true"}; showCategory("Supplementation"); __$("category").style.fontSize = "30px"'  pos='3' >
+<select id='1.3.1' name='concept[Select drug type to be given ]' helpText='Select drug type to be given ' disabled='disabled'  pos='3'  condition='<%= @patient.age_in_months(session["datetime"] || Date.today).to_i >= 12 && @patient.age_in_months(session["datetime"] || Date.today).to_i <= 59 %>'  tt_onLoad='if(!tt_cancel_destination.match("skip_flow")){tt_cancel_destination += "&skip_flow=true"}; showCategory("Supplementation"); __$("category").style.fontSize = "30px"' >
 <option></option>
 <option value='Mebendazole'>Mebendazole</option>
  <option value='Albendazole'>Albendazole</option>
@@ -51,7 +51,7 @@
 				Has half a tablet Albendazole been given?  
 			</td>
 			<td>
-<select id='1.3.1.1.1' name='concept[Has half a tablet Albendazole been given?  ]' helpText='Has half a tablet Albendazole been given?  ' condition='<%= (@patient.age_in_months(session["datetime"] || Date.today).to_i >= 12 && @patient.age_in_months(session["datetime"] || Date.today).to_i <= 23) %>'  tt_onLoad='if(!tt_cancel_destination.match("skip_flow")){tt_cancel_destination += "&skip_flow=true"}; showCategory("Supplementation"); __$("category").style.fontSize = "30px"'  pos='4' >
+<select id='1.3.1.1.1' name='concept[Has half a tablet Albendazole been given?  ]' helpText='Has half a tablet Albendazole been given?  ' pos='4'  condition='<%= (@patient.age_in_months(session["datetime"] || Date.today).to_i >= 12 && @patient.age_in_months(session["datetime"] || Date.today).to_i <= 23) %>'  tt_onLoad='if(!tt_cancel_destination.match("skip_flow")){tt_cancel_destination += "&skip_flow=true"}; showCategory("Supplementation"); __$("category").style.fontSize = "30px"' >
 <option></option>
 <option value='Yes'>Yes</option>
  <option value='No'>No</option>
@@ -63,7 +63,7 @@
 				Has 1 tablet Albendazole been given? 
 			</td>
 			<td>
-<select id='1.3.1.1.2' name='concept[Has 1 tablet Albendazole been given? ]' helpText='Has 1 tablet Albendazole been given? ' condition='<%= @patient.age_in_months(session["datetime"] || Date.today).to_i >= 24 && @patient.age_in_months(session["datetime"] || Date.today).to_i <= 59 %>'  tt_onLoad='if(!tt_cancel_destination.match("skip_flow")){tt_cancel_destination += "&skip_flow=true"}; showCategory("Supplementation"); __$("category").style.fontSize = "30px"'  pos='5' >
+<select id='1.3.1.1.2' name='concept[Has 1 tablet Albendazole been given? ]' helpText='Has 1 tablet Albendazole been given? ' pos='5'  condition='<%= @patient.age_in_months(session["datetime"] || Date.today).to_i >= 24 && @patient.age_in_months(session["datetime"] || Date.today).to_i <= 59 %>'  tt_onLoad='if(!tt_cancel_destination.match("skip_flow")){tt_cancel_destination += "&skip_flow=true"}; showCategory("Supplementation"); __$("category").style.fontSize = "30px"' >
 <option></option>
 <option value='Yes'>Yes</option>
  <option value='No'>No</option>
@@ -75,7 +75,7 @@
 				Has 1 tablet Mebendazole been given? 
 			</td>
 			<td>
-<select id='1.3.1.2.1' name='concept[Has 1 tablet Mebendazole been given? ]' helpText='Has 1 tablet Mebendazole been given? ' condition='<%= @patient.age_in_months(session["datetime"] || Date.today).to_i >= 12 && @patient.age_in_months(session["datetime"] || Date.today).to_i <= 59 %>'  tt_onLoad='if(!tt_cancel_destination.match("skip_flow")){tt_cancel_destination += "&skip_flow=true"}; showCategory("Supplementation"); __$("category").style.fontSize = "30px"'  pos='6' >
+<select id='1.3.1.2.1' name='concept[Has 1 tablet Mebendazole been given? ]' helpText='Has 1 tablet Mebendazole been given? ' pos='6'  condition='<%= @patient.age_in_months(session["datetime"] || Date.today).to_i >= 12 && @patient.age_in_months(session["datetime"] || Date.today).to_i <= 59 %>'  tt_onLoad='if(!tt_cancel_destination.match("skip_flow")){tt_cancel_destination += "&skip_flow=true"}; showCategory("Supplementation"); __$("category").style.fontSize = "30px"' >
 <option></option>
 <option value='Yes'>Yes</option>
  <option value='No'>No</option>
@@ -87,7 +87,7 @@
 				Visit date 
 			</td>
 			<td>
-<input type='text' id='1.3.2'  name='concept[Visit date ]'   field_type='date'  helpText='Date Dosage Given'  tt_onLoad='if(!tt_cancel_destination.match("skip_flow")){tt_cancel_destination += "&skip_flow=true"}; showCategory("Supplementation"); __$("category").style.fontSize = "30px"'  pos='7' />
+<input type='text' id='1.3.2'  name='concept[Visit date ]'   helpText='Date Dosage Given'  pos='7'  tt_onLoad='if(!tt_cancel_destination.match("skip_flow")){tt_cancel_destination += "&skip_flow=true"}; showCategory("Supplementation"); __$("category").style.fontSize = "30px"'  field_type='date' />
 			</td>
 		</tr>
 		<tr>
@@ -95,7 +95,7 @@
 				Have long-lasting insecticidal nets for malaria been given? 
 			</td>
 			<td>
-<select id='1.4.1' name='concept[Have long-lasting insecticidal nets for malaria been given? ]' helpText='Have long-lasting insecticidal nets for malaria been given? ' tt_onLoad='if(!tt_cancel_destination.match("skip_flow")){tt_cancel_destination += "&skip_flow=true"}; showCategory("Supplementation"); __$("category").style.fontSize = "30px"'  pos='8' >
+<select id='1.4.1' name='concept[Have long-lasting insecticidal nets for malaria been given? ]' helpText='Have long-lasting insecticidal nets for malaria been given? ' pos='8'  tt_onLoad='if(!tt_cancel_destination.match("skip_flow")){tt_cancel_destination += "&skip_flow=true"}; showCategory("Supplementation"); __$("category").style.fontSize = "30px"' >
 <option></option>
 <option value='Yes'>Yes</option>
  <option value='No'>No</option>
@@ -107,7 +107,7 @@
 				Date nets received 
 			</td>
 			<td>
-<input type='text' id='1.4.1.2.1'  name='concept[Date nets received ]' helpText='Date nets received '  condition='__$("1.4.1").value == "Yes"'  field_type='date'  tt_onLoad='if(!tt_cancel_destination.match("skip_flow")){tt_cancel_destination += "&skip_flow=true"}; showCategory("Supplementation"); __$("category").style.fontSize = "30px"'  pos='9' />
+<input type='text' id='1.4.1.2.1'  name='concept[Date nets received ]' helpText='Date nets received '  condition='__$("1.4.1").value == "Yes"'  pos='9'  tt_onLoad='if(!tt_cancel_destination.match("skip_flow")){tt_cancel_destination += "&skip_flow=true"}; showCategory("Supplementation"); __$("category").style.fontSize = "30px"'  field_type='date' />
 			</td>
 		</tr>
 	</table>
