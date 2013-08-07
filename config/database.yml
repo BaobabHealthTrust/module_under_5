@@ -25,10 +25,10 @@ test:
   password: password
 
 production:
-  adapter: jdbcmysql
+  adapter: mysql
   encoding: utf8
   reconnect: false
-  database: core_users_production
+  database: core_users
   pool: 5
   username: root
   password: password

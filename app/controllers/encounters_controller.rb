@@ -474,7 +474,7 @@ class EncountersController < ApplicationController
   def give_drugs
 
 
-    @return_url = request.referrer
+    @return_url = request.referrer 
     @patient = Patient.find(params[:patient_id]) rescue nil
 
     @generics = generic
@@ -542,11 +542,13 @@ class EncountersController < ApplicationController
   end
 
   def create_prescription
+  
     User.current = User.find(session[:user]["user_id"])
     if params[:prescription]
 
       params[:prescription].each do |prescription|
-
+       
+        next if params[:formulation].blank?
         @suggestions = prescription[:suggestion] || ['New Prescription']
         @patient = Patient.find(params[:patient_id]) rescue nil
 
@@ -668,15 +670,8 @@ class EncountersController < ApplicationController
 
       encounter = Encounter.new(params[:encounter])
       encounter.encounter_datetime ||= session[:datetime]
-      encounter.save
-
-      if !params[:formulation]
-        #redirect_to "/patients/print_exam_label/?patient_id=#{@patient.id}" and return if (encounter.type.name.upcase rescue "") ==
-        #  "TREATMENT"
-        next
-        #redirect_to next_task(@patient) and return
-      end
-
+      encounter.save     
+      
       unless params[:location]
         session_date = session[:datetime] || params[:encounter_datetime] || Time.now()
       else
