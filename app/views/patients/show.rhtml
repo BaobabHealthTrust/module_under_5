@@ -231,23 +231,24 @@ next_task = @task.encounter_type.gsub('_',' ') rescue nil
         </select>
       <%end%>
 
-      <select id="navigation_links">
+      <%if (@patient.age <= 6 rescue true)%>
+        <select id="navigation_links">
 
-        <% if !@demographics_url.nil? %>
-          <option link="<%= @demographics_url %>" ttSize = "160px">
-            Demographics
-          </option>
-        <% end %>
+          <% if !@demographics_url.nil? %>
+            <option link="<%= @demographics_url %>" ttSize = "160px">
+              Demographics
+            </option>
+          <% end %>
 
-        <%id = params[:id] || params[:patient_id]%>
-        <option link="/patients/baby_chart?patient_id=<%= id %>&user_id=<%=params[:user_id]%>&baby_id=<%= id %>" ttSize = "160px">Weight Chart</option>
+          <%id = params[:id] || params[:patient_id]%>
+          <option link="/patients/baby_chart?patient_id=<%= id %>&user_id=<%=params[:user_id]%>&baby_id=<%= id %>" ttSize = "160px">Weight Chart</option>
 
-        <% if (@task.url != "/patients/show/#{@patient.id}?user_id=#{@user.id}") && (@patient.age <= 6 rescue true)%>
-          <option link="<%= @task.url  %>" ttSize = "160px">Continue</option>
-        <% end %>
+          <% if (@task.url != "/patients/show/#{@patient.id}?user_id=#{@user.id}") && (@patient.age <= 6 rescue true)%>
+            <option link="<%= @task.url  %>" ttSize = "160px">Continue</option>
+          <% end %>
 
-      </select>
-
+        </select>
+      <%end%>
       <input type='submit' value='Finish' />
     </form>
     <</div>

@@ -386,12 +386,32 @@ class EncountersController < ApplicationController
 
     program = ProgramEncounter.find(params[:program_id]) rescue nil
 
+    @task = TaskFlow.new(params[:user_id], program.patient_id)
+
+    if File.exists?("#{Rails.root}/config/protocol_task_flow.yml")
+      map = YAML.load_file("#{Rails.root}/config/protocol_task_flow.yml")["#{Rails.env
+        }"]["label.encounter.map"].split(",") rescue []
+    end
+
+    @label_encounter_map = {}
+
+    map.each{ |tie|
+      label = tie.split("|")[0]
+      encounter = tie.split("|")[1] rescue nil
+
+      concept = @task.task_scopes[label.titleize.downcase.strip][:concept].upcase rescue ""
+      key  = encounter + "|" + concept
+      @label_encounter_map[key] = label if !label.blank? && !encounter.blank?
+    }
+
     unless program.nil?
       result = program.program_encounter_types.find(:all, :joins => [:encounter],
         :order => ["encounter_datetime DESC"]).collect{|e|
         next if e.encounter.blank?
+        labl = labell(e.encounter_id, @label_encounter_map).titleize #rescue nil
+        labl = e.encounter.type.name.titleize if labl.blank?
         [
-          e.encounter_id, e.encounter.type.name.titleize,
+          e.encounter_id, labl,
           e.encounter.encounter_datetime.strftime("%H:%M"),
           e.encounter.creator,
           e.encounter.encounter_datetime.strftime("%d-%b-%Y")
@@ -401,7 +421,17 @@ class EncountersController < ApplicationController
 
     render :text => result.to_json
   end
-  
+
+  def labell(encounter_id, hash)
+    encounter = Encounter.find(encounter_id)
+    concepts = encounter.observations.collect{|ob| ob.concept.name.name.downcase}
+    lbl = ""
+    hash.each{|val, label|
+      lbl = label if (concepts.include?(val.split("|")[1].downcase) rescue false)
+    }
+    lbl.gsub(/examination/i , "exam")
+  end
+ 
   def static_locations
     search_string = (params[:search_string] || "").upcase
     extras = ["Health Facility", "Home", "TBA", "Other"]
@@ -542,22 +572,20 @@ class EncountersController < ApplicationController
   end
 
   def create_prescription
-  
+
     User.current = User.find(session[:user]["user_id"])
     redirect_to "/patients/show/#{params[:patient_id]}?user_id=#{User.current.user_id}" and return if params[:prescription].blank?
-    
+
     if params[:prescription]
 
       params[:prescription].each do |prescription|
-       
-        next if params[:formulation].blank?
+
         @suggestions = prescription[:suggestion] || ['New Prescription']
         @patient = Patient.find(params[:patient_id]) rescue nil
 
         type = EncounterType.find_by_name(params[:encounter][:encounter_type_name]).id rescue nil
         encounter = @patient.encounters.find(:first, :order => ["encounter_datetime DESC"],
           :conditions => ["voided = 0 AND encounter_type = ? AND DATE(encounter_datetime) = ?", type, (session[:datetime].to_date rescue Date.today)]) rescue nil
-
 
         if !type.blank? && encounter.blank?
           encounter = Encounter.create(
@@ -585,7 +613,7 @@ class EncountersController < ApplicationController
 
                 @program_encounter = ProgramEncounter.create(
                   :patient_id => @patient.id,
-                  :date_time => encounter.encounter_datetime,
+                  :date_time => session_date,
                   :program_id => @program.id
                 )
 
@@ -605,7 +633,7 @@ class EncountersController < ApplicationController
                 @current = PatientProgram.create(
                   :patient_id => @patient.id,
                   :program_id => @program.id,
-                  :date_enrolled => Time.now
+                  :date_enrolled => session_date
                 )
 
               end
@@ -672,8 +700,8 @@ class EncountersController < ApplicationController
 
       encounter = Encounter.new(params[:encounter])
       encounter.encounter_datetime ||= session[:datetime]
-      encounter.save     
-      
+      encounter.save
+
       unless params[:location]
         session_date = session[:datetime] || params[:encounter_datetime] || Time.now()
       else

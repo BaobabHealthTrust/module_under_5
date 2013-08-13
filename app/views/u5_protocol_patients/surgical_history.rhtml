@@ -15,7 +15,7 @@
 				Ever had any surgical procedure? 
 			</td>
 			<td>
-<select id='1.1' name='concept[Ever had any surgical procedure? ]' helpText='Ever had any surgical procedure? ' pos='0'  tt_onLoad='tt_cancel_destination += "&skip_flow=true"; showCategory("Surgical History"); __$("category").style.fontSize = "30px"; skipFlow("<%= params["skip_flow"]%>")' >
+<select id='1.1' name='concept[Ever had any surgical procedure? ]' helpText='Ever had any surgical procedure? ' tt_onLoad='tt_cancel_destination += "&skip_flow=true"; showCategory("Surgical History"); __$("category").style.fontSize = "30px"; skipFlow("<%= params["skip_flow"]%>")'  pos='0' >
 <option></option>
 <option value='Yes'>Yes</option>
  <option value='No'>No</option>
@@ -27,7 +27,7 @@
 				Reason for Procedure 
 			</td>
 			<td>
-<input type='text' id='1.1.3'   helpText='Reason for Procedure '  ajaxURL='/encounters/diagnoses?search_string='  pos='1'  condition='__$("1.1").value.trim() == "Yes"'  tt_onLoad='showCategory("Surgical History"); __$("category").style.fontSize = "30px"'  name='concept[Diagnosis][]' />
+<input type='text' id='1.1.3'   helpText='Reason for Procedure '  tt_onLoad='showCategory("Surgical History"); __$("category").style.fontSize = "30px"'  ajaxURL='/encounters/diagnoses?search_string='  condition='__$("1.1").value.trim() == "Yes"'  name='concept[Diagnosis][]'  pos='1' />
 			</td>
 		</tr>
 		<tr>
@@ -35,7 +35,7 @@
 				Next Reason For Procedure (Optional) 
 			</td>
 			<td>
-<input type='text' id='1.1.5'   helpText='Next Reason For Procedure (Optional) '  ajaxURL='/encounters/diagnoses?search_string='  optional='true'  pos='3'  condition='__$("1.1").value.trim() == "Yes" && __$("1.1.3").value.trim().length > 0'  tt_onLoad='showCategory("Surgical History"); __$("category").style.fontSize = "30px";'  name='concept[Diagnosis][]' />
+<input type='text' id='1.1.5'   helpText='Next Reason For Procedure (Optional) '  tt_onLoad='showCategory("Surgical History"); __$("category").style.fontSize = "30px";'  ajaxURL='/encounters/diagnoses?search_string='  condition='__$("1.1").value.trim() == "Yes" && __$("1.1.3").value.trim().length > 0'  name='concept[Diagnosis][]'  pos='3'  optional='true' />
 			</td>
 		</tr>
 		<tr>
@@ -43,7 +43,7 @@
 				Next Reason For Procedure (Optional) 
 			</td>
 			<td>
-<input type='text' id='1.1.7'   helpText='Next Reason For Procedure (Optional) '  ajaxURL='/encounters/diagnoses?search_string='  optional='true'  pos='5'  condition='__$("1.1").value.trim() == "Yes" && __$("1.1.5").value.trim().length > 0'  tt_onLoad='showCategory("Surgical History"); __$("category").style.fontSize = "30px";'  name='concept[Diagnosis][]' />
+<input type='text' id='1.1.7'   helpText='Next Reason For Procedure (Optional) '  tt_onLoad='showCategory("Surgical History"); __$("category").style.fontSize = "30px";'  ajaxURL='/encounters/diagnoses?search_string='  condition='__$("1.1").value.trim() == "Yes" && __$("1.1.5").value.trim().length > 0'  name='concept[Diagnosis][]'  pos='5'  optional='true' />
 			</td>
 		</tr>
 		<tr>
@@ -51,7 +51,7 @@
 				Next Reason For Procedure (Optional) 
 			</td>
 			<td>
-<input type='text' id='1.1.9'   helpText='Next Reason For Procedure (Optional) '  ajaxURL='/encounters/diagnoses?search_string='  optional='true'  pos='7'  condition='__$("1.1").value.trim() == "Yes" && __$("1.1.7").value.trim().length > 0'  tt_onLoad='showCategory("Surgical History"); __$("category").style.fontSize = "30px";'  name='concept[Diagnosis][]' />
+<input type='text' id='1.1.9'   helpText='Next Reason For Procedure (Optional) '  tt_onLoad='showCategory("Surgical History"); __$("category").style.fontSize = "30px";'  ajaxURL='/encounters/diagnoses?search_string='  condition='__$("1.1").value.trim() == "Yes" && __$("1.1.7").value.trim().length > 0'  name='concept[Diagnosis][]'  pos='7'  optional='true' />
 			</td>
 		</tr>
 		<tr>
@@ -59,7 +59,7 @@
 				Next Reason For Procedure (Optional) 
 			</td>
 			<td>
-<input type='text' id='1.1.11'   helpText='Next Reason For Procedure (Optional) '  ajaxURL='/encounters/diagnoses?search_string='  optional='true'  pos='9'  condition='__$("1.1").value.trim() == "Yes" && __$("1.1.9").value.trim().length > 0'  tt_onLoad='showCategory("Surgical History"); __$("category").style.fontSize = "30px";'  name='concept[Diagnosis][]' />
+<input type='text' id='1.1.11'   helpText='Next Reason For Procedure (Optional) '  tt_onLoad='showCategory("Surgical History"); __$("category").style.fontSize = "30px";'  ajaxURL='/encounters/diagnoses?search_string='  condition='__$("1.1").value.trim() == "Yes" && __$("1.1.9").value.trim().length > 0'  name='concept[Diagnosis][]'  pos='9'  optional='true' />
 			</td>
 		</tr>
 	</table>
