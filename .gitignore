@@ -2,6 +2,7 @@ log/
 tmp/
 nbproject/
 *.swap
+config/roles/
 config/database.yml
 config/application.yml
 app/controllers/protocol_patients_controller.rb
