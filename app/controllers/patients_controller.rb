@@ -6,7 +6,11 @@ class PatientsController < ApplicationController
     :set_datetime, :update_datetime, :reset_datetime]
 
   def show
-    
+
+    d = (session[:datetime].to_date rescue Date.today)
+    t = Time.now
+    session_date = DateTime.new(d.year, d.month, d.day, t.hour, t.min, t.sec)
+   
     @patient = Patient.find(params[:id] || params[:patient_id]) rescue nil
 
     if @patient.nil?
@@ -21,7 +25,7 @@ class PatientsController < ApplicationController
     
     redirect_to "/encounters/no_user" and return if @user.nil?
 
-    @task = TaskFlow.new(params[:user_id], @patient.id)
+    @task = TaskFlow.new(params[:user_id], @patient.id, session_date.to_date)
 
     @links = {}
 
@@ -88,7 +92,12 @@ class PatientsController < ApplicationController
   def done(scope = "", encounter_name = "", concept = "")
     scope = "" if concept.blank?
     available = []
-
+    
+    d = (session[:datetime].to_date rescue Date.today)
+    t = Time.now
+    session_date = DateTime.new(d.year, d.month, d.day, t.hour, t.min, t.sec)
+    @task.current_date = session_date
+    
     case scope
     when "TODAY"
       available = Encounter.find(:all, :joins => [:observations], :conditions =>
@@ -119,17 +128,22 @@ class PatientsController < ApplicationController
   end
 
   def current_visit
+
     @patient = Patient.find(params[:id] || params[:patient_id]) rescue nil
+    d = (session[:datetime].to_date rescue Date.today)
+    t = Time.now
+    session_date = DateTime.new(d.year, d.month, d.day, t.hour, t.min, t.sec)
 
-    ProgramEncounter.current_date = (session[:date_time] || Time.now)
+    ProgramEncounter.current_date = session_date.to_date
 
-    @programs = @patient.program_encounters.current.collect{|p|
-
+    @programs = @patient.program_encounters.find(:all, :order => ["date_time DESC"],
+      :conditions => ["DATE(date_time) = ?", session_date.to_date]).collect{|p|
       [
         p.id,
         p.to_s,
         p.program_encounter_types.collect{|e|
           next if e.encounter.blank?
+
           [
             e.encounter_id, e.encounter.type.name,
             e.encounter.encounter_datetime.strftime("%H:%M"),
@@ -139,14 +153,31 @@ class PatientsController < ApplicationController
         p.date_time.strftime("%d-%b-%Y")
       ]
     } if !@patient.blank?
-
-    # raise @programs.inspect
-
+    
+    @programs.delete_if{|prg| prg[2].blank? || (prg[2].first.blank? rescue false)}
     render :layout => false
   end
 
   def visit_history
     @patient = Patient.find(params[:id] || params[:patient_id]) rescue nil
+
+    @task = TaskFlow.new(params[:user_id], @patient.id)
+
+    if File.exists?("#{Rails.root}/config/protocol_task_flow.yml")
+      map = YAML.load_file("#{Rails.root}/config/protocol_task_flow.yml")["#{Rails.env
+        }"]["label.encounter.map"].split(",") rescue []
+    end
+
+    @label_encounter_map = {}
+
+    map.each{ |tie|
+      label = tie.split("|")[0]
+      encounter = tie.split("|")[1] rescue nil
+
+      concept = @task.task_scopes[label.titleize.downcase.strip][:concept].upcase rescue ""
+      key  = encounter + "|" + concept
+      @label_encounter_map[key] = label if !label.blank? && !encounter.blank?
+    }
 
     @programs = @patient.program_encounters.find(:all, :order => ["date_time DESC"]).collect{|p|
 
@@ -155,8 +186,9 @@ class PatientsController < ApplicationController
         p.to_s,
         p.program_encounter_types.collect{|e|
           next if e.encounter.blank?
+          labl = label(e.encounter_id, @label_encounter_map) || e.encounter.type.name
           [
-            e.encounter_id, e.encounter.type.name,
+            e.encounter_id, labl,
             e.encounter.encounter_datetime.strftime("%H:%M"),
             e.encounter.creator
           ] rescue []
@@ -165,11 +197,18 @@ class PatientsController < ApplicationController
       ]
     } if !@patient.nil?
 
-    # raise @programs.inspect
-
+    @programs.delete_if{|prg| prg[2].blank? || (prg[2].first.blank? rescue false)}
     render :layout => false
   end
 
+  def label(encounter_id, hash)
+    concepts = Encounter.find(encounter_id).observations.collect{|ob| ob.concept.name.name.downcase}
+    lbl = ""
+    hash.each{|val, label|
+      lbl = label if (concepts.include?(val.split("|")[1].downcase) rescue false)}
+    lbl
+  end
+  
   def demographics
     @patient = Patient.find(params[:id] || params[:patient_id]) rescue nil
 
@@ -268,7 +307,7 @@ class PatientsController < ApplicationController
     birth_encounter = Observation.find_by_concept_id_and_person_id(ConceptName.find_by_name("Birth Weight").concept_id,
       @patient.id).encounter rescue nil
 
-    Encounter.find_all_by_patient_id(@patient.patient_id).collect{|enc|
+    Encounter.find(:all, :order => ["encounter_datetime DESC"], :conditions => ["patient_id = ?", @patient.patient_id]).collect{|enc|
 
       enc.encounter_datetime = @patient.person.birthdate.to_date if !birth_encounter.blank? and enc.encounter_id == birth_encounter.encounter_id
       

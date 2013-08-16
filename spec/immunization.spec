@@ -28,50 +28,50 @@ O.1.4.1. No
 O.1.4.2. Yes
 Q.1.4.2.1. Date DPT-HepB-Hib 3 vaccine given [field_type: date, pos: 12, tt_onUnLoad: showCategory("Immunization Record"); __$("category").style.fontSize = "30px",]
 
-Q.1.5. PCV 1 vaccine given at 6 weeks or later? [tt_onUnLoad: showCategory("Immunization Record"); __$("category").style.fontSize = "30px", pos: 13, condition: <%= @patient.age_in_months > 1.5 and @patient.pcv1.downcase.strip != "yes" %>]
+Q.1.5. PCV 1 vaccine given at 6 weeks or later? [helpText: Was PCV 1 vaccine given at 6 weeks or later?, tt_onUnLoad: showCategory("Immunization Record"); __$("category").style.fontSize = "30px", pos: 13, condition: <%= @patient.age_in_months > 1.5 and @patient.pcv1.downcase.strip != "yes" %>]
 O.1.5.1. No
 O.1.5.2. Yes
 Q.1.5.2.1. Date PCV 1 vaccine given [tt_onUnLoad: showCategory("Immunization Record"); __$("category").style.fontSize = "30px", field_type: date, pos: 14]
 
-Q.1.6. PCV 2 vaccine given at 1 month after first dose? [tt_onUnLoad: showCategory("Immunization Record"); __$("category").style.fontSize = "30px", pos: 15, condition: <%= @patient.age_in_months > 1.5 and @patient.pcv2.downcase.strip != "yes" %>]
+Q.1.6. PCV 2 vaccine given at 1 month after first dose? [helptext: Was PCV 2 vaccine given at 1 month after first dose?, tt_onUnLoad: showCategory("Immunization Record"); __$("category").style.fontSize = "30px", pos: 15, condition: <%= @patient.age_in_months > 1.5 and @patient.pcv2.downcase.strip != "yes" %>]
 O.1.6.1. No
 O.1.6.2. Yes
 Q.1.6.2.1. Date PCV 2 vaccine given [tt_onUnLoad: showCategory("Immunization Record"); __$("category").style.fontSize = "30px", field_type: date, pos: 16]
 
-Q.1.7. PCV 3 vaccine given at 1 month after second dose? [tt_onUnLoad: showCategory("Immunization Record"); __$("category").style.fontSize = "30px", pos: 17, condition: <%= @patient.age_in_months >= 1.5 and @patient.pcv3.downcase != "yes" %>]
+Q.1.7. PCV 3 vaccine given at 1 month after second dose? [helpText: Was PCV 3 vaccine given at 1 month after second dose?, tt_onUnLoad: showCategory("Immunization Record"); __$("category").style.fontSize = "30px", pos: 17, condition: <%= @patient.age_in_months >= 1.5 and @patient.pcv3.downcase != "yes" %>]
 O.1.7.1. No
 O.1.7.2. Yes
 Q.1.7.2.1. Date PCV 31 vaccine given [tt_onUnLoad: showCategory("Immunization Record"); __$("category").style.fontSize = "30px", field_type: date, pos: 18]
 
-Q.1.8. First polio vaccine at birth [helpText: First polio vaccine at birth?, tt_onUnLoad: showCategory("Immunization Record"); __$("category").style.fontSize = "30px", pos: 19, condition: <%= @patient.age_in_months < 0.5 and @patient.polio0.downcase != "yes" %>]
+Q.1.8. First polio vaccine at birth [helpText: Was first polio vaccine given at birth?, tt_onUnLoad: showCategory("Immunization Record"); __$("category").style.fontSize = "30px", pos: 19, condition: <%= @patient.age_in_months < 0.5 and @patient.polio0.downcase != "yes" %>]
 O.1.8.1. No
 O.1.8.2. Yes
 Q.1.8.2.1. Date first Polio vaccine given [tt_onUnLoad: showCategory("Immunization Record"); __$("category").style.fontSize = "30px", field_type: date, pos: 20]
 
-Q.1.9. Second polio vaccine at 1.5 months [tt_onUnLoad: showCategory("Immunization Record"); __$("category").style.fontSize = "30px", pos: 21, condition: <%= @patient.age_in_months >= 1.5 and @patient.polio1.downcase != "yes" %>]
+Q.1.9. Second polio vaccine at 1.5 months [helpText: Was second polio vaccine given at 1.5 months?, tt_onUnLoad: showCategory("Immunization Record"); __$("category").style.fontSize = "30px", pos: 21, condition: <%= @patient.age_in_months >= 1.5 and @patient.polio1.downcase != "yes" %>]
 O.1.9.1. No
 O.1.9.2. Yes
 Q.1.9.2.1. Date second Polio vaccine given [tt_onUnLoad: showCategory("Immunization Record"); __$("category").style.fontSize = "30px", field_type: date, pos: 22]
 
-Q.1.10. Third polio vaccine at 2.5 months [tt_onUnLoad: showCategory("Immunization Record"); __$("category").style.fontSize = "30px", pos: 23, condition: <%= @patient.age_in_months >= 2.5 and @patient.polio2.downcase != "yes" %>]
+Q.1.10. Third polio vaccine at 2.5 months [helpText: Was third polio vaccine given at 2.5 months?, tt_onUnLoad: showCategory("Immunization Record"); __$("category").style.fontSize = "30px", pos: 23, condition: <%= @patient.age_in_months >= 2.5 and @patient.polio2.downcase != "yes" %>]
 O.1.10.1. No
 O.1.10.2. Yes
 Q.1.10.2.1. Date third Polio vaccine given [tt_onUnLoad: showCategory("Immunization Record"); __$("category").style.fontSize = "30px", field_type: date, pos: 24]
 
-Q.1.11. Fourth polio vaccine at 3.5 months [tt_onUnLoad: showCategory("Immunization Record"); __$("category").style.fontSize = "30px", pos: 25, condition: <%= @patient.age_in_months >= 3.5 and @patient.polio3.downcase != "yes" %>]
+Q.1.11. Fourth polio vaccine at 3.5 months [helpText: Was fourth polio vaccine given at 3.5 months?, tt_onUnLoad: showCategory("Immunization Record"); __$("category").style.fontSize = "30px", pos: 25, condition: <%= @patient.age_in_months >= 3.5 and @patient.polio3.downcase != "yes" %>]
 O.1.11.1. No
 O.1.11.2. Yes
 Q.1.11.2.1. Date fourth Polio vaccine given [tt_onUnLoad: showCategory("Immunization Record"); __$("category").style.fontSize = "30px", field_type: date, pos: 26]
 
-Q.1.12. Measles vaccine at 9 months [condition: <%= @patient.age_in_months >= 9 and @patient.measles9.downcase != "yes" %>, tt_onUnLoad: showCategory("Immunization Record"); __$("category").style.fontSize = "30px", pos: 27]
+Q.1.12. Measles vaccine at 9 months [helpText: Was measles vaccine given at 9 months?,condition: <%= @patient.age_in_months >= 9 and @patient.measles9.downcase != "yes" %>, tt_onUnLoad: showCategory("Immunization Record"); __$("category").style.fontSize = "30px", pos: 27]
 O.1.12.1. No
 O.1.12.2. Yes
 Q.1.12.2.1. Date measles vaccine given [tt_onUnLoad: showCategory("Immunization Record"); __$("category").style.fontSize = "30px", pos: 28, field_type: date]
 
-Q.1.13. Mother HIV Status [tt_onUnLoad: showCategory("Immunization Record"); __$("category").style.fontSize = "30px", pos: 29]
+Q.1.13. Mother HIV Status [tt_onLoad: try{$("touchscreenInput" + tstCurrentPage).value = "<%= @patient.mother_positive rescue nil%>"}catch(c){}, tt_onUnLoad: showCategory("Immunization Record"); __$("category").style.fontSize = "30px", pos: 29]
 O.1.13.1. Negative
 O.1.13.2. Positive
-Q.1.13.2.1. Child current HIV status [concept: HIV Status, tt_onUnLoad: showCategory("Immunization Record"); __$("category").style.fontSize = "30px", pos: 30]
+Q.1.13.2.1. Child current HIV status [concept: HIV Status, tt_onLoad: try{$("touchscreenInput" + tstCurrentPage).value = "<%= @patient.infected? rescue nil%>"}catch(c){}, tt_onUnLoad: showCategory("Immunization Record"); __$("category").style.fontSize = "30px", pos: 30]
 O.1.13.2.1.1. HIV infected
 O.1.13.2.1.2. Not HIV infected
 O.1.13.2.1.3. Not confirmed diagnosis

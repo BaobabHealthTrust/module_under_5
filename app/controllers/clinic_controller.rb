@@ -3,7 +3,7 @@ class ClinicController < ApplicationController
   unloadable  
 
   before_filter :sync_user, :except => [:index, :user_login, :user_logout, 
-      :set_datetime, :update_datetime, :reset_datetime]
+    :set_datetime, :update_datetime, :reset_datetime]
 
   def index
     
@@ -89,7 +89,8 @@ class ClinicController < ApplicationController
       date_of_encounter = Time.mktime(params[:set_year].to_i,
         params[:set_month].to_i,
         params[:set_day].to_i,0,0,1)
-      session[:datetime] = date_of_encounter #if date_of_encounter.to_date != Date.today
+        session[:datetime] = date_of_encounter #if date_of_encounter.to_date != Date.today
+        session["datetime"] = date_of_encounter
     end
 
     redirect_to "/clinic?user_id=#{params[:user_id]}&location_id=#{params[:location_id]}"
@@ -97,6 +98,7 @@ class ClinicController < ApplicationController
 
   def reset_datetime
     session[:datetime] = nil
+    session["datetime"] = nil
     redirect_to "/clinic?user_id=#{params[:user_id]}&location_id=#{params[:location_id]}" and return
   end
 
@@ -595,7 +597,7 @@ class ClinicController < ApplicationController
     render :text => @fields.to_json
   end
 
-protected
+  protected
 
   def sync_user
     if !session[:user].nil?

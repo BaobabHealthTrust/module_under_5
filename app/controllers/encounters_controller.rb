@@ -4,21 +4,26 @@ class EncountersController < ApplicationController
 
   def create
 
+    d = (session[:datetime].to_date rescue Date.today)
+    t = Time.now
+    session_date = DateTime.new(d.year, d.month, d.day, t.hour, t.min, t.sec)
+    
     User.current = User.find(session["user_id"]) rescue nil
 
     Location.current = Location.find(params[:location_id] || session[:location_id]) rescue nil
 
     patient = Patient.find(params[:patient_id]) rescue nil
 
-    if !patient.nil?
+    if !patient.blank?
 
       type = EncounterType.find_by_name(params[:encounter_type]).id rescue nil
 
-      if !type.nil?
+      if !type.blank?
         @encounter = Encounter.create(
           :patient_id => patient.id,
           :provider_id => (params[:user_id]),
           :encounter_type => type,
+          :encounter_datetime => session_date,
           :location_id => (session[:location_id] || params[:location_id])
         )
 
@@ -34,13 +39,13 @@ class EncountersController < ApplicationController
 
             @program_encounter = ProgramEncounter.find_by_program_id(@program.id,
               :conditions => ["patient_id = ? AND DATE(date_time) = ?",
-                patient.id, Date.today.strftime("%Y-%m-%d")])
+                patient.id, session_date.strftime("%Y-%m-%d")])
 
             if @program_encounter.blank?
 
               @program_encounter = ProgramEncounter.create(
                 :patient_id => patient.id,
-                :date_time => Time.now,
+                :date_time =>  session_date,
                 :program_id => @program.id
               )
 
@@ -60,7 +65,7 @@ class EncountersController < ApplicationController
               @current = PatientProgram.create(
                 :patient_id => patient.id,
                 :program_id => @program.id,
-                :date_enrolled => Time.now
+                :date_enrolled =>  session_date
               )
 
             end
@@ -93,8 +98,8 @@ class EncountersController < ApplicationController
 
                 @current.transition({
                     :state => "#{value}",
-                    :start_date => Time.now,
-                    :end_date => Time.now
+                    :start_date =>  session_date,
+                    :end_date =>  session_date
                   }) if !selected_state.nil?
               end
 
@@ -142,7 +147,7 @@ class EncountersController < ApplicationController
 
               when "time"
 
-                obs.update_attribute("value_datetime", "#{Date.today.strftime("%Y-%m-%d")} " + value)
+                obs.update_attribute("value_datetime", "#{session_date.strftime("%Y-%m-%d")} " + value)
 
               when "number"
 
@@ -229,7 +234,7 @@ class EncountersController < ApplicationController
 
                 when "time"
 
-                  obs.update_attribute("value_datetime", "#{Date.today.strftime("%Y-%m-%d")} " + item)
+                  obs.update_attribute("value_datetime", "#{session_date.strftime("%Y-%m-%d")} " + item)
 
                 when "number"
 
@@ -256,10 +261,10 @@ class EncountersController < ApplicationController
 
           end
 
-        end if !params[:concept].nil?
+        end if !params[:concept].blank?
 
 
-        if !params[:prescription].nil?
+        if !params[:prescription].blank?
 
           params[:prescription].each do |prescription|
 
@@ -310,33 +315,7 @@ class EncountersController < ApplicationController
 
       end
 
-      if params[:encounter_type].downcase.strip == "baby delivery" and !params["concept"]["Time of delivery"].nil?
-
-        baby = Baby.new(params[:user_id], params[:patient_id], session[:location_id], (session[:datetime] || Date.today))
-
-        mother = Person.find(params[:patient_id]) rescue nil
-
-        link = get_global_property_value("patient.registration.url").to_s rescue nil
-
-        baby_id = baby.associate_with_mother("#{link}", "Baby #{((params[:baby].to_i - 1) rescue 1)}",
-          "#{(!mother.nil? ? (mother.names.first.family_name rescue "Unknown") :
-          "Unknown")}", params["concept"]["Gender]"], params["concept"]["Date of delivery]"]) # rescue nil
-
-        # Baby identifier
-        concept = ConceptName.find_by_name("Baby outcome").concept_id rescue nil
-
-        obs = Observation.create(
-          :person_id => @encounter.patient_id,
-          :concept_id => concept,
-          :location_id => @encounter.location_id,
-          :obs_datetime => @encounter.encounter_datetime,
-          :encounter_id => @encounter.id,
-          :value_text => baby_id
-        ) if !baby_id.nil?
-
-      end
-
-      @task = TaskFlow.new(params[:user_id] || User.first.id, patient.id)
+      @task = TaskFlow.new(params[:user_id] || User.first.id, patient.id, session_date)
 
       redirect_to params[:next_url] and return if !params[:next_url].nil?
 
@@ -408,7 +387,7 @@ class EncountersController < ApplicationController
       result = program.program_encounter_types.find(:all, :joins => [:encounter],
         :order => ["encounter_datetime DESC"]).collect{|e|
         next if e.encounter.blank?
-        labl = labell(e.encounter_id, @label_encounter_map).titleize #rescue nil
+        labl = labell(e.encounter_id, @label_encounter_map).titleize rescue nil
         labl = e.encounter.type.name.titleize if labl.blank?
         [
           e.encounter_id, labl,
@@ -427,7 +406,9 @@ class EncountersController < ApplicationController
     concepts = encounter.observations.collect{|ob| ob.concept.name.name.downcase}
     lbl = ""
     hash.each{|val, label|
-      lbl = label if (concepts.include?(val.split("|")[1].downcase) rescue false)
+      concept = val.split("|")[1].downcase rescue nil
+      next if ((encounter.type.name.match(/update outcome/i) && concept.match(/diagnosis/i)) rescue false)
+      lbl = label if (concepts.include?(concept) rescue false)
     }
     lbl.gsub(/examination/i , "exam")
   end
@@ -570,9 +551,12 @@ class EncountersController < ApplicationController
 
     collection.uniq
   end
-
+  
   def create_prescription
 
+    d = (session[:datetime].to_date rescue Date.today)
+    t = Time.now
+    session_date = DateTime.new(d.year, d.month, d.day, t.hour, t.min, t.sec)
     User.current = User.find(session[:user]["user_id"])
     redirect_to "/patients/show/#{params[:patient_id]}?user_id=#{User.current.user_id}" and return if params[:prescription].blank?
 
@@ -585,13 +569,14 @@ class EncountersController < ApplicationController
 
         type = EncounterType.find_by_name(params[:encounter][:encounter_type_name]).id rescue nil
         encounter = @patient.encounters.find(:first, :order => ["encounter_datetime DESC"],
-          :conditions => ["voided = 0 AND encounter_type = ? AND DATE(encounter_datetime) = ?", type, (session[:datetime].to_date rescue Date.today)]) rescue nil
+          :conditions => ["voided = 0 AND encounter_type = ? AND DATE(encounter_datetime) = ?", type, session_date.to_date]) rescue nil
 
         if !type.blank? && encounter.blank?
           encounter = Encounter.create(
             :patient_id => @patient.id,
             :provider_id => (User.current.user_id),
             :encounter_type => type,
+            :encounter_datetime => session_date,
             :location_id => (session[:location_id] || params[:location_id])
           )
         end
@@ -607,7 +592,7 @@ class EncountersController < ApplicationController
 
               @program_encounter = ProgramEncounter.find_by_program_id(@program.id,
                 :conditions => ["patient_id = ? AND DATE(date_time) = ?",
-                  @patient.id, Date.today.strftime("%Y-%m-%d")])
+                  @patient.id, session_date.to_date.strftime("%Y-%m-%d")])
 
               if @program_encounter.blank?
 
@@ -746,6 +731,29 @@ class EncountersController < ApplicationController
 
     redirect_to "/patients/show/#{params[:patient_id]}?user_id=#{User.current.user_id}"
 
+  end
+
+  def probe_values
+    patient = Patient.find(params[:patient_id])
+    result = ""
+    session_date = session[:datetime].to_date rescue Date.today
+
+    concept_id = ConceptName.find_by_name(params[:concept_name]).concept_id rescue nil
+    render :text => "".to_json  and return if concept_id.blank?
+
+    patient.encounters.find(:all, :order => ["encounter_datetime DESC"], :limit => 1, :joins => [:observations],
+      :conditions => ["obs.concept_id = ? AND DATE(encounter_datetime) >= ?",
+        concept_id, (session_date - 1.month)]).each{|enc|
+
+      enc.observations.each{|obs|
+        if obs.concept.concept_id == concept_id
+          result = obs.answer_string.titleize.strip if result.blank?
+        end
+      }
+
+    }
+
+    render :text => result.to_s.to_json
   end
 
 end

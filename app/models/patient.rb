@@ -267,4 +267,12 @@ class Patient < ActiveRecord::Base
     status
   end
 
+  def mother_positive
+    ((self.is_exposed?).match(/yes/i))? "Positive" : ""
+  end
+  
+  def infected?
+    (self.hiv_status.match(/positive/i))? "HIV infected" : ""
+  end
+
 end

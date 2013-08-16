@@ -190,7 +190,8 @@ next_task = @task.encounter_type.gsub('_',' ') rescue nil
       </span>
       <span id='patient_id'><%= "#{@patient.national_id}" %></span>
       <span id='patient_residence'><%= "#{@patient.address}" %></span>
-      <span id='patient_age'><%= "#{(@patient.age > 0 ? @patient.age : "#{@patient.age_in_months} months")}" %></span>
+      <%= session_date = session[:datetime].to_date rescue Date.today %>
+      <span id='patient_age'><%= "#{(@patient.age > 0 ? @patient.age : "#{@patient.age_in_months(session_date)} months")}" %></span>
       <span id='patient_gender'><%= "#{@patient.gender}" %></span>
 
       <select id="tabs">

@@ -1,6 +1,6 @@
 P.1. INITIAL NEW-BORN RECORD [program: UNDER 5 PROGRAM, scope: EXISTS]
 C.1. Capture details about the birth of the child if the data does not exist in the system
-Q.1.1. Place of birth [pos: 0, tt_requirenextclick: false, tt_onLoad: tt_cancel_destination += "&skip_flow=true"; __$("nextButton").style.display = "none"; skipFlow("<%= params["skip_flow"]%>"); showCategory("Initial New Born Record"); __$("category").style.fontSize = "30px"]
+Q.1.1. Place of birth [pos: 0, tt_onLoad: tt_cancel_destination += "&skip_flow=true"; __$("nextButton").style.display = "block"; skipFlow("<%= params["skip_flow"]%>"); showCategory("Initial New Born Record"); __$("category").style.fontSize = "30px"]
 O.1.1.1. Home
 O.1.1.2. Health facility
 

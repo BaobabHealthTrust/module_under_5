@@ -27,7 +27,7 @@ Q.1.3.1.2.1. Has 1 tablet Mebendazole been given? [pos: 6, tt_onLoad: if(!tt_can
 O.1.3.1.2.1.1. No
 O.1.3.1.2.1.2. Yes
 
-Q.1.3.2. Visit date [helpText: Date Dosage Given, field_type: date, tt_onLoad: if(!tt_cancel_destination.match("skip_flow")){tt_cancel_destination += "&skip_flow=true"}; showCategory("Supplementation"); __$("category").style.fontSize = "30px", pos: 7]
+Q.1.3.2. Visit date [condition: <%= @patient.age_in_months(session["datetime"] || Date.today).to_i >= 12 && @patient.age_in_months(session["datetime"] || Date.today).to_i <= 59 %>, helpText: Date Dosage Given, field_type: date, tt_onLoad: if(!tt_cancel_destination.match("skip_flow")){tt_cancel_destination += "&skip_flow=true"}; showCategory("Supplementation"); __$("category").style.fontSize = "30px", pos: 7]
 
 Q.1.4.1. Have long-lasting insecticidal nets for malaria been given? [pos: 8, tt_onLoad: if(!tt_cancel_destination.match("skip_flow")){tt_cancel_destination += "&skip_flow=true"}; showCategory("Supplementation"); __$("category").style.fontSize = "30px"]
 O.1.4.1.1. No
