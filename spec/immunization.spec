@@ -68,7 +68,7 @@ O.1.12.1. No
 O.1.12.2. Yes
 Q.1.12.2.1. Date measles vaccine given [tt_onUnLoad: showCategory("Immunization Record"); __$("category").style.fontSize = "30px", pos: 28, field_type: date]
 
-Q.1.13. Mother HIV Status [tt_onLoad: try{$("touchscreenInput" + tstCurrentPage).value = "<%= @patient.mother_positive rescue nil%>"}catch(c){}, tt_onUnLoad: showCategory("Immunization Record"); __$("category").style.fontSize = "30px", pos: 29]
+Q.1.13. Mother HIV Status [helpText: Mother HIV Status <%= @patient.mother_test_date rescue nil%>, tt_onLoad: try{$("touchscreenInput" + tstCurrentPage).value = "<%= @patient.mother_positive rescue nil%>"}catch(c){}, tt_onUnLoad: showCategory("Immunization Record"); __$("category").style.fontSize = "30px", pos: 29]
 O.1.13.1. Negative
 O.1.13.2. Positive
 Q.1.13.2.1. Child current HIV status [concept: HIV Status, tt_onLoad: try{$("touchscreenInput" + tstCurrentPage).value = "<%= @patient.infected? rescue nil%>"}catch(c){}, tt_onUnLoad: showCategory("Immunization Record"); __$("category").style.fontSize = "30px", pos: 30]

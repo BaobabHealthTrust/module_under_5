@@ -241,7 +241,7 @@ class Patient < ActiveRecord::Base
     concepts = ["MOTHER HIV STATUS"].collect{|name| ConceptName.find_by_name(name).concept_id rescue nil}
     status = "yes" if ((["reactive", "positive", "yes"].include?(Observation.find(:last, :order => ["obs_datetime ASC"],
             :conditions => ["person_id = ? AND concept_id IN (?)",
-              self.patient_id, concepts]).answer_string.downcase.sub("-", "negative"))) rescue false)
+              self.patient_id, concepts]).answer_string.downcase.sub("-", "negative").strip)) rescue false)
     status
   end
 
@@ -273,6 +273,25 @@ class Patient < ActiveRecord::Base
   
   def infected?
     (self.hiv_status.match(/positive/i))? "HIV infected" : ""
+  end
+
+  def mother_test_date
+    concepts = ["HIV TEST DATE"].collect{|name| ConceptName.find_by_name(name).concept_id rescue nil} rescue []
+    ob = Observation.find(:last, :order => ["obs_datetime ASC"],
+      :conditions => ["person_id = ? AND concept_id IN (?)",
+        self.mother.patient_id, concepts]) rescue nil
+    
+    return nil if ob.blank?
+    
+    concepts2= ["HIV STATUS"].collect{|name| ConceptName.find_by_name(name).concept_id rescue nil} rescue []
+    result =  Observation.find(:last, :order => ["obs_datetime ASC"],
+      :conditions => ["person_id = ? AND concept_id IN (?) AND encounter_id = ?",
+        self.mother.patient_id, concepts2, ob.encounter_id]).answer_string rescue nil
+
+    return nil if result.blank?
+    
+    "(last known test, #{(ob.answer_string rescue nil)}: #{result})".strip rescue nil
+    
   end
 
 end
