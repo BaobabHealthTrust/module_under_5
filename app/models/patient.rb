@@ -220,7 +220,7 @@ class Patient < ActiveRecord::Base
 
     status = "unknown" if status.blank?
     status = "positive" if ["reactive", "hiv infected", "positive", "+"].include?(status.downcase.strip)
-    status = "negative" if ["non reactive", "non-reactive less than 3 months", "-"].include?(status.downcase.strip)
+    status = "negative" if ["non reactive", "non-reactive", "non-reactive less than 3 months", "-"].include?(status.downcase.strip)
     status
   end
 

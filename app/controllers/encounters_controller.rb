@@ -363,9 +363,13 @@ class EncountersController < ApplicationController
   def list_encounters
     result = []
 
+    d = (session[:datetime].to_date rescue Date.today)
+    t = Time.now
+    session_date = DateTime.new(d.year, d.month, d.day, t.hour, t.min, t.sec)
+    
     program = ProgramEncounter.find(params[:program_id]) rescue nil
 
-    @task = TaskFlow.new(params[:user_id], program.patient_id)
+    @task = TaskFlow.new(params[:user_id], program.patient_id, session_date)
 
     if File.exists?("#{Rails.root}/config/protocol_task_flow.yml")
       map = YAML.load_file("#{Rails.root}/config/protocol_task_flow.yml")["#{Rails.env
