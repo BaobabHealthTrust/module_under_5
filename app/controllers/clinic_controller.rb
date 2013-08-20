@@ -1,22 +1,22 @@
 
 class ClinicController < ApplicationController
-  unloadable  
+  unloadable
 
-  before_filter :sync_user, :except => [:index, :user_login, :user_logout, 
+  before_filter :sync_user, :except => [:index, :user_login, :user_logout,
     :set_datetime, :update_datetime, :reset_datetime]
 
   def index
-    
+
     if session[:user_id].blank?
       reset_session
-      
+
       user_login and return
     end
-    
+
     @location = Location.find(session[:location_id]) rescue nil
 
     session[:location_id] = @location.id if !@location.nil?
-    
+
     redirect_to "/patients/show/#{params[:ext_patient_id]}?user_id=#{params[:user_id]}&location_id=#{
     params[:location_id]}" if !params[:ext_patient_id].nil?
 
@@ -29,9 +29,9 @@ class ClinicController < ApplicationController
     @link = get_global_property_value("user.management.url").to_s rescue nil
 
     @user = JSON.parse(RestClient.get("#{@link}/verify/#{(session[:user_id])}")) rescue {}
-    
+
     session[:user] = @user rescue nil
-    
+
     if @link.nil?
       flash[:error] = "Missing configuration for <br/>user management connection!"
 
@@ -62,7 +62,7 @@ class ClinicController < ApplicationController
   def user_logout
 
     link = get_global_property_value("user.management.url").to_s rescue nil
-    
+
     reset_session
 
     if link.nil?
@@ -84,16 +84,17 @@ class ClinicController < ApplicationController
   end
 
   def update_datetime
-    unless params[:set_day]== "" or params[:set_month]== "" or params[:set_year]== ""
+
+    unless params[:retrospective_date].blank?
       # set for 1 second after midnight to designate it as a retrospective date
-      date_of_encounter = Time.mktime(params[:set_year].to_i,
-        params[:set_month].to_i,
-        params[:set_day].to_i,0,0,1)
-        session[:datetime] = date_of_encounter #if date_of_encounter.to_date != Date.today
-        session["datetime"] = date_of_encounter
+      date_of_encounter = (params[:retrospective_date] + " " + Time.now.strftime("%H:%M")).to_time
+
+      session[:datetime] = date_of_encounter if date_of_encounter.to_date != Date.today
+      session["datetime"] = date_of_encounter if date_of_encounter.to_date != Date.today
     end
 
-    redirect_to "/clinic?user_id=#{params[:user_id]}&location_id=#{params[:location_id]}"
+    redirect_to "/clinic?user_id=#{params[:user_id]}&location_id=#{params[:location_id]}" and return
+
   end
 
   def reset_datetime
@@ -126,7 +127,7 @@ class ClinicController < ApplicationController
 
       redirect_to "/no_user" and return
     end
-    
+
     @host = request.host_with_port rescue ""
 
     render :layout => false
@@ -143,7 +144,7 @@ class ClinicController < ApplicationController
   def project_users
     if !session[:user].nil?
       @user = session[:user]
-    else 
+    else
       @user = JSON.parse(RestClient.get("#{@link}/verify/#{(session[:user_id])}")) rescue {}
     end
     render :layout => false
@@ -184,7 +185,7 @@ class ClinicController < ApplicationController
         )
       end
     end
-    
+
     redirect_to "/project_users_list" and return
   end
 
@@ -199,7 +200,7 @@ class ClinicController < ApplicationController
         user.user_properties.find_by_property("#{@project}.activities").delete
       end
     end
-    
+
     redirect_to "/project_users_list" and return
   end
 
@@ -209,7 +210,7 @@ class ClinicController < ApplicationController
 
     unless @project.nil?
       @users = UserProperty.find_all_by_property("#{@project}.activities").collect { |user| user.user_id }
-    
+
       @roles = UserRole.find(:all, :conditions => ["user_id IN (?)", @users]).collect { |role| role.role }.sort.uniq
 
     end
@@ -222,12 +223,12 @@ class ClinicController < ApplicationController
     if File.exists?("#{Rails.root}/config/protocol_task_flow.yml")
       YAML.load_file("#{Rails.root}/config/protocol_task_flow.yml")["#{Rails.env
         }"]["clinical.encounters.sequential.list"].split(",").each{|activity|
-        
+
         activities[activity.titleize] = 0
 
       } rescue nil
     end
-      
+
     role = params[:role].downcase.gsub(/\s/,".") rescue nil
 
     unless File.exists?("#{Rails.root}/config/roles")
@@ -250,7 +251,7 @@ class ClinicController < ApplicationController
 
   def create_role_activities
     activities = []
-    
+
     role = params[:role].downcase.gsub(/\s/,".") rescue nil
     activity = params[:activity] rescue nil
 
@@ -276,7 +277,7 @@ class ClinicController < ApplicationController
       f.close
 
     end
-    
+
     activities = {}
 
     if File.exists?("#{Rails.root}/config/protocol_task_flow.yml")
@@ -348,10 +349,10 @@ class ClinicController < ApplicationController
     render :text => activities.to_json
   end
 
-  def project_members    
+  def project_members
   end
 
-  def my_activities    
+  def my_activities
   end
 
   def check_user_activities
@@ -372,23 +373,23 @@ class ClinicController < ApplicationController
         } rescue nil
 
       end
-    
+
     end
 
     @project = get_global_property_value("project.name").downcase.gsub(/\s/, ".") rescue nil
 
     unless @project.nil?
-      
+
       UserProperty.find_by_user_id_and_property(session[:user_id],
         "#{@project}.activities").property_value.split(",").each{|activity|
-        
+
         activities[activity.titleize] = 1 if activity.downcase.match("^" +
             (!params[:search].nil? ? params[:search].downcase : "")) and !activities[activity.titleize].nil?
 
       }
 
     end
-    
+
     render :text => activities.to_json
   end
 
@@ -421,7 +422,7 @@ class ClinicController < ApplicationController
       end
 
     end
-    
+
     activities = {}
 
     @user["roles"].each do |role|
@@ -531,7 +532,7 @@ class ClinicController < ApplicationController
         @fields[field] = 0
       end
     }
-    
+
     render :text => @fields.to_json
   end
 
@@ -602,7 +603,7 @@ class ClinicController < ApplicationController
   def sync_user
     if !session[:user].nil?
       @user = session[:user]
-    else 
+    else
       @user = JSON.parse(RestClient.get("#{@link}/verify/#{(session[:user_id])}")) rescue {}
     end
   end
