@@ -15,7 +15,7 @@
 				Weight less than 2500g 
 			</td>
 			<td>
-<select id='1.1' name='concept[Weight less than 2500g ]'  tt_requirenextclick='false'  tt_onLoad='try{$("touchscreenInput" + tstCurrentPage).value = "<%= @patient.low_birth_weight? rescue nil%>"}catch(c){}; tt_cancel_destination += "&skip_flow=true"; __$("nextButton").style.display = "none"; skipFlow("<%= params["skip_flow"]%>"); showCategory("Reason For Special Care"); __$("category").style.fontSize = "30px"'  pos='0'  helpText='Child was born underweight?' >
+<select id='1.1' name='concept[Weight less than 2500g ]'  pos='0'  tt_onLoad='try{$("touchscreenInput" + tstCurrentPage).value = "<%= @patient.low_birth_weight? rescue nil%>"}catch(c){}; tt_cancel_destination += "&skip_flow=true"; __$("nextButton").style.display = "none"; skipFlow("<%= params["skip_flow"]%>"); showCategory("Reason For Special Care"); __$("category").style.fontSize = "30px"'  tt_requirenextclick='false'  helpText='Child was born underweight?' >
 <option></option>
 <option value='No'>No</option>
  <option value='Yes'>Yes</option>
@@ -27,7 +27,7 @@
 				Baby born less than 2 years since last birth of other child 
 			</td>
 			<td>
-<select id='1.2' name='concept[Baby born less than 2 years since last birth of other child ]'  tt_requirenextclick='false'  tt_onLoad='__$("nextButton").style.display = "none"; showCategory("Reason For Special Care"); __$("category").style.fontSize = "30px"'  pos='1'  helpText='Was child born less than 2 years since last birth?' >
+<select id='1.2' name='concept[Baby born less than 2 years since last birth of other child ]'  pos='1'  tt_onLoad='__$("nextButton").style.display = "none"; showCategory("Reason For Special Care"); __$("category").style.fontSize = "30px"'  tt_requirenextclick='false'  helpText='Was child born less than 2 years since last birth?' >
 <option></option>
 <option value='No'>No</option>
  <option value='Yes'>Yes</option>
@@ -39,7 +39,7 @@
 				2 or more children in family have died? 
 			</td>
 			<td>
-<select id='1.3' name='concept[2 or more children in family have died? ]'  tt_requirenextclick='false'  tt_onLoad='__$("nextButton").style.display = "none"; showCategory("Reason For Special Care"); __$("category").style.fontSize = "30px"'  pos='2'  helpText='Does family have two or more children who died?' >
+<select id='1.3' name='concept[2 or more children in family have died? ]'  pos='2'  tt_onLoad='__$("nextButton").style.display = "none"; showCategory("Reason For Special Care"); __$("category").style.fontSize = "30px"'  tt_requirenextclick='false'  helpText='Does family have two or more children who died?' >
 <option></option>
 <option value='No'>No</option>
  <option value='Yes'>Yes</option>
@@ -51,7 +51,7 @@
 				Child exposed to HIV? 
 			</td>
 			<td>
-<select id='1.4' name='concept[Child exposed to HIV? ]'  tt_requirenextclick='false'  tt_onLoad='try{$("touchscreenInput" + tstCurrentPage).value = "<%= @patient.is_exposed? rescue nil%>"}catch(c){}; __$("nextButton").style.display = "none"; showCategory("Reason For Special Care"); __$("category").style.fontSize = "30px"'  pos='3'  helpText='Is child exposed to HIV?' >
+<select id='1.4' name='concept[Child exposed to HIV? ]'  pos='3'  tt_onLoad='try{$("touchscreenInput" + tstCurrentPage).value = "<%= @patient.is_exposed? rescue nil%>"}catch(c){}; __$("nextButton").style.display = "none"; showCategory("Reason For Special Care"); __$("category").style.fontSize = "30px"'  tt_requirenextclick='false'  helpText='Is child exposed to HIV?' >
 <option></option>
 <option value='No'>No</option>
  <option value='Yes'>Yes</option>
@@ -63,7 +63,7 @@
 				Is child an orphan? 
 			</td>
 			<td>
-<select id='1.5' name='concept[Orphan]'  tt_requirenextclick='false'  tt_onLoad='__$("nextButton").style.display = "none"; showCategory("Reason For Special Care"); __$("category").style.fontSize = "30px"'  pos='4'  helpText='Is child an orphan?' >
+<select id='1.5' name='concept[Orphan]'  pos='4'  tt_onLoad='__$("nextButton").style.display = "none"; showCategory("Reason For Special Care"); __$("category").style.fontSize = "30px"'  tt_requirenextclick='false'  helpText='Is child an orphan?' >
 <option></option>
 <option value='No'>No</option>
  <option value='Yes'>Yes</option>
@@ -75,7 +75,7 @@
 				Fifth or more child 
 			</td>
 			<td>
-<select id='1.6' name='concept[Fifth or more child ]'  tt_requirenextclick='false'  tt_onLoad='__$("nextButton").style.display = "none"; showCategory("Reason For Special Care"); __$("category").style.fontSize = "30px"'  pos='5'  helpText='Is child fifth (or more) in family?' >
+<select id='1.6' name='concept[Fifth or more child ]'  pos='5'  tt_onLoad='__$("nextButton").style.display = "none"; showCategory("Reason For Special Care"); __$("category").style.fontSize = "30px"'  tt_requirenextclick='false'  helpText='Is child fifth (or more) in family?' >
 <option></option>
 <option value='No'>No</option>
  <option value='Yes'>Yes</option>
@@ -87,7 +87,7 @@
 				Child a twin 
 			</td>
 			<td>
-<select id='1.7' name='concept[Child a twin ]'  tt_requirenextclick='false'  tt_onLoad='try{$("touchscreenInput" + tstCurrentPage).value = "<%= @patient.twin_outcome? rescue nil%>"}catch(c){}; __$("nextButton").style.display = "none"; showCategory("Reason For Special Care"); __$("category").style.fontSize = "30px"'  pos='6'  helpText='Was child born as twins?' >
+<select id='1.7' name='concept[Child a twin ]'  pos='6'  tt_onLoad='try{$("touchscreenInput" + tstCurrentPage).value = "<%= @patient.twin_outcome? rescue nil%>"}catch(c){}; __$("nextButton").style.display = "none"; showCategory("Reason For Special Care"); __$("category").style.fontSize = "30px"'  tt_requirenextclick='false'  helpText='Was child born as twins?' >
 <option></option>
 <option value='No'>No</option>
  <option value='Yes'>Yes</option>
@@ -99,7 +99,7 @@
 				Any other reason for special care 
 			</td>
 			<td>
-<select id='1.8' name='concept[Any other reason for special care ]'  tt_onLoad='__$("nextButton").style.display = "block"; showCategory("Reason For Special Care"); __$("category").style.fontSize = "30px"'  pos='7'  helpText='Any other reason for special care?' >
+<select id='1.8' name='concept[Any other reason for special care ]'  pos='7'  tt_onLoad='__$("nextButton").style.display = "block"; showCategory("Reason For Special Care"); __$("category").style.fontSize = "30px"'  helpText='Any other reason for special care?' >
 <option></option>
 <option value='Yes'>Yes</option>
  <option value='No'>No</option>
@@ -111,7 +111,7 @@
 				Specify other reason for special care 
 			</td>
 			<td>
-<input type='text' id='1.8.2.1'  name='concept[Specify]' helpText='Specify other reason for special care '  condition='__$("1.8").value == "Yes"'  tt_onLoad='__$("nextButton").style.display = "block"; showCategory("Reason For Special Care"); __$("category").style.fontSize = "30px"'  pos='8' />
+<input type='text' id='1.8.2.1'  name='concept[Specify]' helpText='Specify other reason for special care '  condition='__$("1.8").value == "Yes"'  pos='8'  tt_onLoad='__$("nextButton").style.display = "block"; showCategory("Reason For Special Care"); __$("category").style.fontSize = "30px"' />
 			</td>
 		</tr>
 	</table>

@@ -43,7 +43,7 @@ O.1.7.1. No
 O.1.7.2. Yes
 Q.1.7.2.1. Date PCV 31 vaccine given [tt_onUnLoad: showCategory("Immunization Record"); __$("category").style.fontSize = "30px", field_type: date, pos: 18]
 
-Q.1.8. First polio vaccine at birth [helpText: Was first polio vaccine given at birth?, tt_onUnLoad: showCategory("Immunization Record"); __$("category").style.fontSize = "30px", pos: 19, condition: <%= @patient.age_in_months < 0.5 and @patient.polio0.downcase != "yes" %>]
+Q.1.8. First polio vaccine at birth [helpText: Was first polio vaccine given at birth?, tt_onUnLoad: showCategory("Immunization Record"); __$("category").style.fontSize = "30px", pos: 19, condition: <%= @patient.age_in_months < 1 and @patient.polio0.downcase != "yes" %>]
 O.1.8.1. No
 O.1.8.2. Yes
 Q.1.8.2.1. Date first Polio vaccine given [tt_onUnLoad: showCategory("Immunization Record"); __$("category").style.fontSize = "30px", field_type: date, pos: 20]
