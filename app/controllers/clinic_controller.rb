@@ -188,6 +188,26 @@ class ClinicController < ApplicationController
   end
 
   def overview
+
+    @program_encounter_details =  ProgramEncounterDetail.find(:all, :select => ["encounter_id"], :joins => [:program_encounter],
+      :conditions => ["program_encounter.program_id = ?",
+        Program.find_by_name("UNDER 5 PROGRAM").program_id]).collect{|ped| ped.encounter_id} rescue []
+
+    @types = ["REGISTRATION"]
+    User.current = User.find(session[:user_id] || params[:user_id])
+
+    @me = Encounter.statistics(@types, :conditions =>
+        ['DATE(encounter_datetime) = DATE(NOW()) AND encounter.creator = ? AND encounter.location_id = ? AND encounter.encounter_id IN (?)',
+        User.current.user_id, session[:location_id], @program_encounter_details])
+
+    @today = Encounter.statistics(@types, :conditions => ['DATE(encounter_datetime) = DATE(NOW()) AND encounter.location_id = ? AND encounter.encounter_id IN (?)',
+        session[:location_id], @program_encounter_details])
+
+    @year = Encounter.statistics(@types, :conditions => ['YEAR(encounter_datetime) = YEAR(NOW()) AND encounter.location_id = ? AND encounter.encounter_id IN (?)',
+        session[:location_id], @program_encounter_details])
+
+    @ever = Encounter.statistics(@types, :conditions => ['encounter.location_id = ? AND encounter.encounter_id IN (?)', session[:location_id], @program_encounter_details])
+
     render :layout => false
   end
 
