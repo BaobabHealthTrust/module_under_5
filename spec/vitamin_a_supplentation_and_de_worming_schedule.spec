@@ -1,4 +1,4 @@
-P.1. VITAMIN A SUPPLEMENTATION AND DE-WORMING SCHEDULE [program: UNDER 5 PROGRAM, scope: TODAY, label: Supplementation, concept: Visit date]
+P.1. VITAMIN A SUPPLEMENTATION AND DE-WORMING SCHEDULE [program: UNDER 5 PROGRAM, scope: TODAY, label: Supplementation, concept: Have long-lasting insecticidal nets for malaria been given?]
 C.1. Give VITAMIN A every 6 months from 6 months of age until 5 years
 Q.1.1. Vitamin A 100,000 IU given? [pos: 0, tt_onLoad: if(!tt_cancel_destination.match("skip_flow")){tt_cancel_destination += "&skip_flow=true"}; showCategory("Supplementation"); __$("category").style.fontSize = "30px"; skipFlow("<%= params["skip_flow"]%>"), condition: <%= @patient.age_in_months(session["datetime"] || Date.today).to_i < 12 && @patient.age_in_months(session["datetime"] || Date.today).to_i > 6 && @patient.age_in_months(session["datetime"] || Date.today).to_i < 60 %>]
 O.1.1.1. Yes

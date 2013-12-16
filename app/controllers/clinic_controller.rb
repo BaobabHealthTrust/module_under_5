@@ -206,7 +206,11 @@ class ClinicController < ApplicationController
       :conditions => ["program_encounter.program_id = ?",
         Program.find_by_name("UNDER 5 PROGRAM").program_id]).collect{|ped| ped.encounter_id} rescue []
 
-    @types = ["REGISTRATION"]
+    @types = ["REGISTRATION", "REASON FOR SPECIAL CARE", "FAMILY MEDICAL HISTORY", 
+      "VITAMIN A SUPPLEMENTATION AND DE-WORMING SCHEDULE", "IMMUNIZATION RECORD",
+      "INITIAL NEW-BORN RECORD", "SURGICAL HISTORY", "MEDICAL HISTORY",
+      "ASSESSMENT AT ONE WEEK POSTNATAL CHECK", "UNDER 5 VISIT"
+      ]
     User.current = User.find(session[:user_id] || params[:user_id])
 
     @me = Encounter.statistics(@types, :conditions =>
