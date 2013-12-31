@@ -154,7 +154,7 @@ class PatientsController < ApplicationController
             e.encounter.encounter_datetime.strftime("%H:%M"),
             e.encounter.creator
           ]
-        }.uniq,
+        }.uniq.compact,
         p.date_time.strftime("%d-%b-%Y")
       ]
     } if !@patient.blank?
@@ -197,7 +197,7 @@ class PatientsController < ApplicationController
             e.encounter.encounter_datetime.strftime("%H:%M"),
             e.encounter.creator
           ] rescue []
-        }.uniq,
+        }.uniq.compact,
         p.date_time.strftime("%d-%b-%Y")
       ]
     } if !@patient.nil?
