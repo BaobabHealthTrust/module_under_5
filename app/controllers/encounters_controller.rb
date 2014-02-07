@@ -481,7 +481,7 @@ class EncountersController < ApplicationController
 
   def generic
     
-   medication_tag = get_global_property_value("application_generic_medication")
+    medication_tag = get_global_property_value("application_generic_medication")
 
     if !medication_tag.blank?
 
@@ -772,6 +772,20 @@ class EncountersController < ApplicationController
     }
 
     render :text => result.to_s.to_json
+  end
+
+  def void_order
+    order = Order.find(params[:order_id])
+
+    if order.present?
+      encounter = order.encounter
+      order.void
+      if encounter.orders.blank? && encounter.name.match(/TREATMENT/i)
+        encounter.void
+      end
+    end
+
+    return render :text => {"ok" => true}.to_json
   end
 
 end

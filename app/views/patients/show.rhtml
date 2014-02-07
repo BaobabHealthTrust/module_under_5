@@ -16,6 +16,16 @@ next_task = @task.encounter_type.gsub('_',' ') rescue nil
 
 <%}%>
 
+  function changeContinueColor(){
+    try{
+      var buttons = document.getElementsByClassName("blue");
+      for (var i = 0; i < buttons.length; i ++){
+        if (buttons[i].innerHTML.match(/continue/i)){
+          buttons[i].setAttribute("class", "green");
+        }
+      }}catch(ex){}
+  }
+  
   function paintButtons(){
 
     try{
@@ -71,7 +81,7 @@ next_task = @task.encounter_type.gsub('_',' ') rescue nil
     }
 
     __$("nextTask").innerHTML = "<b>Next Task:</b><br /><i><%= next_task.titleize %></i>";
-
+    changeContinueColor();
 <% if ((@patient.is_exposed?).present?) && (@patient.age <= 6 rescue true)%>
       var exp = document.createElement("div");
       exp.id = "exposure";
@@ -197,6 +207,7 @@ next_task = @task.encounter_type.gsub('_',' ') rescue nil
       <select id="tabs">
         <option value='/patients/current_visit/<%= @patient.id %>?user_id=<%= @user.id %>'>Current Visit</option>
         <option value='/patients/visit_history/<%= @patient.id %>?user_id=<%= @user.id %>'>Visit History</option>
+        <option value='/patients/treatment_details/<%= @patient.id %>?user_id=<%= @user.id %>'>Treatment Details</option>
       </select>
 
       <% if (@patient.age <= 6 rescue true)%>
